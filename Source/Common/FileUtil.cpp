@@ -1,5 +1,5 @@
 #include "FileUtil.h"
-#include "AssertMacro.h"
+#include "Macros.h"
 #include "Common/FileIO/CFileInStream.h"
 
 #include <experimental/filesystem>
@@ -50,7 +50,7 @@ bool IsEmpty(const TString& rkDirPath)
 {
     if (!IsDirectory(rkDirPath))
     {
-        Log::Error("Non-directory path passed to IsEmpty(): " + rkDirPath);
+        errorf("Non-directory path passed to IsEmpty(): %s", *rkDirPath);
         return false;
     }
 
@@ -61,7 +61,7 @@ bool MakeDirectory(const TString& rkNewDir)
 {
     if (!IsValidPath(rkNewDir, true))
     {
-        Log::Error("Unable to create directory because name contains illegal characters: " + rkNewDir);
+        errorf("Unable to create directory because name contains illegal characters: %s", *rkNewDir);
         return false;
     }
 
@@ -72,7 +72,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        Log::Error("Unable to copy file because destination name contains illegal characters: " + rkNewPath);
+        errorf("Unable to copy file because destination name contains illegal characters: %s", rkNewPath);
         return false;
     }
 
@@ -87,7 +87,7 @@ bool CopyDirectory(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        Log::Error("Unable to copy directory because destination name contains illegal characters: " + rkNewPath);
+        errorf("Unable to copy directory because destination name contains illegal characters: %s", *rkNewPath);
         return false;
     }
 
@@ -102,13 +102,13 @@ bool MoveFile(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        Log::Error("Unable to move file because destination name contains illegal characters: " + rkNewPath);
+        errorf("Unable to move file because destination name contains illegal characters: %s", rkNewPath);
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        Log::Error("Unable to move file because there is an existing file at the destination path: " + rkNewPath);
+        errorf("Unable to move file because there is an existing file at the destination path: %s", *rkNewPath);
         return false;
     }
 
@@ -121,13 +121,13 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        Log::Error("Unable to move directory because destination name contains illegal characters: " + rkNewPath);
+        errorf("Unable to move directory because destination name contains illegal characters: %s", *rkNewPath);
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        Log::Error("Unable to move directory because there is an existing directory at the destination path: %s" + rkNewPath);
+        errorf("Unable to move directory because there is an existing directory at the destination path: %s", rkNewPath);
         return false;
     }
 
@@ -153,7 +153,7 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
     if (Root)
     {
         ASSERT(false);
-        Log::Fatal("Attempted to delete root directory!");
+        fatalf("Attempted to delete root directory!");
         return false;
     }
 
@@ -178,7 +178,7 @@ bool ClearDirectory(const TString& rkDirPath)
     if (Root)
     {
         ASSERT(false);
-        Log::Fatal("Attempted to clear root directory!");
+        fatalf("Attempted to clear root directory!");
         return false;
     }
 
@@ -196,20 +196,20 @@ bool ClearDirectory(const TString& rkDirPath)
             Success = DeleteDirectory(*It, false);
 
         if (!Success)
-            Log::Error("Failed to delete filesystem object: " + TString(*It));
+            errorf("Failed to delete filesystem object: %s", *TString(*It));
     }
 
     return true;
 }
 
-u64 FileSize(const TString &rkFilePath)
+uint64 FileSize(const TString &rkFilePath)
 {
-    return (u64) (Exists(rkFilePath) ? file_size(ToPath(*rkFilePath)) : -1);
+    return (uint64) (Exists(rkFilePath) ? file_size(ToPath(*rkFilePath)) : -1);
 }
 
-u64 LastModifiedTime(const TString& rkFilePath)
+uint64 LastModifiedTime(const TString& rkFilePath)
 {
-    return (u64) last_write_time(ToPath(*rkFilePath)).time_since_epoch().count();
+    return (uint64) last_write_time(ToPath(*rkFilePath)).time_since_epoch().count();
 }
 
 TString WorkingDirectory()
@@ -305,7 +305,7 @@ TString SimplifyRelativePath(const TString& rkPath)
     return Out;
 }
 
-u32 MaxFileNameLength()
+uint32 MaxFileNameLength()
 {
     return 255;
 }
@@ -321,7 +321,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
         return Name;
 
     // Remove illegal characters from path
-    for (u32 iChr = 0; iChr < Name.Size(); iChr++)
+    for (uint32 iChr = 0; iChr < Name.Size(); iChr++)
     {
         char Chr = Name[iChr];
         bool Remove = false;
@@ -345,7 +345,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     // For directories, space and dot are not allowed at the end of the path
     if (Directory)
     {
-        u32 ChopNum = 0;
+        int ChopNum = 0;
 
         for (int iChr = (int) Name.Size() - 1; iChr >= 0; iChr--)
         {
@@ -361,7 +361,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     }
 
     // Remove spaces from beginning of path
-    u32 NumLeadingSpaces = 0;
+    uint NumLeadingSpaces = 0;
     while (NumLeadingSpaces < Name.Size() && Name[NumLeadingSpaces] == ' ')
         NumLeadingSpaces++;
 
@@ -371,7 +371,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     // Ensure the name is below the character limit
     if (Name.Size() > MaxFileNameLength())
     {
-        u32 ChopNum = Name.Size() - MaxFileNameLength();
+        int ChopNum = Name.Size() - MaxFileNameLength();
         Name = Name.ChopBack(ChopNum);
     }
 
@@ -381,7 +381,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
 TString SanitizePath(TString Path, bool Directory)
 {
     TStringList Components = Path.Split("\\/");
-    u32 CompIdx = 0;
+    uint32 CompIdx = 0;
     Path = "";
 
     for (auto It = Components.begin(); It != Components.end(); It++)
@@ -401,12 +401,12 @@ TString SanitizePath(TString Path, bool Directory)
 
 bool IsValidFileNameCharacter(char Chr)
 {
-    static const u32 skNumIllegalChars = sizeof(gskIllegalNameChars) / sizeof(char);
+    static const uint32 skNumIllegalChars = sizeof(gskIllegalNameChars) / sizeof(char);
 
     if (Chr >= 0 && Chr <= 31)
         return false;
 
-    for (u32 BanIdx = 0; BanIdx < skNumIllegalChars; BanIdx++)
+    for (uint32 BanIdx = 0; BanIdx < skNumIllegalChars; BanIdx++)
     {
         if (Chr == gskIllegalNameChars[BanIdx])
             return false;
@@ -429,7 +429,7 @@ bool IsValidName(const TString& rkName, bool Directory, bool RootDir /*= false*/
         return true;
 
     // Check for banned characters
-    for (u32 iChr = 0; iChr < rkName.Size(); iChr++)
+    for (uint32 iChr = 0; iChr < rkName.Size(); iChr++)
     {
         char Chr = rkName[iChr];
 
@@ -453,7 +453,7 @@ bool IsValidPath(const TString& rkPath, bool Directory)
     TStringList Components = rkPath.Split("\\/");
 
     // Validate other components
-    u32 CompIdx = 0;
+    uint32 CompIdx = 0;
 
     for (auto It = Components.begin(); It != Components.end(); It++)
     {

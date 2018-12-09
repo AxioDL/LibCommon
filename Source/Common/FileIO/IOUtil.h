@@ -1,6 +1,8 @@
 #ifndef IOUTIL_H
 #define IOUTIL_H
 
+#include "Common/BasicTypes.h"
+
 namespace IOUtil
 {
     enum EEndianness {
@@ -9,12 +11,12 @@ namespace IOUtil
     };
     extern const EEndianness kSystemEndianness;
 
-    void SwapBytes(short& rVal);
-    void SwapBytes(unsigned short& rVal);
-    void SwapBytes(long& rVal);
-    void SwapBytes(unsigned long& rVal);
-    void SwapBytes(long long& rVal);
-    void SwapBytes(unsigned long long& rVal);
+    void SwapBytes(int16& rVal);
+    void SwapBytes(uint16& rVal);
+    void SwapBytes(int32& rVal);
+    void SwapBytes(uint32& rVal);
+    void SwapBytes(int64& rVal);
+    void SwapBytes(uint64& rVal);
     void SwapBytes(float& rVal);
     void SwapBytes(double& rVal);
 }

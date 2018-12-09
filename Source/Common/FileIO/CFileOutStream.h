@@ -8,7 +8,7 @@ class CFileOutStream : public IOutputStream
 private:
     FILE *mpFStream;
     TString mName;
-    u32 mSize;
+    uint32 mSize;
 
 public:
     CFileOutStream();
@@ -20,14 +20,14 @@ public:
     void Update(const TString& rkFile, IOUtil::EEndianness FileEndianness);
     void Close();
 
-    void WriteBytes(const void *pkSrc, u32 Count);
-    bool Seek(s32 Offset, u32 Origin);
-    bool Seek64(s64 Offset, u32 Origin);
-    u32 Tell() const;
-    u64 Tell64() const;
+    void WriteBytes(const void *pkSrc, uint32 Count);
+    bool Seek(int32 Offset, uint32 Origin);
+    bool Seek64(int64 Offset, uint32 Origin);
+    uint32 Tell() const;
+    uint64 Tell64() const;
     bool EoF() const;
     bool IsValid() const;
-    u32 Size() const;
+    uint32 Size() const;
     TString FileName() const;
 };
 

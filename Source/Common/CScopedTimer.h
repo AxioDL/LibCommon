@@ -2,7 +2,7 @@
 #define CSCOPEDTIMER
 
 #include "CTimer.h"
-#include "Log.h"
+#include "Macros.h"
 #include "TString.h"
 
 // Runs a timer and automatically stops + prints the time to the log when it goes out of scope.
@@ -29,7 +29,7 @@ public:
     {
         if (!mStopped)
         {
-            Log::Write(mTimerName + " finished in " + TString::FromFloat((float) mTimer.Stop()) + "s");
+            debugf("%s finished in %fs", *mTimerName, (float) mTimer.Stop());
             mStopped = true;
         }
     }

@@ -61,31 +61,31 @@ void CFileInStream::Close()
     mpFStream = nullptr;
 }
 
-void CFileInStream::ReadBytes(void *pDst, u32 Count)
+void CFileInStream::ReadBytes(void *pDst, uint32 Count)
 {
     if (!IsValid()) return;
     fread(pDst, 1, Count, mpFStream);
 }
 
-bool CFileInStream::Seek(s32 Offset, u32 Origin)
+bool CFileInStream::Seek(int32 Offset, uint32 Origin)
 {
     if (!IsValid()) return false;
     return (fseek(mpFStream, Offset, Origin) != 0);
 }
 
-bool CFileInStream::Seek64(s64 Offset, u32 Origin)
+bool CFileInStream::Seek64(int64 Offset, uint32 Origin)
 {
     if (!IsValid()) return false;
     return (_fseeki64(mpFStream, Offset, Origin) != 0);
 }
 
-u32 CFileInStream::Tell() const
+uint32 CFileInStream::Tell() const
 {
     if (!IsValid()) return 0;
     return ftell(mpFStream);
 }
 
-u64 CFileInStream::Tell64() const
+uint64 CFileInStream::Tell64() const
 {
     if (!IsValid()) return 0;
     return _ftelli64(mpFStream);
@@ -101,7 +101,7 @@ bool CFileInStream::IsValid() const
     return (mpFStream != 0);
 }
 
-u32 CFileInStream::Size() const
+uint32 CFileInStream::Size() const
 {
     return mFileSize;
 }

@@ -6,24 +6,24 @@
 class CMemoryOutStream : public IOutputStream
 {
     char *mpDataStart;
-    u32 mDataSize;
-    u32 mPos;
-    u32 mUsed;
+    uint32 mDataSize;
+    uint32 mPos;
+    uint32 mUsed;
 
 public:
     CMemoryOutStream();
-    CMemoryOutStream(void *pData, u32 Size, IOUtil::EEndianness mDataEndianness);
+    CMemoryOutStream(void *pData, uint32 Size, IOUtil::EEndianness mDataEndianness);
     ~CMemoryOutStream();
-    void SetData(void *pData, u32 Size, IOUtil::EEndianness mDataEndianness);
+    void SetData(void *pData, uint32 Size, IOUtil::EEndianness mDataEndianness);
 
-    void WriteBytes(const void *pkSrc, u32 Count);
-    bool Seek(s32 Offset, u32 Origin);
-    u32 Tell() const;
+    void WriteBytes(const void *pkSrc, uint32 Count);
+    bool Seek(int32 Offset, uint32 Origin);
+    uint32 Tell() const;
     bool EoF() const;
     bool IsValid() const;
-    u32 Size() const;
-    u32 SpaceUsed() const;
-    void SetSize(u32 Size);
+    uint32 Size() const;
+    uint32 SpaceUsed() const;
+    void SetSize(uint32 Size);
     void* Data() const;
     void* DataAtPosition() const;
 };

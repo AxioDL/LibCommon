@@ -1,6 +1,6 @@
 #include "CCRC32.h"
 
-const u32 gkCrcTable[] = {
+const uint32 gkCrcTable[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
     0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
     0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
@@ -53,7 +53,7 @@ CCRC32::CCRC32()
 }
 
 /** Allows the hash to be initialized to an arbitrary value */
-CCRC32::CCRC32(u32 InitialValue)
+CCRC32::CCRC32(uint32 InitialValue)
     : mHash( InitialValue )
 {
 }
@@ -61,7 +61,7 @@ CCRC32::CCRC32(u32 InitialValue)
 /** Hash arbitrary data */
 void CCRC32::Hash(const void* pkData, int Size)
 {
-    const u8* pkCastData = static_cast<const u8*>(pkData);
+    const uint8* pkCastData = static_cast<const uint8*>(pkData);
 
     while (Size--)
     {
@@ -70,28 +70,28 @@ void CCRC32::Hash(const void* pkData, int Size)
 }
 
 /** Retrieve the final output hash. (You can keep adding data to the hash after calling this.) */
-u32 CCRC32::Digest() const
+uint32 CCRC32::Digest() const
 {
     return mHash;
 }
 
 /** Convenience hash methods */
-void CCRC32::Hash(u8 v)
+void CCRC32::Hash(uint8 v)
 {
     Hash(&v, 1);
 }
 
-void CCRC32::Hash(u16 v)
+void CCRC32::Hash(uint16 v)
 {
     Hash(&v, 2);
 }
 
-void CCRC32::Hash(u32 v)
+void CCRC32::Hash(uint32 v)
 {
     Hash(&v, 4);
 }
 
-void CCRC32::Hash(u64 v)
+void CCRC32::Hash(uint64 v)
 {
     Hash(&v, 8);
 }
@@ -120,7 +120,7 @@ void CCRC32::Hash(const char* pkString)
 }
 
 /** Static */
-u32 CCRC32::StaticHashString(const char* pkString)
+uint32 CCRC32::StaticHashString(const char* pkString)
 {
     CCRC32 Hasher;
     Hasher.Hash(pkString);

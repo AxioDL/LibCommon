@@ -7,20 +7,20 @@
 
 class CSerialVersion
 {
-    u16 mArchiveVersion;
-    u16 mFileVersion;
+    uint16 mArchiveVersion;
+    uint16 mFileVersion;
     EGame mGame;
 
 public:
     CSerialVersion();
-    CSerialVersion(u16 ArchiveVer, u16 FileVer, EGame Game);
+    CSerialVersion(uint16 ArchiveVer, uint16 FileVer, EGame Game);
     CSerialVersion(IInputStream& rInput);
     void Read(IInputStream& rInput);
     void Write(IOutputStream& rOutput);
 
-    inline u16 ArchiveVersion() const   { return mArchiveVersion; }
-    inline u16 FileVersion() const      { return mFileVersion; }
-    inline EGame Game() const           { return mGame; }
+    inline uint16 ArchiveVersion() const    { return mArchiveVersion; }
+    inline uint16 FileVersion() const       { return mFileVersion; }
+    inline EGame Game() const               { return mGame; }
 };
 
 #endif // CSERIALVERSION

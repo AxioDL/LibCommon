@@ -22,13 +22,13 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath);
 bool DeleteFile(const TString& rkFilePath);
 bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty); // This is an extremely destructive function, be careful using it!
 bool ClearDirectory(const TString& rkDirPath);  // This is an extremely destructive function, be careful using it!
-u64 FileSize(const TString& rkFilePath);
-u64 LastModifiedTime(const TString& rkFilePath);
+uint64 FileSize(const TString& rkFilePath);
+uint64 LastModifiedTime(const TString& rkFilePath);
 TString WorkingDirectory();
 TString MakeAbsolute(TString Path);
 TString MakeRelative(const TString& rkPath, const TString& rkRelativeTo = WorkingDirectory());
 TString SimplifyRelativePath(const TString& rkPath);
-u32 MaxFileNameLength();
+uint32 MaxFileNameLength();
 TString SanitizeName(TString Name, bool Directory, bool RootDir = false);
 TString SanitizePath(TString Path, bool Directory);
 bool IsValidFileNameCharacter(char Chr);

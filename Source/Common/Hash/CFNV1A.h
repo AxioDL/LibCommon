@@ -12,13 +12,13 @@ public:
     };
 
 private:
-    u64 mHash;
+    uint64 mHash;
     EHashLength mHashLength;
 
-    static const u64 skFNVOffsetBasis32 = 0x811C9DC5;
-    static const u64 skFNVOffsetBasis64 = 0xCBF29CE484222325;
-    static const u64 skFNVPrime32 = 0x1000193;
-    static const u64 skFNVPrime64 = 0x100000001B3;
+    static const uint64 skFNVOffsetBasis32 = 0x811C9DC5;
+    static const uint64 skFNVOffsetBasis64 = 0xCBF29CE484222325;
+    static const uint64 skFNVPrime32 = 0x1000193;
+    static const uint64 skFNVPrime64 = 0x100000001B3;
 
 public:
     CFNV1A(EHashLength Length)
@@ -41,12 +41,12 @@ public:
         mHash = skFNVOffsetBasis64;
     }
 
-    void HashData(const void *pkData, u32 Size)
+    void HashData(const void *pkData, uint32 Size)
     {
         const char *pkCharData = (const char*) pkData;
-        u64 FNVPrime = (mHashLength == e32Bit) ? skFNVPrime32 : skFNVPrime64;
+        uint64 FNVPrime = (mHashLength == e32Bit) ? skFNVPrime32 : skFNVPrime64;
 
-        for (u32 iByte = 0; iByte < Size; iByte++)
+        for (uint32 iByte = 0; iByte < Size; iByte++)
         {
             mHash ^= *pkCharData;
             mHash *= FNVPrime;
@@ -54,13 +54,13 @@ public:
         }
     }
 
-    inline u32 GetHash32()  { return (u32) mHash; }
-    inline u64 GetHash64()  { return mHash; }
+    inline uint32 GetHash32()  { return (uint32) mHash; }
+    inline uint64 GetHash64()  { return mHash; }
 
     // Convenience functions
-    inline void HashByte(const u8& rkVal)           { HashData(&rkVal, 1); }
-    inline void HashShort(const u16& rkVal)         { HashData(&rkVal, 2); }
-    inline void HashLong(const u32& rkVal)          { HashData(&rkVal, 4); }
+    inline void HashByte(const uint8& rkVal)           { HashData(&rkVal, 1); }
+    inline void HashShort(const uint16& rkVal)         { HashData(&rkVal, 2); }
+    inline void HashLong(const uint32& rkVal)          { HashData(&rkVal, 4); }
     inline void HashFloat(const float& rkVal)       { HashData(&rkVal, 4); }
     inline void HashString(const TString& rkVal)    { HashData(rkVal.Data(), rkVal.Size()); }
 };

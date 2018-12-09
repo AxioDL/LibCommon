@@ -47,7 +47,7 @@ void CFrustumPlanes::SetPlanes(const CVector3f& rkPosition, const CVector3f& rkD
 
 bool CFrustumPlanes::PointInFrustum(const CVector3f& rkPoint) const
 {
-    for (u32 iPlane = 0; iPlane < 6; iPlane++)
+    for (uint32 iPlane = 0; iPlane < 6; iPlane++)
     {
         const CPlane& rkPlane = mPlanes[iPlane];
 
@@ -73,12 +73,12 @@ bool CFrustumPlanes::BoxInFrustum(const CAABox& rkBox) const
     Points[6] = CVector3f(Max.X, Max.Y, Min.Z);
     Points[7] = CVector3f(Max.X, Min.Y, Min.Z);
 
-    for (u32 iPlane = 0; iPlane < 6; iPlane++)
+    for (uint32 iPlane = 0; iPlane < 6; iPlane++)
     {
         const CPlane& rkPlane = mPlanes[iPlane];
         int NumPoints = 0;
 
-        for (u32 iPoint = 0; iPoint < 8; iPoint++)
+        for (uint32 iPoint = 0; iPoint < 8; iPoint++)
         {
             if (rkPlane.Normal().Dot(Points[iPoint]) + rkPlane.Dist() < 0.f)
                 NumPoints++;

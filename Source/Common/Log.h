@@ -1,26 +1,30 @@
-#ifndef INFO
-#define INFO
+#ifndef LOG_H
+#define LOG_H
 
 #include <Common/TString.h>
 
-namespace Log
+/** Application logging functionality */
+//@todo: make this object-oriented and allow multiple handlers for log messages
+namespace NLog
 {
 
+enum class EMsgType
+{
+    Standard,
+    Warning,
+    Error,
+    Fatal
+};
+
 bool InitLog(const TString& rkFilename);
-void Write(const TString& rkMessage);
-void Error(const TString& rkMessage);
-void Warning(const TString& rkMessage);
-void Fatal(const TString& rkMessage);
-void FileWrite(const TString& rkFilename, const TString& rkMessage);
-void FileWrite(const TString& rkFilename, unsigned long Offset, const TString& rkMessage);
-void FileError(const TString& rkFilename, const TString& rkMessage);
-void FileError(const TString& rkFilename, unsigned long Offset, const TString& rkMessage);
-void FileWarning(const TString& rkFilename, const TString& rkMessage);
-void FileWarning(const TString& rkFilename, unsigned long Offset, const TString& rkMessage);
+void Writef(const char* pkMsg, ...);
+void Warnf(const char* pkMsg, ...);
+void Errorf(const char* pkMsg, ...);
+void Fatalf(const char* pkMsg, ...);
 const TStringList& GetErrorLog();
 void ClearErrorLog();
 
 }
 
-#endif // INFO
+#endif // LOG_H
 

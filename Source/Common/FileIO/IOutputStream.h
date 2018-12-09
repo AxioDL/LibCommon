@@ -12,35 +12,35 @@ protected:
 
 public:
     void WriteBool(bool Val);
-    void WriteByte(char Val);
-    void WriteShort(short Val);
-    void WriteLong(long Val);
-    void WriteLongLong(long long Val);
+    void WriteByte(int8 Val);
+    void WriteShort(int16 Val);
+    void WriteLong(int32 Val);
+    void WriteLongLong(int64 Val);
     void WriteFloat(float Val);
     void WriteDouble(double Val);
-    void WriteFourCC(long Val);
+    void WriteFourCC(uint32 Val);
     void WriteString(const TString& rkVal, int Count = -1, bool Terminate = true);
     void WriteSizedString(const TString& rkVal);
     void WriteWString(const TWideString& rkVal, int Count = -1, bool Terminate = true);
     void WriteSizedWString(const TWideString& rkVal);
 
-    bool GoTo(u32 Address);
-    bool Skip(s32 SkipAmount);
+    bool GoTo(uint32 Address);
+    bool Skip(int32 SkipAmount);
 
-    void WriteToBoundary(u32 Boundary, u8 Fill);
+    void WriteToBoundary(uint32 Boundary, uint8 Fill);
     void SetEndianness(IOUtil::EEndianness Endianness);
     void SetDestString(const TString& rkDest);
     IOUtil::EEndianness GetEndianness() const;
     TString GetDestString() const;
 
     virtual ~IOutputStream();
-    virtual void WriteBytes(const void *pkSrc, u32 Count) = 0;
-    virtual bool Seek(s32 Offset, u32 Origin) = 0;
-    virtual bool Seek64(s64 Offset, u32 Origin);
-    virtual u32 Tell() const = 0;
-    virtual u64 Tell64() const;
+    virtual void WriteBytes(const void *pkSrc, uint32 Count) = 0;
+    virtual bool Seek(int32 Offset, uint32 Origin) = 0;
+    virtual bool Seek64(int64 Offset, uint32 Origin);
+    virtual uint32 Tell() const = 0;
+    virtual uint64 Tell64() const;
     virtual bool EoF() const = 0;
     virtual bool IsValid() const = 0;
-    virtual u32 Size() const = 0;
+    virtual uint32 Size() const = 0;
 };
 #endif // COUTPUTSTREAM_H

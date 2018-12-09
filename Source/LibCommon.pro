@@ -48,7 +48,6 @@ INCLUDEPATH += $$EXTERNALS_DIR/CodeGen/include \
 
 # Header Files
 HEADERS += \
-    Common/AssertMacro.h \
     Common/BasicTypes.h \
     Common/Common.h \
     Common/CColor.h \
@@ -60,7 +59,9 @@ HEADERS += \
     Common/FileIO.h \
     Common/FileUtil.h \
     Common/Flags.h \
+    Common/LinkedList.h \
     Common/Log.h \
+    Common/Macros.h \
     Common/NBasics.h \
     Common/TString.h \
     Common/CScopedTimer.h \
@@ -82,8 +83,6 @@ HEADERS += \
     Common/FileIO/CFileOutStream.h \
     Common/FileIO/CMemoryInStream.h \
     Common/FileIO/CMemoryOutStream.h \
-    Common/FileIO/CTextInStream.h \
-    Common/FileIO/CTextOutStream.h \
     Common/FileIO/CVectorOutStream.h \
     Common/FileIO/IInputStream.h \
     Common/FileIO/IOutputStream.h \
@@ -116,8 +115,6 @@ SOURCES += \
     Common/FileIO/CFileOutStream.cpp \
     Common/FileIO/CMemoryInStream.cpp \
     Common/FileIO/CMemoryOutStream.cpp \
-    Common/FileIO/CTextInStream.cpp \
-    Common/FileIO/CTextOutStream.cpp \
     Common/FileIO/CVectorOutStream.cpp \
     Common/FileIO/IOUtil.cpp \
     Common/FileIO/IInputStream.cpp \

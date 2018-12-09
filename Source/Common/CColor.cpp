@@ -9,10 +9,10 @@ CColor::CColor(IInputStream& rInput, bool Integral /*= false*/)
 {
     if (Integral)
     {
-        R = (u8) rInput.ReadByte() / 255.f;
-        G = (u8) rInput.ReadByte() / 255.f;
-        B = (u8) rInput.ReadByte() / 255.f;
-        A = (u8) rInput.ReadByte() / 255.f;
+        R = (uint8) rInput.ReadByte() / 255.f;
+        G = (uint8) rInput.ReadByte() / 255.f;
+        B = (uint8) rInput.ReadByte() / 255.f;
+        A = (uint8) rInput.ReadByte() / 255.f;
     }
     else
     {
@@ -33,13 +33,13 @@ CColor::CColor(float _R, float _G, float _B, float _A /*= 1.f*/)
 {
 }
 
-void CColor::SetIntegral(u8 RGBA)
+void CColor::SetIntegral(uint8 RGBA)
 {
     float f = RGBA / 255.f;
     R = G = B = A = f;
 }
 
-void CColor::SetIntegral(u8 _R, u8 _G, u8 _B, u8 _A /*= 255*/)
+void CColor::SetIntegral(uint8 _R, uint8 _G, uint8 _B, uint8 _A /*= 255*/)
 {
     R = _R / 255.f;
     G = _G / 255.f;
@@ -73,19 +73,19 @@ void CColor::Serialize(IArchive& rArc)
 
 long CColor::ToLongRGBA() const
 {
-    u8 _R = (u8) (R * 255);
-    u8 _G = (u8) (G * 255);
-    u8 _B = (u8) (B * 255);
-    u8 _A = (u8) (A * 255);
+    uint8 _R = (uint8) (R * 255);
+    uint8 _G = (uint8) (G * 255);
+    uint8 _B = (uint8) (B * 255);
+    uint8 _A = (uint8) (A * 255);
     return (_R << 24) | (_G << 16) | (_B << 8) | _A;
 }
 
 long CColor::ToLongARGB() const
 {
-    u8 _R = (u8) (R * 255);
-    u8 _G = (u8) (G * 255);
-    u8 _B = (u8) (B * 255);
-    u8 _A = (u8) (A * 255);
+    uint8 _R = (uint8) (R * 255);
+    uint8 _G = (uint8) (G * 255);
+    uint8 _B = (uint8) (B * 255);
+    uint8 _A = (uint8) (A * 255);
     return (_A << 24) | (_R << 16) | (_G << 8) | _B;
 }
 
@@ -173,14 +173,14 @@ void CColor::operator/=(const CColor& rkOther)
 }
 
 // ************ STATIC ************
-CColor CColor::Integral(u8 RGBA)
+CColor CColor::Integral(uint8 RGBA)
 {
     CColor Out;
     Out.SetIntegral(RGBA);
     return Out;
 }
 
-CColor CColor::Integral(u8 _R, u8 _G, u8 _B, u8 _A /*= 255*/)
+CColor CColor::Integral(uint8 _R, uint8 _G, uint8 _B, uint8 _A /*= 255*/)
 {
     CColor Out;
     Out.SetIntegral(_R, _G, _B, _A);

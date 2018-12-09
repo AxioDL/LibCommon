@@ -10,24 +10,24 @@ void IOutputStream::WriteBool(bool Val)
     WriteBytes(&ChrVal, 1);
 }
 
-void IOutputStream::WriteByte(char Val)
+void IOutputStream::WriteByte(int8 Val)
 {
     WriteBytes(&Val, 1);
 }
 
-void IOutputStream::WriteShort(short Val)
+void IOutputStream::WriteShort(int16 Val)
 {
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     WriteBytes(&Val, 2);
 }
 
-void IOutputStream::WriteLong(long Val)
+void IOutputStream::WriteLong(int32 Val)
 {
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     WriteBytes(&Val, 4);
 }
 
-void IOutputStream::WriteLongLong(long long Val)
+void IOutputStream::WriteLongLong(int64 Val)
 {
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     WriteBytes(&Val, 8);
@@ -45,7 +45,7 @@ void IOutputStream::WriteDouble(double Val)
     WriteBytes(&Val, 8);
 }
 
-void IOutputStream::WriteFourCC(long Val)
+void IOutputStream::WriteFourCC(uint32 Val)
 {
     if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
     WriteBytes(&Val, 4);
@@ -84,25 +84,25 @@ void IOutputStream::WriteSizedWString(const TWideString& rkVal)
 {
     WriteLong(rkVal.Size());
 
-    for (u32 ChrIdx = 0; ChrIdx < rkVal.Size(); ChrIdx++)
+    for (uint32 ChrIdx = 0; ChrIdx < rkVal.Size(); ChrIdx++)
         WriteShort(rkVal[ChrIdx]);
 }
 
-bool IOutputStream::GoTo(u32 Address)
+bool IOutputStream::GoTo(uint32 Address)
 {
     return Seek(Address, SEEK_SET);
 }
 
-bool IOutputStream::Skip(s32 SkipAmount)
+bool IOutputStream::Skip(int32 SkipAmount)
 {
     return Seek(SkipAmount, SEEK_CUR);
 }
 
-void IOutputStream::WriteToBoundary(u32 Boundary, u8 Fill)
+void IOutputStream::WriteToBoundary(uint32 Boundary, uint8 Fill)
 {
-    u32 Num = Boundary - (Tell() % Boundary);
+    uint32 Num = Boundary - (Tell() % Boundary);
     if (Num == Boundary) return;
-    for (u32 iByte = 0; iByte < Num; iByte++)
+    for (uint32 iByte = 0; iByte < Num; iByte++)
         WriteByte(Fill);
 }
 
@@ -126,12 +126,12 @@ TString IOutputStream::GetDestString() const
     return mDataDest;
 }
 
-bool IOutputStream::Seek64(s64 Offset, u32 Origin)
+bool IOutputStream::Seek64(int64 Offset, uint32 Origin)
 {
-    return Seek((s32) Offset, Origin);
+    return Seek((int32) Offset, Origin);
 }
 
-u64 IOutputStream::Tell64() const
+uint64 IOutputStream::Tell64() const
 {
-    return (u64) (Tell());
+    return (uint64) (Tell());
 }

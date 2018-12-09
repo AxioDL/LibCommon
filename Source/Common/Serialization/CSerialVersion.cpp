@@ -5,7 +5,7 @@ CSerialVersion::CSerialVersion()
 {
 }
 
-CSerialVersion::CSerialVersion(u16 ArchiveVer, u16 FileVer, EGame Game)
+CSerialVersion::CSerialVersion(uint16 ArchiveVer, uint16 FileVer, EGame Game)
     : mArchiveVersion(ArchiveVer)
     , mFileVersion(FileVer)
     , mGame(Game)

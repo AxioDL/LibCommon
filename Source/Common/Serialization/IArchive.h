@@ -2,7 +2,7 @@
 #define IARCHIVE
 
 #include "CSerialVersion.h"
-#include "Common/AssertMacro.h"
+#include "Common/Macros.h"
 #include "Common/BasicTypes.h"
 #include "Common/CAssetID.h"
 #include "Common/CFourCC.h"
@@ -101,20 +101,20 @@ struct TSerialParameter
 {
     const char*         pkName;
     ValType&            rValue;
-    u32                 HintFlags;
+    uint32              HintFlags;
     const ValType*      pDefaultValue;
 };
 
 /** Function that creates a SerialParameter */
 template<typename ValType>
 ENABLE_IF( SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType> )
-inline SerialParameter(const char* pkName, ValType& rValue, u32 HintFlags = 0, const ValType& rkDefaultValue = ValType())
+inline SerialParameter(const char* pkName, ValType& rValue, uint32 HintFlags = 0, const ValType& rkDefaultValue = ValType())
 {
     return TSerialParameter<ValType> { pkName, rValue, HintFlags, &rkDefaultValue };
 }
 template<typename ValType>
 ENABLE_IF( !SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType> )
-inline SerialParameter(const char* pkName, ValType& rValue, u32 HintFlags = 0)
+inline SerialParameter(const char* pkName, ValType& rValue, uint32 HintFlags = 0)
 {
     return TSerialParameter<ValType> { pkName, rValue, HintFlags, nullptr };
 }
@@ -187,7 +187,7 @@ struct SerialType
     /** Check for ArcType::SerializePrimitive(ValType&) method */
     template<typename V, typename A>
     static constexpr auto HasPrimitiveSerialize(int) -> decltype(
-            std::declval<A>().SerializePrimitive( std::declval<V&>(), u32() ), bool()
+            std::declval<A>().SerializePrimitive( std::declval<V&>(), uint32() ), bool()
         )
     {
         return true;
@@ -308,12 +308,12 @@ struct ArchiveConstructorType
 class IArchive
 {
 protected:
-    u16 mArchiveVersion;
-    u16 mFileVersion;
+    uint16 mArchiveVersion;
+    uint16 mFileVersion;
     EGame mGame;
 
     // Subclasses must fill in flags in their constructors!!!
-    u32 mArchiveFlags;
+    uint32 mArchiveFlags;
 
     // Info about the stack of parameters being serialized
     struct SParmStackEntry
@@ -321,7 +321,7 @@ protected:
         size_t TypeID;
         size_t TypeSize;
         void* pDataPointer;
-        u32 HintFlags;
+        uint32 HintFlags;
     };
     std::vector<SParmStackEntry> mParmStack;
 
@@ -336,7 +336,7 @@ public:
         // Insert new versions before this line
         eArVer_Max
     };
-    static const u32 skCurrentArchiveVersion = (eArVer_Max - 1);
+    static const uint32 skCurrentArchiveVersion = (eArVer_Max - 1);
 
     IArchive()
         : mFileVersion(0)
@@ -354,7 +354,7 @@ public:
     void SerializeVersion()
     {
         *this << SerialParameter("ArchiveVer",  mArchiveVersion,    SH_Attribute)
-              << SerialParameter("FileVer",     mFileVersion,       SH_Attribute | SH_Optional,     (u16) 0)
+              << SerialParameter("FileVer",     mFileVersion,       SH_Attribute | SH_Optional,     (uint16) 0)
               << SerialParameter("Game",        mGame,              SH_Attribute | SH_Optional,     EGame::Invalid);
 
         if (IsReader())
@@ -706,30 +706,30 @@ public:
     }
 
     // Interface
-    virtual bool ParamBegin(const char *pkName, u32 Flags) = 0;
+    virtual bool ParamBegin(const char *pkName, uint32 Flags) = 0;
     virtual void ParamEnd() = 0;
 
-    virtual bool PreSerializePointer(void*& Pointer, u32 Flags) = 0;
-    virtual void SerializePrimitive(bool& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(char& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(s8& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(u8& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(s16& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(u16& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(s32& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(u32& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(s64& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(u64& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(float& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(double& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(TString& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(TWideString& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(CFourCC& rValue, u32 Flags) = 0;
-    virtual void SerializePrimitive(CAssetID& rValue, u32 Flags) = 0;
-    virtual void SerializeBulkData(void* pData, u32 DataSize, u32 Flags) = 0;
+    virtual bool PreSerializePointer(void*& Pointer, uint32 Flags) = 0;
+    virtual void SerializePrimitive(bool& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(char& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(int8& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(uint8& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(int16& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(uint16& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(int32& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(uint32& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(int64& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(uint64& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(float& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(double& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(TString& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags) = 0;
+    virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags) = 0;
+    virtual void SerializeBulkData(void* pData, uint32 DataSize, uint32 Flags) = 0;
 
     // Optional - serialize in an array size. By default, just stores size as an attribute property.
-    virtual void SerializeArraySize(u32& Value)
+    virtual void SerializeArraySize(uint32& Value)
     {
         *this << SerialParameter("Size", Value, SH_Attribute);
     }
@@ -741,11 +741,11 @@ public:
     inline bool IsBinaryFormat() const          { return (mArchiveFlags & AF_Binary) != 0; }
     inline bool CanSkipParameters() const       { return (mArchiveFlags & AF_NoSkipping) == 0; }
 
-    inline u16 ArchiveVersion() const   { return mArchiveVersion; }
-    inline u16 FileVersion() const      { return mFileVersion; }
-    inline EGame Game() const           { return mGame; }
+    inline uint16 ArchiveVersion() const    { return mArchiveVersion; }
+    inline uint16 FileVersion() const       { return mFileVersion; }
+    inline EGame Game() const               { return mGame; }
 
-    inline void SetVersion(u16 ArchiveVersion, u16 FileVersion, EGame Game)
+    inline void SetVersion(uint16 ArchiveVersion, uint16 FileVersion, EGame Game)
     {
         mArchiveVersion = ArchiveVersion;
         mFileVersion = FileVersion;
@@ -765,9 +765,9 @@ public:
     }
 
     /** Utility function for class versioning */
-    u32 SerializeClassVersion(u32 CurrentVersion)
+    uint32 SerializeClassVersion(uint32 CurrentVersion)
     {
-        *this << SerialParameter("ClassVer", CurrentVersion, SH_Attribute | SH_Optional, (u32) 0);
+        *this << SerialParameter("ClassVer", CurrentVersion, SH_Attribute | SH_Optional, (uint32) 0);
         return CurrentVersion;
     }
 };
@@ -800,7 +800,7 @@ inline void DefaultEnumSerialize(IArchive& Arc, T& Val)
     }
     else
     {
-        Arc.SerializePrimitive((u32&) Val, 0);
+        Arc.SerializePrimitive((uint32&) Val, 0);
     }
 }
 
@@ -817,7 +817,7 @@ inline void Serialize(IArchive& Arc, T& Val)
 template<typename T>
 inline void Serialize(IArchive& Arc, std::vector<T>& Vector)
 {
-    u32 Size = Vector.size();
+    uint32 Size = Vector.size();
     Arc.SerializeArraySize(Size);
 
     if (Arc.IsReader())
@@ -825,19 +825,19 @@ inline void Serialize(IArchive& Arc, std::vector<T>& Vector)
         Vector.resize(Size);
     }
 
-    for (u32 i = 0; i < Size; i++)
+    for (uint32 i = 0; i < Size; i++)
     {
         // SH_IgnoreName to preserve compatibility with older files that may have differently-named items
         Arc << SerialParameter("Element", Vector[i], SH_InheritHints | SH_IgnoreName);
     }
 }
 
-// overload for std::vector<u8> that serializes in bulk
+// overload for std::vector<uint8> that serializes in bulk
 template<>
-inline void Serialize(IArchive& Arc, std::vector<u8>& Vector)
+inline void Serialize(IArchive& Arc, std::vector<uint8>& Vector)
 {
     // Don't use SerializeArraySize, bulk data is a special case that overloads may not handle correctly
-    u32 Size = Vector.size();
+    uint32 Size = Vector.size();
     Arc << SerialParameter("Size", Size, SH_Attribute);
 
     if (Arc.IsReader())
@@ -852,7 +852,7 @@ inline void Serialize(IArchive& Arc, std::vector<u8>& Vector)
 template<typename T>
 inline void Serialize(IArchive& Arc, std::list<T>& List)
 {
-    u32 Size = List.size();
+    uint32 Size = List.size();
     Arc.SerializeArraySize(Size);
 
     if (Arc.IsReader())
@@ -881,12 +881,12 @@ inline void Serialize(IArchive& Arc, TWideStringList& List)
 template<typename T>
 inline void Serialize(IArchive& Arc, std::set<T>& Set)
 {
-    u32 Size = Set.size();
+    uint32 Size = Set.size();
     Arc.SerializeArraySize(Size);
 
     if (Arc.IsReader())
     {
-        for (u32 i = 0; i < Size; i++)
+        for (uint32 i = 0; i < Size; i++)
         {
             T Val;
             Arc << SerialParameter("Element", Val, SH_IgnoreName | SH_InheritHints);
@@ -908,10 +908,10 @@ inline void Serialize(IArchive& Arc, std::set<T>& Set)
 template<typename KeyType, typename ValType, typename MapType>
 inline void SerializeMap_Internal(IArchive& Arc, MapType& Map)
 {
-    u32 Size = Map.size();
+    uint32 Size = Map.size();
     Arc.SerializeArraySize(Size);
 
-    u32 Hints = SH_IgnoreName | SH_InheritHints;
+    uint32 Hints = SH_IgnoreName | SH_InheritHints;
 
     // Serialize the key/value as attributes if they are both primitive types.
     if (Arc.ArchiveVersion() >= IArchive::eArVer_MapAttributes && TIsPrimitive<KeyType>::value && TIsPrimitive<ValType>::value)
@@ -921,7 +921,7 @@ inline void SerializeMap_Internal(IArchive& Arc, MapType& Map)
 
     if (Arc.IsReader())
     {
-        for (u32 i = 0; i < Size; i++)
+        for (uint32 i = 0; i < Size; i++)
         {
             KeyType Key;
             ValType Val;

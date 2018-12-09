@@ -13,32 +13,32 @@ bool IInputStream::ReadBool()
     return (Val != 0 ? true : false);
 }
 
-char IInputStream::ReadByte()
+int8 IInputStream::ReadByte()
 {
-    char Val;
+    int8 Val;
     ReadBytes(&Val, 1);
     return Val;
 }
 
-short IInputStream::ReadShort()
+int16 IInputStream::ReadShort()
 {
-    short Val;
+    int16 Val;
     ReadBytes(&Val, 2);
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     return Val;
 }
 
-long IInputStream::ReadLong()
+int32 IInputStream::ReadLong()
 {
-    long Val;
+    int32 Val;
     ReadBytes(&Val, 4);
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     return Val;
 }
 
-long long IInputStream::ReadLongLong()
+int64 IInputStream::ReadLongLong()
 {
-    long long Val;
+    int64 Val;
     ReadBytes(&Val, 8);
     if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
     return Val;
@@ -60,9 +60,9 @@ double IInputStream::ReadDouble()
     return Val;
 }
 
-long IInputStream::ReadFourCC()
+uint32 IInputStream::ReadFourCC()
 {
-    long Val;
+    uint32 Val;
     ReadBytes(&Val, 4);
     if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
     return Val;
@@ -83,7 +83,7 @@ TString IInputStream::ReadString()
     return Str;
 }
 
-TString IInputStream::ReadString(u32 Count)
+TString IInputStream::ReadString(uint32 Count)
 {
     TString Str(Count, 0);
     ReadBytes(&Str[0], Count);
@@ -92,7 +92,7 @@ TString IInputStream::ReadString(u32 Count)
 
 TString IInputStream::ReadSizedString()
 {
-    u32 StringSize = ReadLong();
+    uint32 StringSize = ReadLong();
     return ReadString(StringSize);
 }
 
@@ -111,7 +111,7 @@ TWideString IInputStream::ReadWString()
     return WStr;
 }
 
-TWideString IInputStream::ReadWString(u32 Count)
+TWideString IInputStream::ReadWString(uint32 Count)
 {
     TWideString WStr(Count, 0);
     ReadBytes(&WStr[0], WStr.Size() * 2);
@@ -120,34 +120,34 @@ TWideString IInputStream::ReadWString(u32 Count)
 
 TWideString IInputStream::ReadSizedWString()
 {
-    u32 StringSize = ReadLong();
+    uint32 StringSize = ReadLong();
     return ReadWString(StringSize);
 }
 
-char IInputStream::PeekByte()
+int8 IInputStream::PeekByte()
 {
-    char Val = ReadByte();
+    int8 Val = ReadByte();
     Seek(-1, SEEK_CUR);
     return Val;
 }
 
-short IInputStream::PeekShort()
+int16 IInputStream::PeekShort()
 {
-    short Val = ReadShort();
+    int16 Val = ReadShort();
     Seek(-2, SEEK_CUR);
     return Val;
 }
 
-long IInputStream::PeekLong()
+int32 IInputStream::PeekLong()
 {
-    long Val = ReadLong();
+    int32 Val = ReadLong();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-long long IInputStream::PeekLongLong()
+int64 IInputStream::PeekLongLong()
 {
-    long long Val = ReadLongLong();
+    int64 Val = ReadLongLong();
     Seek(-8, SEEK_CUR);
     return Val;
 }
@@ -166,26 +166,26 @@ double IInputStream::PeekDouble()
     return Val;
 }
 
-long IInputStream::PeekFourCC()
+uint32 IInputStream::PeekFourCC()
 {
     long Val = ReadFourCC();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-bool IInputStream::GoTo(u32 Address)
+bool IInputStream::GoTo(uint32 Address)
 {
     return Seek(Address, SEEK_SET);
 }
 
-bool IInputStream::Skip(s32 SkipAmount)
+bool IInputStream::Skip(int32 SkipAmount)
 {
     return Seek(SkipAmount, SEEK_CUR);
 }
 
-void IInputStream::SeekToBoundary(u32 Boundary)
+void IInputStream::SeekToBoundary(uint32 Boundary)
 {
-    u32 Num = Boundary - (Tell() % Boundary);
+    uint32 Num = Boundary - (Tell() % Boundary);
     if (Num == Boundary) return;
     else Seek(Num, SEEK_CUR);
 }
@@ -210,12 +210,12 @@ TString IInputStream::GetSourceString() const
     return mDataSource;
 }
 
-bool IInputStream::Seek64(s64 Offset, u32 Origin)
+bool IInputStream::Seek64(int64 Offset, uint32 Origin)
 {
-    return Seek((s32) Offset, Origin);
+    return Seek((int32) Offset, Origin);
 }
 
-u64 IInputStream::Tell64() const
+uint64 IInputStream::Tell64() const
 {
-    return (u64) Tell();
+    return (uint64) Tell();
 }

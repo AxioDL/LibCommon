@@ -1,11 +1,12 @@
 #include "CTimer.h"
 #include "Log.h"
+#include "Macros.h"
 #include "TString.h"
 
 #include <ctime>
 #include <iostream>
 
-namespace Log
+namespace NLog
 {
 
 TStringList gErrorLog;
@@ -57,84 +58,67 @@ bool InitLog(const TString& rkFilename)
     // Print app name and version
     fprintf(gpLogFile, APP_FULL_NAME"\n");
 #endif
+    gInitialized = true;
 
     // Print any messages that were attempted before we initialized
     if (!gPreInitLogs.empty())
     {
         for (auto it = gPreInitLogs.begin(); it != gPreInitLogs.end(); it++)
-            Write(*it);
+            Writef(**it);
+
+        gPreInitLogs.clear();
     }
 
-    gInitialized = true;
     return true;
 }
 
-void Write(const TString& rkMessage)
+void WriteInternal(EMsgType Type, const char* pkMsg, const va_list& VarArgs)
 {
+    char LineBuffer[512];
     double Time = CTimer::GlobalTime() - gAppStartTime;
+    int Offset = sprintf(LineBuffer, "[%08.3f] ", Time);
+    vsprintf(&LineBuffer[Offset], pkMsg, VarArgs);
 
+    // Write to log file
     if (!gInitialized)
-        gPreInitLogs.push_back(rkMessage);
+        gPreInitLogs.push_back(LineBuffer);
 
     else if (gpLogFile)
     {
-        fprintf(gpLogFile, "[%08.3f] %s\n", Time, *rkMessage);
+        fprintf(gpLogFile, "%s\n", LineBuffer);
         fflush(gpLogFile);
     }
 
-    std::cout << std::fixed << std::setprecision(3)
-              << "["  << Time << "] " << rkMessage << "\n";
+    std::cout << LineBuffer << "\n";
 }
 
-void Error(const TString& rkMessage)
+#define DEFINE_LOG_FUNC(MsgType) \
+    va_list VarArgs; \
+    va_start(VarArgs, pkMsg); \
+    WriteInternal(MsgType, pkMsg, VarArgs); \
+    va_end(VarArgs); \
+
+void Writef(const char* pkMsg, ...)
 {
-    TString FullMessage = "ERROR: " + rkMessage;
-    Write(FullMessage);
-    gErrorLog.push_back(FullMessage);
+    DEFINE_LOG_FUNC(EMsgType::Standard);
 }
 
-void Warning(const TString& rkMessage)
+void Warnf(const char* pkMsg, ...)
 {
-    TString FullMessage = "Warning: " + rkMessage;
-    Write(FullMessage);
-    gErrorLog.push_back(FullMessage);
+    DEFINE_LOG_FUNC(EMsgType::Warning);
 }
 
-void Fatal(const TString& rkMessage)
+void Errorf(const char* pkMsg, ...)
 {
-    TString FullMessage = "FATAL ERROR: " + rkMessage;
-    Write(FullMessage);
+    DEFINE_LOG_FUNC(EMsgType::Error);
+    DEBUG_BREAK;
+}
+
+void Fatalf(const char* pkMsg, ...)
+{
+    DEFINE_LOG_FUNC(EMsgType::Fatal);
+    DEBUG_BREAK;
     abort();
-}
-
-void FileWrite(const TString& rkFilename, const TString& rkMessage)
-{
-    Write(rkFilename + " : " + rkMessage);
-}
-
-void FileWrite(const TString& rkFilename, u32 Offset, const TString& rkMessage)
-{
-    Write(rkFilename + " : " + TString::HexString(Offset, 0) + " - " + rkMessage);
-}
-
-void FileError(const TString& rkFilename, const TString& rkMessage)
-{
-    Error(rkFilename + " : " + rkMessage);
-}
-
-void FileError(const TString& rkFilename, u32 Offset, const TString& rkMessage)
-{
-    Error(rkFilename + " : " + TString::HexString(Offset, 0) + " - " + rkMessage);
-}
-
-void FileWarning(const TString& rkFilename, const TString& rkMessage)
-{
-    Warning(rkFilename + " : " + rkMessage);
-}
-
-void FileWarning(const TString& rkFilename, u32 Offset, const TString& rkMessage)
-{
-    Warning(rkFilename + " : " + TString::HexString(Offset, 0) + " - " + rkMessage);
 }
 
 const TStringList& GetErrorLog()

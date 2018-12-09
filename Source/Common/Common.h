@@ -2,7 +2,7 @@
 #define COMMON_H
 
 #include "BasicTypes.h"
-#include "AssertMacro.h"
+#include "Macros.h"
 #include "CAssetID.h"
 #include "CColor.h"
 #include "CFourCC.h"
@@ -14,6 +14,7 @@
 #include "FileIO.h"
 #include "FileUtil.h"
 #include "Flags.h"
+#include "LinkedList.h"
 #include "Log.h"
 #include "TString.h"
 #include "Hash/CCRC32.h"
@@ -21,11 +22,5 @@
 #include "Serialization/Binary.h"
 #include "Serialization/XML.h"
 #include "NBasics.h"
-
-// temporary home for ALIGN macro, moving later
-#define ALIGN(Val, Align) ((Val + (Align-1)) & ~(Align-1))
-
-// temporary home for MEMBER_OFFSET macro
-#define MEMBER_OFFSET(TypeName, MemberName) ( (int) (long long) &((TypeName*)0)->MemberName )
 
 #endif // COMMON_H

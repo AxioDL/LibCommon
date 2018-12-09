@@ -51,7 +51,7 @@ CFourCC GameTo4CC(EGame Game)
 
 EGame GameFrom4CC(CFourCC GameId)
 {
-    static const std::unordered_map<u32, EGame> skIdToGame =
+    static const std::unordered_map<uint32, EGame> skIdToGame =
     {
         { FOURCC('MP1D'), EGame::PrimeDemo },
         { FOURCC('MPRM'), EGame::Prime },

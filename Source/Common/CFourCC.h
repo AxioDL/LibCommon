@@ -1,9 +1,9 @@
 #ifndef CFOURCC_H
 #define CFOURCC_H
 
-#include "AssertMacro.h"
 #include "BasicTypes.h"
 #include "FileIO.h"
+#include "Macros.h"
 #include "TString.h"
 
 #define FOURCC_FROM_TEXT(Text) (Text[0] << 24 | Text[1] << 16 | Text[2] << 8 | Text[3])
@@ -16,7 +16,7 @@ class CFourCC
     // Note: mFourCC_Chars isn't used much due to endianness.
     union
     {
-        u32 mFourCC;
+        uint32 mFourCC;
         char mFourCC_Chars[4];
     };
 
@@ -26,7 +26,7 @@ public:
     inline CFourCC(const char *pkSrc)       { mFourCC = FOURCC_FROM_TEXT(pkSrc); }
     inline CFourCC(const TString& rkSrc)    { ASSERT(rkSrc.Length() == 4); mFourCC = FOURCC_FROM_TEXT(rkSrc); }
     inline CFourCC(const TWideString& rkSrc){ ASSERT(rkSrc.Length() == 4); mFourCC = FOURCC_FROM_TEXT(rkSrc); }
-    inline CFourCC(u32 Src)                 { mFourCC = Src; }
+    inline CFourCC(uint32 Src)              { mFourCC = Src; }
     inline CFourCC(IInputStream& rSrc)      { Read(rSrc); }
 
     // Functionality
@@ -38,12 +38,12 @@ public:
 
     inline void Write(IOutputStream& rOutput) const
     {
-        u32 Val = mFourCC;
+        uint32 Val = mFourCC;
         if (rOutput.GetEndianness() == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
         rOutput.WriteLong(Val);
     }
 
-    inline u32 ToLong() const
+    inline uint32 ToLong() const
     {
         return mFourCC;
     }
@@ -72,7 +72,7 @@ public:
 
     inline void Reverse() const
     {
-        IOUtil::SwapBytes((u32&) mFourCC);
+        IOUtil::SwapBytes((uint32&) mFourCC);
     }
 
     // Operators
@@ -116,7 +116,7 @@ public:
 
     inline CFourCC& operator=(const char *pkSrc)            { mFourCC = FOURCC_FROM_TEXT(pkSrc);    return *this;   }
     inline CFourCC& operator=(const TString& rkSrc)         { mFourCC = FOURCC_FROM_TEXT(rkSrc);    return *this;   }
-    inline CFourCC& operator=(u32 Src)                      { mFourCC = Src;                        return *this;   }
+    inline CFourCC& operator=(uint32 Src)                   { mFourCC = Src;                        return *this;   }
     inline bool operator==(const CFourCC& rkOther) const    { return mFourCC == rkOther.mFourCC;                    }
     inline bool operator!=(const CFourCC& rkOther) const    { return mFourCC != rkOther.mFourCC;                    }
     inline bool operator> (const CFourCC& rkOther) const    { return mFourCC >  rkOther.mFourCC;                    }

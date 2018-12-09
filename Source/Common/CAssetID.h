@@ -16,12 +16,12 @@ enum EIDLength
 class CAssetID
 {
     EIDLength mLength;
-    u64 mID;
+    uint64 mID;
 
 public:
     CAssetID();
-    CAssetID(u64 ID);
-    CAssetID(u64 ID, EIDLength Length);
+    CAssetID(uint64 ID);
+    CAssetID(uint64 ID, EIDLength Length);
     CAssetID(IInputStream& rInput, EIDLength Length);
     CAssetID(IInputStream& rInput, EGame Game);
     void Write(IOutputStream& rOutput, EIDLength ForcedLength = eInvalidIDLength) const;
@@ -29,19 +29,19 @@ public:
     bool IsValid() const;
 
     // Operators
-    inline void operator= (const u64& rkInput)              { *this = CAssetID(rkInput); }
+    inline void operator= (const uint64& rkInput)           { *this = CAssetID(rkInput); }
     inline bool operator==(const CAssetID& rkOther) const   { return mLength == rkOther.mLength && mID == rkOther.mID; }
     inline bool operator!=(const CAssetID& rkOther) const   { return mLength != rkOther.mLength || mID != rkOther.mID; }
     inline bool operator> (const CAssetID& rkOther) const   { return mLength >= rkOther.mLength && mID > rkOther.mID; }
     inline bool operator>=(const CAssetID& rkOther) const   { return mLength >= rkOther.mLength && mID >= rkOther.mID; }
     inline bool operator< (const CAssetID& rkOther) const   { return mLength <  rkOther.mLength || mID < rkOther.mID; }
     inline bool operator<=(const CAssetID& rkOther) const   { return mLength <  rkOther.mLength || mID <= rkOther.mID; }
-    inline bool operator==(u64 Other) const                 { return mID == Other; }
-    inline bool operator!=(u64 Other) const                 { return mID != Other; }
+    inline bool operator==(uint64 Other) const              { return mID == Other; }
+    inline bool operator!=(uint64 Other) const              { return mID != Other; }
 
     // Accessors
-    inline u32 ToLong() const               { return (u32) mID; }
-    inline u64 ToLongLong() const           { return mID; }
+    inline uint32 ToLong() const            { return (uint32) mID; }
+    inline uint64 ToLongLong() const        { return mID; }
     inline EIDLength Length() const         { return mLength; }
     inline void SetLength(EIDLength Length) { mLength = Length; }
 

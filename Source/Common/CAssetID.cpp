@@ -9,7 +9,7 @@ CAssetID::CAssetID()
 
 }
 
-CAssetID::CAssetID(u64 ID)
+CAssetID::CAssetID(uint64 ID)
     : mID(ID)
 {
     // This constructor is intended to be used with both 32-bit and 64-bit input values
@@ -25,7 +25,7 @@ CAssetID::CAssetID(u64 ID)
     }
 }
 
-CAssetID::CAssetID(u64 ID, EIDLength Length)
+CAssetID::CAssetID(uint64 ID, EIDLength Length)
     : mID(ID)
     , mLength(Length)
 {
@@ -46,7 +46,7 @@ void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalid
 CAssetID::CAssetID(IInputStream& rInput, EIDLength Length)
     : mLength(Length)
 {
-    if (Length == e32Bit)   mID = ((u64) rInput.ReadLong()) & 0xFFFFFFFF;
+    if (Length == e32Bit)   mID = ((uint64) rInput.ReadLong()) & 0xFFFFFFFF;
     else                    mID = rInput.ReadLongLong();
 }
 
@@ -75,12 +75,12 @@ CAssetID CAssetID::FromString(const TString& rkString)
 {
     // If the input is a hex ID in string form, then preserve it... otherwise, generate an ID by hashing the string
     TString Name = rkString.GetFileName(false);
-    u32 NameLength = Name.Length();
+    uint32 NameLength = Name.Length();
 
     if (Name.IsHexString())
     {
-        if (NameLength == 8)  return CAssetID(Name.ToInt32());
-        if (NameLength == 16) return CAssetID(Name.ToInt64());
+        if (NameLength == 8)  return CAssetID(Name.ToInt32(16));
+        if (NameLength == 16) return CAssetID(Name.ToInt64(16));
     }
 
     return CAssetID(rkString.Hash64());
@@ -90,10 +90,10 @@ CAssetID CAssetID::RandomID()
 {
     CAssetID ID;
     ID.mLength = e64Bit;
-    ID.mID = (u64(rand()) << 32) | rand();
+    ID.mID = (uint64(rand()) << 32) | rand();
     return ID;
 }
 
 // ************ STATIC MEMBER INITIALIZATION ************
-CAssetID CAssetID::skInvalidID32 = CAssetID((u64) -1, e32Bit);
-CAssetID CAssetID::skInvalidID64 = CAssetID((u64) -1, e64Bit);
+CAssetID CAssetID::skInvalidID32 = CAssetID((uint64) -1, e32Bit);
+CAssetID CAssetID::skInvalidID64 = CAssetID((uint64) -1, e64Bit);

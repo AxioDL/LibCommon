@@ -11,11 +11,11 @@
 class CBasicBinaryWriter : public IArchive
 {
     IOutputStream *mpStream;
-    u32 mMagic;
+    uint32 mMagic;
     bool mOwnsStream;
 
 public:
-    CBasicBinaryWriter(const TString& rkFilename, u32 Magic, u16 FileVersion, EGame Game)
+    CBasicBinaryWriter(const TString& rkFilename, uint32 Magic, uint16 FileVersion, EGame Game)
         : IArchive()
         , mMagic(Magic)
         , mOwnsStream(true)
@@ -31,7 +31,7 @@ public:
         }
     }
 
-    CBasicBinaryWriter(IOutputStream *pStream, u16 FileVersion, EGame Game)
+    CBasicBinaryWriter(IOutputStream *pStream, uint16 FileVersion, EGame Game)
         : IArchive()
         , mOwnsStream(false)
     {
@@ -69,35 +69,35 @@ public:
     virtual bool IsWriter() const       { return true; }
     virtual bool IsTextFormat() const   { return false; }
 
-    virtual bool ParamBegin(const char*, u32)   { return true; }
-    virtual void ParamEnd()                     { }
+    virtual bool ParamBegin(const char*, uint32)    { return true; }
+    virtual void ParamEnd()                         { }
 
-    virtual bool PreSerializePointer(void*& Pointer, u32 Flags)
+    virtual bool PreSerializePointer(void*& Pointer, uint32 Flags)
     {
         bool ValidPtr = (Pointer != nullptr);
         mpStream->WriteBool(ValidPtr);
         return ValidPtr;
     }
 
-    virtual void SerializeContainerSize(u32& rSize, const TString&)     { mpStream->WriteLong(rSize); }
+    virtual void SerializeContainerSize(uint32& rSize, const TString&)  { mpStream->WriteLong(rSize); }
 
-    virtual void SerializePrimitive(bool& rValue, u32 Flags)            { mpStream->WriteBool(rValue); }
-    virtual void SerializePrimitive(char& rValue, u32 Flags)            { mpStream->WriteByte(rValue); }
-    virtual void SerializePrimitive(s8& rValue, u32 Flags)              { mpStream->WriteByte(rValue); }
-    virtual void SerializePrimitive(u8& rValue, u32 Flags)              { mpStream->WriteByte(rValue); }
-    virtual void SerializePrimitive(s16& rValue, u32 Flags)             { mpStream->WriteShort(rValue); }
-    virtual void SerializePrimitive(u16& rValue, u32 Flags)             { mpStream->WriteShort(rValue); }
-    virtual void SerializePrimitive(s32& rValue, u32 Flags)             { mpStream->WriteLong(rValue); }
-    virtual void SerializePrimitive(u32& rValue, u32 Flags)             { mpStream->WriteLong(rValue); }
-    virtual void SerializePrimitive(s64& rValue, u32 Flags)             { mpStream->WriteLongLong(rValue); }
-    virtual void SerializePrimitive(u64& rValue, u32 Flags)             { mpStream->WriteLongLong(rValue); }
-    virtual void SerializePrimitive(float& rValue, u32 Flags)           { mpStream->WriteFloat(rValue); }
-    virtual void SerializePrimitive(double& rValue, u32 Flags)          { mpStream->WriteDouble(rValue); }
-    virtual void SerializePrimitive(TString& rValue, u32 Flags)         { mpStream->WriteSizedString(rValue); }
-    virtual void SerializePrimitive(TWideString& rValue, u32 Flags)     { mpStream->WriteSizedWString(rValue); }
-    virtual void SerializePrimitive(CFourCC& rValue, u32 Flags)         { rValue.Write(*mpStream); }
-    virtual void SerializePrimitive(CAssetID& rValue, u32 Flags)        { rValue.Write(*mpStream, CAssetID::GameIDLength(Game())); }
-    virtual void SerializeBulkData(void* pData, u32 Size, u32 Flags)        { mpStream->WriteBytes(pData, Size); }
+    virtual void SerializePrimitive(bool& rValue, uint32 Flags)             { mpStream->WriteBool(rValue); }
+    virtual void SerializePrimitive(char& rValue, uint32 Flags)             { mpStream->WriteByte(rValue); }
+    virtual void SerializePrimitive(int8& rValue, uint32 Flags)             { mpStream->WriteByte(rValue); }
+    virtual void SerializePrimitive(uint8& rValue, uint32 Flags)            { mpStream->WriteByte(rValue); }
+    virtual void SerializePrimitive(int16& rValue, uint32 Flags)            { mpStream->WriteShort(rValue); }
+    virtual void SerializePrimitive(uint16& rValue, uint32 Flags)           { mpStream->WriteShort(rValue); }
+    virtual void SerializePrimitive(int32& rValue, uint32 Flags)            { mpStream->WriteLong(rValue); }
+    virtual void SerializePrimitive(uint32& rValue, uint32 Flags)           { mpStream->WriteLong(rValue); }
+    virtual void SerializePrimitive(int64& rValue, uint32 Flags)            { mpStream->WriteLongLong(rValue); }
+    virtual void SerializePrimitive(uint64& rValue, uint32 Flags)           { mpStream->WriteLongLong(rValue); }
+    virtual void SerializePrimitive(float& rValue, uint32 Flags)            { mpStream->WriteFloat(rValue); }
+    virtual void SerializePrimitive(double& rValue, uint32 Flags)           { mpStream->WriteDouble(rValue); }
+    virtual void SerializePrimitive(TString& rValue, uint32 Flags)          { mpStream->WriteSizedString(rValue); }
+    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)      { mpStream->WriteSizedWString(rValue); }
+    virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)          { rValue.Write(*mpStream); }
+    virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)         { rValue.Write(*mpStream, CAssetID::GameIDLength(Game())); }
+    virtual void SerializeBulkData(void* pData, uint32 Size, uint32 Flags)  { mpStream->WriteBytes(pData, Size); }
 };
 
 #endif // CBASICBINARYWRITER

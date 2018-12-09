@@ -14,46 +14,46 @@ protected:
     
 public:
     bool ReadBool();
-    char ReadByte();
-    short ReadShort();
-    long ReadLong();
-    long long ReadLongLong();
+    int8 ReadByte();
+    int16 ReadShort();
+    int32 ReadLong();
+    int64 ReadLongLong();
     float ReadFloat();
     double ReadDouble();
-    long ReadFourCC();
+    uint32 ReadFourCC();
     TString ReadString();
-    TString ReadString(u32 Count);
+    TString ReadString(uint32 Count);
     TString ReadSizedString();
     TWideString ReadWString();
-    TWideString ReadWString(u32 Count);
+    TWideString ReadWString(uint32 Count);
     TWideString ReadSizedWString();
 
-    char PeekByte();
-    short PeekShort();
-    long PeekLong();
-    long long PeekLongLong();
+    int8 PeekByte();
+    int16 PeekShort();
+    int32 PeekLong();
+    int64 PeekLongLong();
     float PeekFloat();
     double PeekDouble();
-    long PeekFourCC();
+    uint32 PeekFourCC();
 
-    bool GoTo(u32 Address);
-    bool Skip(s32 SkipAmount);
+    bool GoTo(uint32 Address);
+    bool Skip(int32 SkipAmount);
 
-    void SeekToBoundary(u32 Boundary);
+    void SeekToBoundary(uint32 Boundary);
     void SetEndianness(IOUtil::EEndianness Endianness);
     void SetSourceString(const TString& rkSource);
     IOUtil::EEndianness GetEndianness() const;
     TString GetSourceString() const;
 
     virtual ~IInputStream();
-    virtual void ReadBytes(void *pDst, u32 Count) = 0;
-    virtual bool Seek(s32 Offset, u32 Origin) = 0;
-    virtual bool Seek64(s64 Offset, u32 Origin);
-    virtual u32 Tell() const = 0;
-    virtual u64 Tell64() const;
+    virtual void ReadBytes(void *pDst, uint32 Count) = 0;
+    virtual bool Seek(int32 Offset, uint32 Origin) = 0;
+    virtual bool Seek64(int64 Offset, uint32 Origin);
+    virtual uint32 Tell() const = 0;
+    virtual uint64 Tell64() const;
     virtual bool EoF() const = 0;
     virtual bool IsValid() const = 0;
-    virtual u32 Size() const = 0;
+    virtual uint32 Size() const = 0;
 };
 
 #endif // IINPUTSTREAM_H

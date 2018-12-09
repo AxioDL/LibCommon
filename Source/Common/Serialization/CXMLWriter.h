@@ -15,7 +15,7 @@ class CXMLWriter : public IArchive
     bool mSaved;
 
 public:
-    CXMLWriter(const TString& rkFileName, const TString& rkRootName, u16 FileVersion = 0, EGame Game = EGame::Invalid)
+    CXMLWriter(const TString& rkFileName, const TString& rkRootName, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
         : IArchive()
         , mOutFilename(rkFileName)
         , mpAttributeName(nullptr)
@@ -48,7 +48,7 @@ public:
     {
         if (mSaved)
         {
-            Log::Error("Attempted to save XML twice!");
+            errorf("Attempted to save XML twice!");
             return false;
         }
 
@@ -57,7 +57,7 @@ public:
 
         if (Error != tinyxml2::XML_SUCCESS)
         {
-            Log::Error("Failed to save XML file: " + mOutFilename);
+            errorf("Failed to save XML file: %s", *mOutFilename);
             return false;
         }
         else
@@ -70,7 +70,7 @@ public:
     }
 
     // Interface
-    virtual bool ParamBegin(const char *pkName, u32 Flags)
+    virtual bool ParamBegin(const char *pkName, uint32 Flags)
     {
         ASSERT(IsValid());
         ASSERT(!mpAttributeName); // Attributes cannot have sub-children
@@ -122,7 +122,7 @@ protected:
     }
 
 public:
-    virtual bool PreSerializePointer(void*& Pointer, u32 Flags)
+    virtual bool PreSerializePointer(void*& Pointer, uint32 Flags)
     {
         if (!Pointer)
         {
@@ -132,34 +132,34 @@ public:
         return true;
     }
 
-    virtual void SerializeArraySize(u32& Value)
+    virtual void SerializeArraySize(uint32& Value)
     {
         // Do nothing. Reader obtains container size from number of child elements
     }
 
-    virtual void SerializePrimitive(bool& rValue, u32 Flags)        { WriteParam(rValue ? "true" : "false"); }
-    virtual void SerializePrimitive(char& rValue, u32 Flags)        { WriteParam(*TString(rValue)); }
-    virtual void SerializePrimitive(s8& rValue, u32 Flags)          { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u8&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(u8& rValue, u32 Flags)          { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u8&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(s16& rValue, u32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(u16& rValue, u32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(s32& rValue, u32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(u32& rValue, u32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((u32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(s64& rValue, u32 Flags)         { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
-    virtual void SerializePrimitive(u64& rValue, u32 Flags)         { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
-    virtual void SerializePrimitive(float& rValue, u32 Flags)       { WriteParam( *TString::FromFloat(rValue, 1, true) ); }
-    virtual void SerializePrimitive(double& rValue, u32 Flags)      { WriteParam( *TString::FromFloat((float) rValue, 1, true) ); }
-    virtual void SerializePrimitive(TString& rValue, u32 Flags)     { WriteParam( *rValue ); }
-    virtual void SerializePrimitive(TWideString& rValue, u32 Flags) { WriteParam( *rValue.ToUTF8() ); }
-    virtual void SerializePrimitive(CFourCC& rValue, u32 Flags)     { WriteParam( *rValue.ToString() ); }
-    virtual void SerializePrimitive(CAssetID& rValue, u32 Flags)    { WriteParam( *rValue.ToString( CAssetID::GameIDLength(Game()) ) ); }
+    virtual void SerializePrimitive(bool& rValue, uint32 Flags)         { WriteParam(rValue ? "true" : "false"); }
+    virtual void SerializePrimitive(char& rValue, uint32 Flags)         { WriteParam(*TString(rValue)); }
+    virtual void SerializePrimitive(int8& rValue, uint32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint8&)  rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(uint8& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint8&)  rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(int16& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(uint16& rValue, uint32 Flags)       { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(int32& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(uint32& rValue, uint32 Flags)       { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
+    virtual void SerializePrimitive(int64& rValue, uint32 Flags)        { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
+    virtual void SerializePrimitive(uint64& rValue, uint32 Flags)       { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
+    virtual void SerializePrimitive(float& rValue, uint32 Flags)        { WriteParam( *TString::FromFloat(rValue, 1, true) ); }
+    virtual void SerializePrimitive(double& rValue, uint32 Flags)       { WriteParam( *TString::FromFloat((float) rValue, 1, true) ); }
+    virtual void SerializePrimitive(TString& rValue, uint32 Flags)      { WriteParam( *rValue ); }
+    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)  { WriteParam( *rValue.ToUTF8() ); }
+    virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)      { WriteParam( *rValue.ToString() ); }
+    virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)     { WriteParam( *rValue.ToString( CAssetID::GameIDLength(Game()) ) ); }
 
-    virtual void SerializeBulkData(void* pData, u32 Size, u32 Flags)
+    virtual void SerializeBulkData(void* pData, uint32 Size, uint32 Flags)
     {
         char* pCharData = (char*) pData;
         TString OutString(Size*2);
 
-        for (u32 ByteIdx = 0; ByteIdx < Size; ByteIdx++)
+        for (uint32 ByteIdx = 0; ByteIdx < Size; ByteIdx++)
         {
             //@todo: sloooooow. maybe replace with a LUT?
             sprintf(&OutString[ByteIdx*2], "%02X", pCharData[ByteIdx]);
