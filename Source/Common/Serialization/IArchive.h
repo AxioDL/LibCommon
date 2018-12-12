@@ -506,7 +506,7 @@ public:
             // Support for old versions of archives that serialize types on non-abstract polymorphic pointers
             if (ArchiveVersion() < eArVer_Refactor && IsReader() && std::is_polymorphic_v<ValType>)
             {
-                u32 Type;
+                uint32 Type;
                 *this << SerialParameter("Type", Type, SH_Attribute);
             }
 
@@ -559,7 +559,7 @@ public:
             // Support for old versions of archives that serialize types on non-abstract polymorphic pointers
             if (ArchiveVersion() < eArVer_Refactor && IsReader() && std::is_polymorphic_v<ValType>)
             {
-                u32 Type;
+                uint32 Type;
                 *this << SerialParameter("Type", Type, SH_Attribute);
             }
 
@@ -611,7 +611,7 @@ public:
             // Support for old versions of archives that serialize types on non-abstract polymorphic pointers
             if (ArchiveVersion() < eArVer_Refactor && IsReader() && std::is_polymorphic_v<ValType>)
             {
-                u32 Type;
+                uint32 Type;
                 *this << SerialParameter("Type", Type, SH_Attribute);
             }
 

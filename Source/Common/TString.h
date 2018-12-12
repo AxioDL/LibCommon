@@ -3,6 +3,7 @@
 
 #include "BasicTypes.h"
 #include "FileIO/IOUtil.h"
+#include "Macros.h"
 
 #include <cstdarg>
 #include <iomanip>
@@ -400,9 +401,10 @@ public:
     inline int32 ToInt32(int Base = 10) const
     {
         try {
-            return std::stol(mInternalString, nullptr, Base);
+            return (int32) std::stoul(mInternalString, nullptr, Base);
         }
         catch(...) {
+            errorf("ToInt32 failed (input: %s)", **this);
             return 0;
         }
     }
@@ -410,27 +412,34 @@ public:
     inline int64 ToInt64(int Base = 10) const
     {
         try {
-            return std::stoll(mInternalString, nullptr, Base);
+            return (int64) std::stoull(mInternalString, nullptr, Base);
         }
         catch(...) {
+            errorf("ToInt64 failed (input: %s)", **this);
             return 0;
         }
     }
 
-    void ToInt128(CharType* pOut, int Base = 16) const
+    void ToInt128(void* pOut, int Base = 16) const
     {
-        // TODO: only works in base 16
-        int64 Part1 = std::stoll(mInternalString.substr(0, 16), nullptr, Base);
-        int64 Part2 = std::stoll(mInternalString.substr(16, 16), nullptr, Base);
+        try {
+            // TODO: only works in base 16
+            uint64 Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
+            uint64 Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
 
-        if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian)
-        {
-            IOUtil::SwapBytes(Part1);
-            IOUtil::SwapBytes(Part2);
+            if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian)
+            {
+                IOUtil::SwapBytes(Part1);
+                IOUtil::SwapBytes(Part2);
+            }
+
+            memcpy( ((char*) pOut) + 0, &Part1, 8);
+            memcpy( ((char*) pOut) + 8, &Part2, 8);
         }
-
-        memcpy(pOut, &Part1, 8);
-        memcpy(pOut + 8, &Part2, 8);
+        catch(...) {
+            errorf("ToUint128 failed (input: %s)", **this);
+            return;
+        }
     }
 
     inline float ToFloat() const

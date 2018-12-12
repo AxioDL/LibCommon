@@ -136,7 +136,7 @@ SOURCES += \
 # Codegen
 CODEGEN_DIR = $$EXTERNALS_DIR/CodeGen
 CODEGEN_OUT_PATH = $$BUILD_DIR/CodeGen/auto_codegen.cpp
-CODEGEN_SRC_PATH = $$PWD/Common
+CODEGEN_SRC_PATH = $$PWD
 include($$EXTERNALS_DIR/CodeGen/codegen.pri)
 
 # Library Sources
