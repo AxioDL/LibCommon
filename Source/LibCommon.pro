@@ -100,7 +100,8 @@ HEADERS += \
     Common/Math/CVector3f.h \
     Common/Math/CVector4f.h \
     Common/Math/ETransformSpace.h \
-    Common/Math/MathUtil.h
+    Common/Math/MathUtil.h \
+    Common/Math/EAxis.h
 
 # Source Files
 SOURCES += \

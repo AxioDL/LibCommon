@@ -33,13 +33,13 @@ public:
     inline void Read(IInputStream& rInput)
     {
         mFourCC = rInput.ReadLong();
-        if (rInput.GetEndianness() == IOUtil::eLittleEndian) Reverse();
+        if (rInput.GetEndianness() == EEndian::LittleEndian) Reverse();
     }
 
     inline void Write(IOutputStream& rOutput) const
     {
         uint32 Val = mFourCC;
-        if (rOutput.GetEndianness() == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
+        if (rOutput.GetEndianness() == EEndian::LittleEndian) SwapBytes(Val);
         rOutput.WriteLong(Val);
     }
 
@@ -72,14 +72,14 @@ public:
 
     inline void Reverse() const
     {
-        IOUtil::SwapBytes((uint32&) mFourCC);
+        SwapBytes((uint32&) mFourCC);
     }
 
     // Operators
     inline char& operator[](int Index)
     {
         ASSERT(Index >= 0 && Index < 4);
-        if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian)
+        if (EEndian::SystemEndian == EEndian::LittleEndian)
             Index = 3 - Index;
 
         return ((char*)(&mFourCC))[Index];
@@ -88,7 +88,7 @@ public:
     inline const char& operator[](int Index) const
     {
         ASSERT(Index >= 0 && Index < 4);
-        if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian)
+        if (EEndian::SystemEndian == EEndian::LittleEndian)
             Index = 3 - Index;
 
         return ((char*)(&mFourCC))[Index];

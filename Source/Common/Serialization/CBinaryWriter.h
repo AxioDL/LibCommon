@@ -24,7 +24,7 @@ public:
         , mOwnsStream(true)
     {
         mArchiveFlags = AF_Writer | AF_Binary;
-        mpStream = new CFileOutStream(rkFilename, IOUtil::eBigEndian);
+        mpStream = new CFileOutStream(rkFilename, EEndian::BigEndian);
 
         if (mpStream->IsValid())
         {

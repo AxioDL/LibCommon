@@ -9,10 +9,10 @@ CFileOutStream::CFileOutStream()
 CFileOutStream::CFileOutStream(const TString& rkFile)
     : mpFStream(nullptr)
 {
-    Open(rkFile, IOUtil::eBigEndian);
+    Open(rkFile, EEndian::BigEndian);
 }
 
-CFileOutStream::CFileOutStream(const TString& rkFile, IOUtil::EEndianness FileEndianness)
+CFileOutStream::CFileOutStream(const TString& rkFile, EEndian FileEndianness)
     : mpFStream(nullptr)
 {
     Open(rkFile, FileEndianness);
@@ -33,7 +33,7 @@ CFileOutStream::~CFileOutStream()
         Close();
 }
 
-void CFileOutStream::Open(const TString& rkFile, IOUtil::EEndianness FileEndianness)
+void CFileOutStream::Open(const TString& rkFile, EEndian FileEndianness)
 {
     if (IsValid())
         Close();
@@ -45,7 +45,7 @@ void CFileOutStream::Open(const TString& rkFile, IOUtil::EEndianness FileEndiann
     mSize = 0;
 }
 
-void CFileOutStream::Update(const TString& rkFile, IOUtil::EEndianness FileEndianness)
+void CFileOutStream::Update(const TString& rkFile, EEndian FileEndianness)
 {
     if (IsValid())
         Close();

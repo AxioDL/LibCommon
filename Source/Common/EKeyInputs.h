@@ -3,19 +3,19 @@
 
 #include "Flags.h"
 
-enum EKeyInput
+enum class EKeyInput
 {
-    eCtrlKey  = 0x1,
-    eShiftKey = 0x2,
-    eAltKey   = 0x2,
-    eQKey     = 0x4,
-    eWKey     = 0x8,
-    eEKey     = 0x10,
-    eAKey     = 0x20,
-    eSKey     = 0x40,
-    eDKey     = 0x80
+    Ctrl  = 0x1,
+    Shift = 0x2,
+    Alt   = 0x2,
+    Q     = 0x4,
+    W     = 0x8,
+    E     = 0x10,
+    A     = 0x20,
+    S     = 0x40,
+    D     = 0x80
 };
-DECLARE_FLAGS(EKeyInput, FKeyInputs)
+DECLARE_FLAGS_ENUMCLASS(EKeyInput, FKeyInputs)
 
 #endif // EKEYINPUTS
 

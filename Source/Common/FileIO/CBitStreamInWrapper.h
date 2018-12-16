@@ -8,7 +8,7 @@ class CBitStreamInWrapper
 public:
     enum EChunkSize
     {
-        e8Bit = 8, e16Bit = 16, e32Bit = 32
+        k8Bit = 8, k16Bit = 16, k32Bit = 32
     };
 
 private:
@@ -18,7 +18,7 @@ private:
     uint32 mBitsRemaining;
 
 public:
-    CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize = e32Bit);
+    CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize = k32Bit);
     void SetChunkSize(EChunkSize Size);
     long ReadBits(uint32 NumBits, bool ExtendSignBit = true);
     bool ReadBit();

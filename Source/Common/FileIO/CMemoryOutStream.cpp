@@ -8,7 +8,7 @@ CMemoryOutStream::CMemoryOutStream()
 {
 }
 
-CMemoryOutStream::CMemoryOutStream(void *pData, uint32 Size, IOUtil::EEndianness DataEndianness)
+CMemoryOutStream::CMemoryOutStream(void *pData, uint32 Size, EEndian DataEndianness)
 {
     SetData(pData, Size, DataEndianness);
 }
@@ -17,7 +17,7 @@ CMemoryOutStream::~CMemoryOutStream()
 {
 }
 
-void CMemoryOutStream::SetData(void *pData, uint32 Size, IOUtil::EEndianness DataEndianness)
+void CMemoryOutStream::SetData(void *pData, uint32 Size, EEndian DataEndianness)
 {
     mpDataStart = (char*) pData;
     mDataSize = Size;

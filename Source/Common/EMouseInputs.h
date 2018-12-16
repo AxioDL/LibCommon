@@ -3,13 +3,13 @@
 
 #include "Flags.h"
 
-enum EMouseInput
+enum class EMouseInput
 {
-    eLeftButton   = 0x1,
-    eMiddleButton = 0x2,
-    eRightButton  = 0x4
+    LeftButton   = 0x1,
+    MiddleButton = 0x2,
+    RightButton  = 0x4
 };
-DECLARE_FLAGS(EMouseInput, FMouseInputs)
+DECLARE_FLAGS_ENUMCLASS(EMouseInput, FMouseInputs)
 
 #endif // EMOUSEINPUTS
 

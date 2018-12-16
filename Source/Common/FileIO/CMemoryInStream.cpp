@@ -6,7 +6,7 @@ CMemoryInStream::CMemoryInStream()
     , mPos(0)
 {
 }
-CMemoryInStream::CMemoryInStream(const void *pkData, uint32 Size, IOUtil::EEndianness DataEndianness)
+CMemoryInStream::CMemoryInStream(const void *pkData, uint32 Size, EEndian DataEndianness)
 {
     SetData(pkData, Size, DataEndianness);
 }
@@ -15,7 +15,7 @@ CMemoryInStream::~CMemoryInStream()
 {
 }
 
-void CMemoryInStream::SetData(const void *pkData, uint32 Size, IOUtil::EEndianness DataEndianness)
+void CMemoryInStream::SetData(const void *pkData, uint32 Size, EEndian DataEndianness)
 {
     mpDataStart = (const char*) pkData;
     mDataSize = Size;

@@ -1,10 +1,9 @@
 #ifndef ETRANSFORMSPACE
 #define ETRANSFORMSPACE
 
-enum ETransformSpace
+enum class ETransformSpace
 {
-    eWorldTransform,
-    eLocalTransform
+    World, Local
 };
 
 #endif // ETRANSFORMSPACE

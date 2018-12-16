@@ -8,10 +8,10 @@ CFileInStream::CFileInStream()
 CFileInStream::CFileInStream(const TString& rkFile)
     : mpFStream(nullptr)
 {
-    Open(rkFile, IOUtil::eBigEndian);
+    Open(rkFile, EEndian::BigEndian);
 }
 
-CFileInStream::CFileInStream(const TString& rkFile, IOUtil::EEndianness FileEndianness)
+CFileInStream::CFileInStream(const TString& rkFile, EEndian FileEndianness)
     : mpFStream(nullptr)
 {
     Open(rkFile, FileEndianness);
@@ -32,7 +32,7 @@ CFileInStream::~CFileInStream()
         Close();
 }
 
-void CFileInStream::Open(const TString& rkFile, IOUtil::EEndianness FileEndianness)
+void CFileInStream::Open(const TString& rkFile, EEndian FileEndianness)
 {
     if (IsValid())
         Close();

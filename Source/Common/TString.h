@@ -427,10 +427,10 @@ public:
             uint64 Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
             uint64 Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
 
-            if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian)
+            if (EEndian::SystemEndian == EEndian::LittleEndian)
             {
-                IOUtil::SwapBytes(Part1);
-                IOUtil::SwapBytes(Part2);
+                SwapBytes(Part1);
+                SwapBytes(Part2);
             }
 
             memcpy( ((char*) pOut) + 0, &Part1, 8);

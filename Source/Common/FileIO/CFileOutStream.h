@@ -13,11 +13,11 @@ private:
 public:
     CFileOutStream();
     CFileOutStream(const TString& rkFile);
-    CFileOutStream(const TString& rkFile, IOUtil::EEndianness FileEndianness);
+    CFileOutStream(const TString& rkFile, EEndian FileEndianness);
     CFileOutStream(const CFileOutStream& rkSrc);
     ~CFileOutStream();
-    void Open(const TString& rkFile, IOUtil::EEndianness);
-    void Update(const TString& rkFile, IOUtil::EEndianness FileEndianness);
+    void Open(const TString& rkFile, EEndian);
+    void Update(const TString& rkFile, EEndian FileEndianness);
     void Close();
 
     void WriteBytes(const void *pkSrc, uint32 Count);

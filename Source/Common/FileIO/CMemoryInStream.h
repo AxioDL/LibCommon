@@ -11,9 +11,9 @@ class CMemoryInStream : public IInputStream
 
 public:
     CMemoryInStream();
-    CMemoryInStream(const void *pkData, uint32 Size, IOUtil::EEndianness dataEndianness);
+    CMemoryInStream(const void *pkData, uint32 Size, EEndian dataEndianness);
     ~CMemoryInStream();
-    void SetData(const void *pkData, uint32 Size, IOUtil::EEndianness dataEndianness);
+    void SetData(const void *pkData, uint32 Size, EEndian dataEndianness);
 
     void ReadBytes(void *pDst, uint32 Count);
     bool Seek(int32 Offset, uint32 Origin);

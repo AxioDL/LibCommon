@@ -16,7 +16,7 @@ uint32 TString::Hash32() const
 uint64 TString::Hash64() const
 {
     // todo: replace with MD5
-    CFNV1A Hash(CFNV1A::e64Bit);
+    CFNV1A Hash(CFNV1A::k64Bit);
     Hash.HashString(*this);
     return Hash.GetHash64();
 }
@@ -110,14 +110,14 @@ TWideString TString::ToUTF16() const
 // ************ TWideString ************
 uint32 TWideString::Hash32() const
 {
-    CFNV1A Hash(CFNV1A::e32Bit);
+    CFNV1A Hash(CFNV1A::k32Bit);
     Hash.HashData(Data(), Size() * sizeof(wchar_t));
     return Hash.GetHash32();
 }
 
 uint64 TWideString::Hash64() const
 {
-    CFNV1A Hash(CFNV1A::e64Bit);
+    CFNV1A Hash(CFNV1A::k64Bit);
     Hash.HashData(Data(), Size() * sizeof(wchar_t));
     return Hash.GetHash64();
 }

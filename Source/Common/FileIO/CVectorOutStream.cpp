@@ -6,10 +6,10 @@ CVectorOutStream::CVectorOutStream()
     , mOwnsVector(true)
     , mPos(0)
 {
-    mDataEndianness = IOUtil::eBigEndian;
+    mDataEndianness = EEndian::BigEndian;
 }
 
-CVectorOutStream::CVectorOutStream(IOUtil::EEndianness DataEndianness)
+CVectorOutStream::CVectorOutStream(EEndian DataEndianness)
     : mpVector(new std::vector<char>)
     , mOwnsVector(true)
     , mPos(0)
@@ -17,7 +17,7 @@ CVectorOutStream::CVectorOutStream(IOUtil::EEndianness DataEndianness)
     mDataEndianness = DataEndianness;
 }
 
-CVectorOutStream::CVectorOutStream(uint32 InitialSize, IOUtil::EEndianness DataEndianness)
+CVectorOutStream::CVectorOutStream(uint32 InitialSize, EEndian DataEndianness)
     : mpVector(new std::vector<char>(InitialSize))
     , mOwnsVector(true)
     , mPos(0)
@@ -25,7 +25,7 @@ CVectorOutStream::CVectorOutStream(uint32 InitialSize, IOUtil::EEndianness DataE
     mDataEndianness = DataEndianness;
 }
 
-CVectorOutStream::CVectorOutStream(std::vector<char> *pVector, IOUtil::EEndianness DataEndianness)
+CVectorOutStream::CVectorOutStream(std::vector<char> *pVector, EEndian DataEndianness)
     : mpVector(pVector)
     , mOwnsVector(false)
     , mPos(0)

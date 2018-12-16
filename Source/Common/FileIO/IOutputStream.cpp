@@ -17,37 +17,37 @@ void IOutputStream::WriteByte(int8 Val)
 
 void IOutputStream::WriteShort(int16 Val)
 {
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     WriteBytes(&Val, 2);
 }
 
 void IOutputStream::WriteLong(int32 Val)
 {
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     WriteBytes(&Val, 4);
 }
 
 void IOutputStream::WriteLongLong(int64 Val)
 {
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     WriteBytes(&Val, 8);
 }
 
 void IOutputStream::WriteFloat(float Val)
 {
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     WriteBytes(&Val, 4);
 }
 
 void IOutputStream::WriteDouble(double Val)
 {
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     WriteBytes(&Val, 8);
 }
 
 void IOutputStream::WriteFourCC(uint32 Val)
 {
-    if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
+    if (EEndian::SystemEndian == EEndian::LittleEndian) SwapBytes(Val);
     WriteBytes(&Val, 4);
 }
 
@@ -106,7 +106,7 @@ void IOutputStream::WriteToBoundary(uint32 Boundary, uint8 Fill)
         WriteByte(Fill);
 }
 
-void IOutputStream::SetEndianness(IOUtil::EEndianness Endianness)
+void IOutputStream::SetEndianness(EEndian Endianness)
 {
     mDataEndianness = Endianness;
 }
@@ -116,7 +116,7 @@ void IOutputStream::SetDestString(const TString& rkDest)
     mDataDest = rkDest;
 }
 
-IOUtil::EEndianness IOutputStream::GetEndianness() const
+EEndian IOutputStream::GetEndianness() const
 {
     return mDataEndianness;
 }

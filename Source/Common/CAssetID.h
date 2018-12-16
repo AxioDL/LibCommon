@@ -8,9 +8,9 @@
 
 enum EIDLength
 {
-    e32Bit = 4,
-    e64Bit = 8,
-    eInvalidIDLength = 0
+    k32Bit = 4,
+    k64Bit = 8,
+    kInvalidIDLength = 0
 };
 
 class CAssetID
@@ -24,8 +24,8 @@ public:
     CAssetID(uint64 ID, EIDLength Length);
     CAssetID(IInputStream& rInput, EIDLength Length);
     CAssetID(IInputStream& rInput, EGame Game);
-    void Write(IOutputStream& rOutput, EIDLength ForcedLength = eInvalidIDLength) const;
-    TString ToString(EIDLength ForcedLength = eInvalidIDLength) const;
+    void Write(IOutputStream& rOutput, EIDLength ForcedLength = kInvalidIDLength) const;
+    TString ToString(EIDLength ForcedLength = kInvalidIDLength) const;
     bool IsValid() const;
 
     // Operators
@@ -49,9 +49,9 @@ public:
     static CAssetID FromString(const TString& rkString);
     static CAssetID RandomID();
 
-    inline static EIDLength GameIDLength(EGame Game)        { return (Game == EGame::Invalid ? eInvalidIDLength : (Game <= EGame::Echoes ? e32Bit : e64Bit)); }
-    inline static CAssetID InvalidID(EIDLength IDLength)    { return (IDLength == e32Bit ? skInvalidID32 : skInvalidID64); }
-    inline static CAssetID InvalidID(EGame Game)            { return InvalidID(Game <= EGame::Echoes ? e32Bit : e64Bit); }
+    inline static EIDLength GameIDLength(EGame Game)        { return (Game == EGame::Invalid ? kInvalidIDLength : (Game <= EGame::Echoes ? k32Bit : k64Bit)); }
+    inline static CAssetID InvalidID(EIDLength IDLength)    { return (IDLength == k32Bit ? skInvalidID32 : skInvalidID64); }
+    inline static CAssetID InvalidID(EGame Game)            { return InvalidID(Game <= EGame::Echoes ? k32Bit : k64Bit); }
 
     static CAssetID skInvalidID32;
     static CAssetID skInvalidID64;

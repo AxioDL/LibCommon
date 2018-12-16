@@ -56,11 +56,11 @@ bool CBitStreamInWrapper::ReadBit()
 // ************ PRIVATE ************
 void CBitStreamInWrapper::ReplenishPool()
 {
-    if (mChunkSize == e8Bit)
+    if (mChunkSize == k8Bit)
         mBitPool = mpSourceStream->ReadByte();
-    else if (mChunkSize == e16Bit)
+    else if (mChunkSize == k16Bit)
         mBitPool = mpSourceStream->ReadShort();
-    else if (mChunkSize == e32Bit)
+    else if (mChunkSize == k32Bit)
         mBitPool = mpSourceStream->ReadLong();
 
     mBitsRemaining = mChunkSize;

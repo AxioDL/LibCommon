@@ -14,10 +14,10 @@ private:
 public:
     CFileInStream();
     CFileInStream(const TString& rkFile);
-    CFileInStream(const TString& rkFile, IOUtil::EEndianness FileEndianness);
+    CFileInStream(const TString& rkFile, EEndian FileEndianness);
     CFileInStream(const CFileInStream& rkSrc);
     ~CFileInStream();
-    void Open(const TString& rkFile, IOUtil::EEndianness FileEndianness);
+    void Open(const TString& rkFile, EEndian FileEndianness);
     void Close();
 
     void ReadBytes(void *pDst, uint32 Count);

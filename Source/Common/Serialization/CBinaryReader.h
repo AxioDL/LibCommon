@@ -28,7 +28,7 @@ public:
         , mInAttribute(false)
     {
         mArchiveFlags = AF_Reader | AF_Binary;
-        mpStream = new CFileInStream(rkFilename, IOUtil::eBigEndian);
+        mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
 
         if (mpStream->IsValid())
         {

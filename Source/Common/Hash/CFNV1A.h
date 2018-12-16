@@ -8,7 +8,7 @@ class CFNV1A
 {
 public:
     enum EHashLength {
-        e32Bit, e64Bit
+        k32Bit, k64Bit
     };
 
 private:
@@ -23,7 +23,7 @@ private:
 public:
     CFNV1A(EHashLength Length)
     {
-        if (Length == e32Bit)
+        if (Length == k32Bit)
             Init32();
         else
             Init64();
@@ -31,20 +31,20 @@ public:
 
     void Init32()
     {
-        mHashLength = e32Bit;
+        mHashLength = k32Bit;
         mHash = skFNVOffsetBasis32;
     }
 
     void Init64()
     {
-        mHashLength = e64Bit;
+        mHashLength = k64Bit;
         mHash = skFNVOffsetBasis64;
     }
 
     void HashData(const void *pkData, uint32 Size)
     {
         const char *pkCharData = (const char*) pkData;
-        uint64 FNVPrime = (mHashLength == e32Bit) ? skFNVPrime32 : skFNVPrime64;
+        uint64 FNVPrime = (mHashLength == k32Bit) ? skFNVPrime32 : skFNVPrime64;
 
         for (uint32 iByte = 0; iByte < Size; iByte++)
         {
@@ -58,9 +58,9 @@ public:
     inline uint64 GetHash64()  { return mHash; }
 
     // Convenience functions
-    inline void HashByte(const uint8& rkVal)           { HashData(&rkVal, 1); }
-    inline void HashShort(const uint16& rkVal)         { HashData(&rkVal, 2); }
-    inline void HashLong(const uint32& rkVal)          { HashData(&rkVal, 4); }
+    inline void HashByte(const uint8& rkVal)        { HashData(&rkVal, 1); }
+    inline void HashShort(const uint16& rkVal)      { HashData(&rkVal, 2); }
+    inline void HashLong(const uint32& rkVal)       { HashData(&rkVal, 4); }
     inline void HashFloat(const float& rkVal)       { HashData(&rkVal, 4); }
     inline void HashString(const TString& rkVal)    { HashData(rkVal.Data(), rkVal.Size()); }
 };

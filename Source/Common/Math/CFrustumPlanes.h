@@ -10,9 +10,9 @@ class CFrustumPlanes
 public:
     enum EFrustumSide
     {
-        eNearPlane = 0, eFarPlane    = 1,
-        eTopPlane  = 2, eBottomPlane = 3,
-        eLeftPlane = 4, eRightPlane  = 5
+        kNearPlane = 0, kFarPlane    = 1,
+        kTopPlane  = 2, kBottomPlane = 3,
+        kLeftPlane = 4, kRightPlane  = 5
     };
 
 private:

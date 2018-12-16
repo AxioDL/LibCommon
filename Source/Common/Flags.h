@@ -15,7 +15,7 @@ public:
     TFlags(uint32 Val) : mValue(Val) {}
     TFlags(FlagEnum Val) : mValue((uint32) Val) {}
 
-    inline operator   int()   const { return mValue;  }
+    inline operator int()     const { return mValue;  }
     inline bool operator!()   const { return !mValue; }
     inline TFlags operator~() const { return TFlags(FlagEnum(~mValue)); }
 
@@ -30,6 +30,9 @@ public:
     inline TFlags operator&(uint32 Mask) const      { return TFlags(FlagEnum(mValue & Mask)); }
     inline TFlags operator&(FlagEnum Flag) const    { return TFlags(FlagEnum(mValue & (uint32) Flag)); }
 
+    inline bool operator==(FlagEnum Flag) const     { return mValue == (uint32) Flag; }
+    inline bool operator!=(FlagEnum Flag) const     { return mValue != (uint32) Flag; }
+
     inline bool HasFlag(FlagEnum Flag) const    { return ((mValue & (uint32) Flag) != 0); }
     inline bool HasAnyFlags(TFlags Flags) const { return ((mValue & Flags) != 0); }
     inline bool HasAllFlags(TFlags Flags) const { return ((mValue & Flags) == Flags); }
@@ -40,23 +43,51 @@ public:
 
     inline void Serialize(IArchive& rArc)       { rArc.SerializePrimitive(mValue, SH_HexDisplay); }
 };
+// Note: When declaring flags for an enum class, use DECLARE_FLAGS_ENUMCLASS instead, defined below.
 #define DECLARE_FLAGS(Enum, FlagTypeName) typedef TFlags<Enum> FlagTypeName;
 
-// Alternate version for enum class flags
-#define DECLARE_FLAGS_ENUMCLASS(Enum, FlagTypeName) \
-    DECLARE_FLAGS(Enum, FlagTypeName) \
-    inline int operator|(Enum Left, Enum Right) \
+// Operator definitions for enum class flags
+#define ENUMCLASS_OPERATOR_OR(LeftType, RightType) \
+    inline int operator|(const LeftType Left, const RightType Right) \
     { \
         return (int) Left | (int) Right; \
-    } \
-    inline int operator&(Enum Left, Enum Right) \
+    }
+
+#define ENUMCLASS_OPERATOR_AND(LeftType, RightType) \
+    inline int operator&(const LeftType Left, const RightType Right) \
     { \
         return (int) Left & (int) Right; \
-    } \
-    inline int operator~(Enum Value) \
+    }
+
+#define ENUMCLASS_OPERATOR_BITSHIFT_LEFT(LeftType, RightType) \
+    inline int operator<<(const LeftType Left, const RightType Right) \
+    { \
+        return (int) Left << (int) Right; \
+    }
+
+#define ENUMCLASS_OPERATOR_BITSHIFT_RIGHT(LeftType, RightType) \
+    inline int operator>>(const LeftType Left, const RightType Right) \
+    { \
+        return (int) Left >> (int) Right; \
+    }
+
+#define ENUMCLASS_OPERATOR_NOT(InType) \
+    inline int operator~(const InType Value) \
     { \
         return ~((int) Value); \
     } \
+
+#define DECLARE_FLAGS_ENUMCLASS(Enum, FlagTypeName) \
+    DECLARE_FLAGS(Enum, FlagTypeName) \
+    ENUMCLASS_OPERATOR_OR(Enum, Enum) \
+    ENUMCLASS_OPERATOR_OR(Enum, int) \
+    ENUMCLASS_OPERATOR_OR(int, Enum) \
+    ENUMCLASS_OPERATOR_AND(Enum, Enum) \
+    ENUMCLASS_OPERATOR_AND(Enum, int) \
+    ENUMCLASS_OPERATOR_AND(int, Enum) \
+    ENUMCLASS_OPERATOR_BITSHIFT_LEFT(Enum, int) \
+    ENUMCLASS_OPERATOR_BITSHIFT_RIGHT(Enum, int) \
+    ENUMCLASS_OPERATOR_NOT(Enum)
 
 #endif // FLAGS_H
 

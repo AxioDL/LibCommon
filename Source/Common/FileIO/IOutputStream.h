@@ -7,7 +7,7 @@
 class IOutputStream
 {
 protected:
-    IOUtil::EEndianness mDataEndianness;
+    EEndian mDataEndianness;
     TString mDataDest;
 
 public:
@@ -28,9 +28,9 @@ public:
     bool Skip(int32 SkipAmount);
 
     void WriteToBoundary(uint32 Boundary, uint8 Fill);
-    void SetEndianness(IOUtil::EEndianness Endianness);
+    void SetEndianness(EEndian Endianness);
     void SetDestString(const TString& rkDest);
-    IOUtil::EEndianness GetEndianness() const;
+    EEndian GetEndianness() const;
     TString GetDestString() const;
 
     virtual ~IOutputStream();

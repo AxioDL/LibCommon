@@ -24,7 +24,7 @@ int16 IInputStream::ReadShort()
 {
     int16 Val;
     ReadBytes(&Val, 2);
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -32,7 +32,7 @@ int32 IInputStream::ReadLong()
 {
     int32 Val;
     ReadBytes(&Val, 4);
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -40,7 +40,7 @@ int64 IInputStream::ReadLongLong()
 {
     int64 Val;
     ReadBytes(&Val, 8);
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -48,7 +48,7 @@ float IInputStream::ReadFloat()
 {
     float Val;
     ReadBytes(&Val, 4);
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -56,7 +56,7 @@ double IInputStream::ReadDouble()
 {
     double Val;
     ReadBytes(&Val, 8);
-    if (mDataEndianness != IOUtil::kSystemEndianness) IOUtil::SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -64,7 +64,7 @@ uint32 IInputStream::ReadFourCC()
 {
     uint32 Val;
     ReadBytes(&Val, 4);
-    if (IOUtil::kSystemEndianness == IOUtil::eLittleEndian) IOUtil::SwapBytes(Val);
+    if (EEndian::SystemEndian == EEndian::LittleEndian) SwapBytes(Val);
     return Val;
 }
 
@@ -190,7 +190,7 @@ void IInputStream::SeekToBoundary(uint32 Boundary)
     else Seek(Num, SEEK_CUR);
 }
 
-void IInputStream::SetEndianness(IOUtil::EEndianness Endianness)
+void IInputStream::SetEndianness(EEndian Endianness)
 {
     mDataEndianness = Endianness;
 }
@@ -200,7 +200,7 @@ void IInputStream::SetSourceString(const TString& rkSource)
     mDataSource = rkSource;
 }
 
-IOUtil::EEndianness IInputStream::GetEndianness() const
+EEndian IInputStream::GetEndianness() const
 {
     return mDataEndianness;
 }

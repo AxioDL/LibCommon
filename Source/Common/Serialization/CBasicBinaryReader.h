@@ -21,7 +21,7 @@ public:
         , mOwnsStream(true)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
-        mpStream = new CFileInStream(rkFilename, IOUtil::eBigEndian);
+        mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
 
         if (mpStream->IsValid())
         {
@@ -42,7 +42,7 @@ public:
         SetVersion(rkVersion);
     }
 
-    CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, IOUtil::EEndianness Endian = IOUtil::kSystemEndianness)
+    CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, EEndian Endian = EEndian::SystemEndian)
         : IArchive()
         , mMagicValid(true)
         , mOwnsStream(true)

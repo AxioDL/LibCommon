@@ -23,26 +23,26 @@ void CFrustumPlanes::SetPlanes(const CVector3f& rkPosition, const CVector3f& rkD
 
     // Define the planes
     CVector3f NearCenter = rkPosition + (rkDirection * Near);
-    mPlanes[eNearPlane].Redefine(rkDirection, NearCenter);
+    mPlanes[kNearPlane].Redefine(rkDirection, NearCenter);
 
     CVector3f FarCenter = rkPosition + (rkDirection * Far);
-    mPlanes[eFarPlane].Redefine(-rkDirection, FarCenter);
+    mPlanes[kFarPlane].Redefine(-rkDirection, FarCenter);
 
     CVector3f MidRight = NearCenter + (Right * (NearWidth / 2.f));
     CVector3f RightNormal = Up.Cross((MidRight - rkPosition).Normalized());
-    mPlanes[eRightPlane].Redefine(RightNormal, rkPosition);
+    mPlanes[kRightPlane].Redefine(RightNormal, rkPosition);
 
     CVector3f MidLeft = NearCenter - (Right * (NearWidth / 2.f));
     CVector3f LeftNormal = (MidLeft - rkPosition).Normalized().Cross(Up);
-    mPlanes[eLeftPlane].Redefine(LeftNormal, rkPosition);
+    mPlanes[kLeftPlane].Redefine(LeftNormal, rkPosition);
 
     CVector3f MidTop = NearCenter + (Up * (NearHeight / 2.f));
     CVector3f TopNormal = (MidTop - rkPosition).Normalized().Cross(Right);
-    mPlanes[eTopPlane].Redefine(TopNormal, rkPosition);
+    mPlanes[kTopPlane].Redefine(TopNormal, rkPosition);
 
     CVector3f MidBottom = NearCenter - (Up * (NearHeight / 2.f));
     CVector3f BottomNormal = Right.Cross((MidBottom - rkPosition).Normalized());
-    mPlanes[eBottomPlane].Redefine(BottomNormal, rkPosition);
+    mPlanes[kBottomPlane].Redefine(BottomNormal, rkPosition);
 }
 
 bool CFrustumPlanes::PointInFrustum(const CVector3f& rkPoint) const

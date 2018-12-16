@@ -9,7 +9,7 @@
 class IInputStream
 {
 protected:
-    IOUtil::EEndianness mDataEndianness;
+    EEndian mDataEndianness;
     TString mDataSource;
     
 public:
@@ -40,9 +40,9 @@ public:
     bool Skip(int32 SkipAmount);
 
     void SeekToBoundary(uint32 Boundary);
-    void SetEndianness(IOUtil::EEndianness Endianness);
+    void SetEndianness(EEndian Endianness);
     void SetSourceString(const TString& rkSource);
-    IOUtil::EEndianness GetEndianness() const;
+    EEndian GetEndianness() const;
     TString GetSourceString() const;
 
     virtual ~IInputStream();
