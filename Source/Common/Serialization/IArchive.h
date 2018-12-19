@@ -16,6 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 /* This is a custom serialization implementation intended for saving game assets out to editor-
  * friendly formats, such as XML. The main goals of the serialization system is to simplify the
@@ -774,7 +775,7 @@ public:
 
 /** Class that determines if the type is a primitive */
 template<typename T>
-class TIsPrimitive : std::conditional< SerialType<T,IArchive>::Type == SerialType<T,IArchive>::Primitive, std::true_type, std::false_type >::type
+class TIsPrimitive : public std::conditional< SerialType<T,IArchive>::Type == SerialType<T,IArchive>::Primitive, std::true_type, std::false_type >::type
 {};
 
 #if WITH_CODEGEN
