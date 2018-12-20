@@ -23,7 +23,7 @@ public:
     {
         Release();
         TWideString WidePath = rkPath.ToUTF16();
-        mpFile = _wfopen(*WidePath, L"a+");
+        mpFile = _wfopen((const wchar_t*) *WidePath, L"a+");
     }
 
     void Release()

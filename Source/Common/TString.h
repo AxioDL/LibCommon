@@ -22,7 +22,7 @@
  * Afterwards we define the following subclasses/typedefs:
  *
  * - TBasicString<char> - TString
- * - TBasicString<wchar_t> - TWideString
+ * - TBasicString<char16_t> - TWideString
  * - std::list<TString> - TStringList
  * - std::list<TWideString> - TWideStringList
  *
@@ -32,7 +32,7 @@
  */
 
 // Helper macros for creating string literals of the correct char type. Internal use only! Invalid outside of this header!
-#define LITERAL(Text) (typeid(CharType) == typeid(char) ? (const CharType*) ##Text : (const CharType*) L##Text)
+#define LITERAL(Text) (typeid(CharType) == typeid(char) ? (const CharType*) ##Text : (const CharType*) u##Text)
 #define CHAR_LITERAL(Text) (CharType) Text
 
 // ************ TBasicString ************
@@ -53,12 +53,12 @@ public:
     {
     }
 
-    TBasicString(uint32 Size)
+    TBasicString(uint Size)
         : mInternalString(Size, 0)
     {
     }
 
-    TBasicString(uint32 Size, CharType Fill)
+    TBasicString(uint Size, CharType Fill)
         : mInternalString(Size, Fill)
     {
     }
@@ -90,7 +90,7 @@ public:
         return mInternalString.data();
     }
 
-    inline CharType At(uint32 Pos) const
+    inline CharType At(uint Pos) const
     {
 #ifdef _DEBUG
         if (Size() <= Pos)
@@ -109,63 +109,63 @@ public:
         return (Size() > 0 ? mInternalString[Size() - 1] : 0);
     }
 
-    inline uint32 Size() const
+    inline uint Size() const
     {
         return mInternalString.size();
     }
 
-    inline uint32 Length() const
+    inline uint Length() const
     {
         return Size();
     }
 
-    inline uint32 IndexOf(CharType Character, uint32 Offset) const
+    inline int IndexOf(CharType Character, uint Offset) const
     {
         size_t Pos = mInternalString.find_first_of(Character, Offset);
-        return (Pos == _TStdString::npos ? -1 : (uint32) Pos);
+        return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline uint32 IndexOf(CharType Character) const
+    inline int IndexOf(CharType Character) const
     {
         return IndexOf(Character, 0);
     }
 
-    inline uint32 IndexOf(const CharType* pkCharacters, uint32 Offset) const
+    inline int IndexOf(const CharType* pkCharacters, uint Offset) const
     {
         size_t Pos = mInternalString.find_first_of(pkCharacters, Offset);
-        return (Pos == _TStdString::npos ? -1 : (uint32) Pos);
+        return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline uint32 IndexOf(const CharType* pkCharacters) const
+    inline int IndexOf(const CharType* pkCharacters) const
     {
         return IndexOf(pkCharacters, 0);
     }
 
-    inline uint32 LastIndexOf(CharType Character) const
+    inline int LastIndexOf(CharType Character) const
     {
         size_t Pos = mInternalString.find_last_of(Character);
-        return (Pos == _TStdString::npos ? -1 : (uint32) Pos);
+        return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline uint32 LastIndexOf(const CharType* pkCharacters) const
+    inline int LastIndexOf(const CharType* pkCharacters) const
     {
         size_t Pos = mInternalString.find_last_of(pkCharacters);
 
         if (Pos == _TStdString::npos)
             return -1;
         else
-            return (uint32) Pos;
+            return (int) Pos;
     }
 
-    uint32 IndexOfPhrase(const _TString& rkStr, uint32 Offset, bool CaseSensitive = true) const
+    int IndexOfPhrase(const _TString& rkStr, uint Offset, bool CaseSensitive = true) const
     {
         if (Size() < rkStr.Size()) return -1;
 
         // Now loop from the offset provided by the user.
-        uint32 Pos = Offset;
-        uint32 LatestPossibleStart = Size() - rkStr.Size();
-        uint32 MatchStart = -1;
-        uint32 Matched = 0;
+        uint Pos = Offset;
+        uint LatestPossibleStart = Size() - rkStr.Size();
+        int MatchStart = -1;
+        int Matched = 0;
 
         while (Pos < Size())
         {
@@ -204,18 +204,18 @@ public:
         return -1;
     }
 
-    inline uint32 IndexOfPhrase(const _TString& rkStr, bool CaseSensitive = true) const
+    inline int IndexOfPhrase(const _TString& rkStr, bool CaseSensitive = true) const
     {
         return IndexOfPhrase(rkStr, 0, CaseSensitive);
     }
 
     // Modify String
-    inline _TString SubString(int StartPos, int Length) const
+    inline _TString SubString(uint StartPos, uint Length) const
     {
         return mInternalString.substr(StartPos, Length);
     }
 
-    inline void Reserve(uint32 Amount)
+    inline void Reserve(uint Amount)
     {
         mInternalString.reserve(Amount);
     }
@@ -225,7 +225,7 @@ public:
         mInternalString.shrink_to_fit();
     }
 
-    inline void Insert(uint32 Pos, CharType Chr)
+    inline void Insert(uint Pos, CharType Chr)
     {
 #ifdef _DEBUG
         if (Size() < Pos)
@@ -234,7 +234,7 @@ public:
         mInternalString.insert(Pos, 1, Chr);
     }
 
-    inline void Insert(uint32 Pos, const CharType* pkStr)
+    inline void Insert(uint Pos, const CharType* pkStr)
     {
 #ifdef _DEBUG
         if (Size() < Pos)
@@ -243,12 +243,12 @@ public:
         mInternalString.insert(Pos, pkStr);
     }
 
-    inline void Insert(uint32 Pos, const _TString& rkStr)
+    inline void Insert(uint Pos, const _TString& rkStr)
     {
         Insert(Pos, rkStr.CString());
     }
 
-    inline void Remove(uint32 Pos, uint32 Len)
+    inline void Remove(uint Pos, uint Len)
     {
 #ifdef _DEBUG
         if (Size() <= Pos)
@@ -259,15 +259,15 @@ public:
 
     inline void Remove(const CharType* pkStr, bool CaseSensitive = false)
     {
-        uint32 InStrLen = CStringLength(pkStr);
+        uint InStrLen = CStringLength(pkStr);
 
-        for (uint32 Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Idx, CaseSensitive))
+        for (int Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Idx, CaseSensitive))
             Remove(Idx, InStrLen);
     }
 
     inline void Remove(CharType Chr)
     {
-        for (uint32 Idx = IndexOf(Chr); Idx != -1; Idx = IndexOf(Chr, Idx))
+        for (int Idx = IndexOf(Chr); Idx != -1; Idx = IndexOf(Chr, Idx))
             Remove(Idx, 1);
     }
 
@@ -285,11 +285,11 @@ public:
 
     inline void Replace(const CharType* pkStr, const CharType *pkReplacement, bool CaseSensitive = false)
     {
-        uint32 Offset = 0;
-        uint32 InStrLen = CStringLength(pkStr);
-        uint32 ReplaceStrLen = CStringLength(pkReplacement);
+        uint Offset = 0;
+        uint InStrLen = CStringLength(pkStr);
+        uint ReplaceStrLen = CStringLength(pkReplacement);
 
-        for (uint32 Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Offset, CaseSensitive))
+        for (int Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Offset, CaseSensitive))
         {
             Remove(Idx, InStrLen);
             Insert(Idx, pkReplacement);
@@ -336,7 +336,7 @@ public:
     {
         _TString Out(Size());
 
-        for (uint32 iChar = 0; iChar < Size(); iChar++)
+        for (uint iChar = 0; iChar < Size(); iChar++)
             Out[iChar] = CharToUpper( At(iChar) );
 
         return Out;
@@ -347,7 +347,7 @@ public:
         // todo: doesn't handle accented characters
         _TString Out(Size());
 
-        for (uint32 iChar = 0; iChar < Size(); iChar++)
+        for (uint iChar = 0; iChar < Size(); iChar++)
             Out[iChar] = CharToLower( At(iChar) );
 
         return Out;
@@ -357,7 +357,7 @@ public:
     {
         int Start = -1, End = -1;
 
-        for (uint32 iChar = 0; iChar < Size(); iChar++)
+        for (uint iChar = 0; iChar < Size(); iChar++)
         {
             if (!IsWhitespace(mInternalString[iChar]))
             {
@@ -381,18 +381,18 @@ public:
         return SubString(Start, End - Start);
     }
 
-    inline _TString Truncate(uint32 Amount) const
+    inline _TString Truncate(uint Amount) const
     {
         return SubString(0, Amount);
     }
 
-    inline _TString ChopFront(uint32 Amount) const
+    inline _TString ChopFront(uint Amount) const
     {
         if (Size() <= Amount) return _TString();
         return SubString(Amount, Size() - Amount);
     }
 
-    inline _TString ChopBack(uint32 Amount) const
+    inline _TString ChopBack(uint Amount) const
     {
         if (Size() <= Amount) return _TString();
         return SubString(0, Size() - Amount);
@@ -455,13 +455,13 @@ public:
     _TStringList Split(const CharType* pkTokens, bool KeepEmptyParts = false) const
     {
         _TStringList Out;
-        uint32 LastSplit = 0;
+        uint LastSplit = 0;
 
         // Iterate over all characters in the input string
-        for (uint32 iChr = 0; iChr < Length(); iChr++)
+        for (uint iChr = 0; iChr < Length(); iChr++)
         {
             // Check whether this character is one of the user-provided tokens
-            for (uint32 iTok = 0; true; iTok++)
+            for (uint iTok = 0; true; iTok++)
             {
                 if (!pkTokens[iTok]) break;
 
@@ -546,7 +546,7 @@ public:
         return IndexOf(Chr) != -1;
     }
 
-    bool IsHexString(bool RequirePrefix = false, uint32 Width = -1) const
+    bool IsHexString(bool RequirePrefix = false, int Width = -1) const
     {
         _TString Str(*this);
         bool HasPrefix = Str.StartsWith(LITERAL("0x"));
@@ -577,7 +577,7 @@ public:
         if (Str.Size() != Width) return false;
 
         // Now we can finally check the actual string and make sure all the characters are valid hex characters.
-        for (uint32 iChr = 0; iChr < Width; iChr++)
+        for (int iChr = 0; iChr < Width; iChr++)
         {
             CharType Chr = Str[iChr];
             if (!((Chr >= CHAR_LITERAL('0')) && (Chr <= CHAR_LITERAL('9'))) &&
@@ -700,7 +700,7 @@ public:
 
     _TString operator+(const CharType* pkOther) const
     {
-        uint32 Len = CStringLength(pkOther);
+        uint Len = CStringLength(pkOther);
 
         _TString Out(Len + Size());
         memcpy(&Out[0], mInternalString.data(), Size() * sizeof(CharType));
@@ -1006,7 +1006,7 @@ public:
             Type = LITERAL("GB");
         }
 
-        uint32 DecCount = Out.Size() - (Out.IndexOf(CHAR_LITERAL('.')) + 1);
+        uint DecCount = Out.Size() - (Out.IndexOf(CHAR_LITERAL('.')) + 1);
         if (DecCount > NumDecimals) Out = Out.ChopBack(DecCount - NumDecimals);
         return Out + Type;
     }
@@ -1103,10 +1103,10 @@ class TString : public TBasicString<char>
 {
 public:
     TString()                                   : TBasicString<char>() {}
-    TString(size_t Size)                        : TBasicString<char>(Size) {}
-    TString(size_t Size, char Fill)             : TBasicString<char>(Size, Fill) {}
+    TString(uint Size)                          : TBasicString<char>(Size) {}
+    TString(uint Size, char Fill)               : TBasicString<char>(Size, Fill) {}
     TString(const char* pkText)                 : TBasicString<char>(pkText) {}
-    TString(const char* pkText, uint32 Length)  : TBasicString<char>(pkText, Length) {}
+    TString(const char* pkText, uint Length)    : TBasicString<char>(pkText, Length) {}
     TString(const std::string& rkText)          : TBasicString<char>(rkText) {}
     TString(const TBasicString<char>& rkStr)    : TBasicString<char>(rkStr) {}
 
@@ -1116,16 +1116,16 @@ public:
 };
 
 // ************ TWideString ************
-class TWideString : public TBasicString<wchar_t>
+class TWideString : public TBasicString<char16_t>
 {
 public:
-    TWideString()                                       : TBasicString<wchar_t>() {}
-    TWideString(uint32 Size)                            : TBasicString<wchar_t>(Size) {}
-    TWideString(uint32 Size, wchar_t Fill)              : TBasicString<wchar_t>(Size, Fill) {}
-    TWideString(const wchar_t* pkText)                  : TBasicString<wchar_t>(pkText) {}
-    TWideString(const wchar_t* pkText, uint32 Length)   : TBasicString<wchar_t>(pkText, Length) {}
-    TWideString(const std::wstring& rkText)             : TBasicString<wchar_t>(rkText) {}
-    TWideString(const TBasicString<wchar_t>& rkStr)     : TBasicString<wchar_t>(rkStr) {}
+    TWideString()                                       : TBasicString<char16_t>() {}
+    TWideString(uint Size)                              : TBasicString<char16_t>(Size) {}
+    TWideString(uint Size, char16_t Fill)               : TBasicString<char16_t>(Size, Fill) {}
+    TWideString(const char16_t* pkText)                 : TBasicString<char16_t>(pkText) {}
+    TWideString(const char16_t* pkText, uint Length)    : TBasicString<char16_t>(pkText, Length) {}
+    TWideString(const std::u16string& rkText)           : TBasicString<char16_t>(rkText) {}
+    TWideString(const TBasicString<char16_t>& rkStr)    : TBasicString<char16_t>(rkStr) {}
 
     uint32 Hash32() const;
     uint64 Hash64() const;
@@ -1134,6 +1134,6 @@ public:
 
 // ************ Typedefs ************
 typedef std::list<TBasicString<char>>       TStringList;
-typedef std::list<TBasicString<wchar_t>>    TWideStringList;
+typedef std::list<TBasicString<char16_t>>   TWideStringList;
 
 #endif // TSTRING_H

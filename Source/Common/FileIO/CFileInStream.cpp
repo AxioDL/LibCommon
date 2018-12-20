@@ -38,7 +38,7 @@ void CFileInStream::Open(const TString& rkFile, EEndian FileEndianness)
         Close();
 
     TWideString WideFile = rkFile.ToUTF16();
-    _wfopen_s(&mpFStream, *WideFile, L"rb");
+    _wfopen_s(&mpFStream, (const wchar_t*) *WideFile, L"rb");
     mName = rkFile;
     mDataEndianness = FileEndianness;
 

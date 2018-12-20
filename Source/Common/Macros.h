@@ -25,6 +25,9 @@ void Fatalf(const char* pkMsg, ...);
 #define errorf  NLog::Errorf
 #define fatalf  NLog::Fatalf
 
+/** Returns the size of a static array */
+#define ARRAY_SIZE(Array) ( sizeof(Array) / sizeof(Array[0]) )
+
 /** Aligns the input value to be a multiple of Align. Align must be a power of 2. */
 #define ALIGN(Value, Align) ( (Value + Align-1) & ~(Align-1) )
 
