@@ -94,7 +94,6 @@ public:
     virtual void SerializePrimitive(float& rValue, uint32 Flags)            { mpStream->WriteFloat(rValue); }
     virtual void SerializePrimitive(double& rValue, uint32 Flags)           { mpStream->WriteDouble(rValue); }
     virtual void SerializePrimitive(TString& rValue, uint32 Flags)          { mpStream->WriteSizedString(rValue); }
-    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)      { mpStream->WriteSizedWString(rValue); }
     virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)          { rValue.Write(*mpStream); }
     virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)         { rValue.Write(*mpStream, CAssetID::GameIDLength(Game())); }
     virtual void SerializeBulkData(void* pData, uint32 Size, uint32 Flags)  { mpStream->WriteBytes(pData, Size); }

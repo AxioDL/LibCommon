@@ -2,7 +2,6 @@
 #define CCRC32_H
 
 #include "Common/BasicTypes.h"
-#include "Common/TString.h"
 
 /**
  * CRC32 hash implementation
@@ -36,6 +35,7 @@ public:
     void Hash(const char* pkString);
 
     static uint32 StaticHashString(const char* pkString);
+    static uint32 StaticHashData(const void* pkData, uint Size);
 };
 
 #endif // CCRC32_H

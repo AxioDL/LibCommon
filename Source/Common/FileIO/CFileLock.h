@@ -22,8 +22,7 @@ public:
     void Lock(const TString& rkPath)
     {
         Release();
-        TWideString WidePath = rkPath.ToUTF16();
-        mpFile = _wfopen((const wchar_t*) *WidePath, L"a+");
+        mpFile = _wfopen(ToWChar(rkPath), L"a+");
     }
 
     void Release()

@@ -146,7 +146,6 @@ public:
     virtual void SerializePrimitive(float& rValue, uint32 Flags)        { rValue = ReadParam().ToFloat(); }
     virtual void SerializePrimitive(double& rValue, uint32 Flags)       { rValue = (double) ReadParam().ToFloat(); }
     virtual void SerializePrimitive(TString& rValue, uint32 Flags)      { rValue = ReadParam(); }
-    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)  { rValue = ReadParam().ToUTF16(); }
     virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)      { rValue = CFourCC( ReadParam() ); }
     virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)     { rValue = CAssetID::FromString( ReadParam() ); }
 

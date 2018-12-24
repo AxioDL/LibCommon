@@ -96,32 +96,37 @@ TString IInputStream::ReadSizedString()
     return ReadString(StringSize);
 }
 
-TWideString IInputStream::ReadWString()
+T16String IInputStream::Read16String()
 {
-    TWideString WStr;
-    short Chr = 1;
+    T16String Out;
+    char16_t Chr = 1;
 
     do
     {
         Chr = ReadShort();
-        if (Chr != 0) WStr.Append(Chr);
+        if (Chr != 0) Out.Append(Chr);
     }
     while (Chr != 0 && !EoF());
 
-    return WStr;
+    return Out;
 }
 
-TWideString IInputStream::ReadWString(uint32 Count)
+T16String IInputStream::Read16String(uint32 Count)
 {
-    TWideString WStr(Count, 0);
-    ReadBytes(&WStr[0], WStr.Size() * 2);
-    return WStr;
+    T16String Out(Count, 0);
+
+    for( uint32 i=0; i<Count; i++ )
+    {
+        Out[i] = ReadShort();
+    }
+
+    return Out;
 }
 
-TWideString IInputStream::ReadSizedWString()
+T16String IInputStream::ReadSized16String()
 {
-    uint32 StringSize = ReadLong();
-    return ReadWString(StringSize);
+    uint StringSize = ReadLong();
+    return Read16String(StringSize);
 }
 
 int8 IInputStream::PeekByte()

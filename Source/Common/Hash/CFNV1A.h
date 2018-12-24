@@ -2,7 +2,7 @@
 #define CFNV1A_H
 
 #include "Common/BasicTypes.h"
-#include "Common/TString.h"
+#include <string.h>
 
 class CFNV1A
 {
@@ -62,7 +62,22 @@ public:
     inline void HashShort(const uint16& rkVal)      { HashData(&rkVal, 2); }
     inline void HashLong(const uint32& rkVal)       { HashData(&rkVal, 4); }
     inline void HashFloat(const float& rkVal)       { HashData(&rkVal, 4); }
-    inline void HashString(const TString& rkVal)    { HashData(rkVal.Data(), rkVal.Size()); }
+    inline void HashString(const char* pkVal)       { HashData(pkVal, strlen(pkVal)); }
+
+    // Static
+    inline static uint32 StaticHashData32(const void* pkData, uint Size)
+    {
+        CFNV1A Hasher(k32Bit);
+        Hasher.HashData(pkData, Size);
+        return Hasher.GetHash32();
+    }
+
+    inline static uint64 StaticHashData64(const void* pkData, uint Size)
+    {
+        CFNV1A Hasher(k64Bit);
+        Hasher.HashData(pkData, Size);
+        return Hasher.GetHash64();
+    }
 };
 
 #endif // CFNV1A_H

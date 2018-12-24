@@ -80,17 +80,17 @@ std::false_type THasEqualToOperator(...);
 template<typename ValType> using THasEqualTo = decltype(THasEqualToOperator(std::declval<ValType>()));
 
 /** Class that determines if the type is a container */
-template<typename>      struct TIsContainer : std::false_type {};
-template<typename T>    struct TIsContainer< std::vector<T> > : std::true_type {};
-template<typename T>    struct TIsContainer< std::list<T> > : std::true_type {};
-template<typename T>    struct TIsContainer< std::set<T> > : std::true_type {};
-template<typename T, typename V>    struct TIsContainer< std::map<T,V> > : std::true_type {};
-template<typename T, typename V>    struct TIsContainer< std::unordered_map<T,V> > : std::true_type {};
+template<typename>      struct TIsContainer : public std::false_type {};
+template<typename T>    struct TIsContainer< std::vector<T> > : public std::true_type {};
+template<typename T>    struct TIsContainer< std::list<T> > : public std::true_type {};
+template<typename T>    struct TIsContainer< std::set<T> > : public std::true_type {};
+template<typename T, typename V>    struct TIsContainer< std::map<T,V> > : public std::true_type {};
+template<typename T, typename V>    struct TIsContainer< std::unordered_map<T,V> > : public std::true_type {};
 
 /** Class that determines if the type is a smart pointer */
-template<typename>      struct TIsSmartPointer : std::false_type {};
-template<typename T>    struct TIsSmartPointer< std::shared_ptr<T> > : std::true_type {};
-template<typename T>    struct TIsSmartPointer< std::unique_ptr<T> > : std::true_type {};
+template<typename>      struct TIsSmartPointer : public std::false_type {};
+template<typename T>    struct TIsSmartPointer< std::shared_ptr<T> > : public std::true_type {};
+template<typename T>    struct TIsSmartPointer< std::unique_ptr<T> > : public std::true_type {};
 
 /** Helper macro that tells us whether the parameter supports default property values */
 #define SUPPORTS_DEFAULT_VALUES (!std::is_pointer_v<ValType> && std::is_copy_assignable_v<ValType> && THasEqualTo<ValType>::value && !TIsContainer<ValType>::value && !TIsSmartPointer<ValType>::value)
@@ -303,6 +303,9 @@ struct ArchiveConstructorType
 
 /** Helper that turns functions on or off depending on if the parameter type is abstract */
 #define IS_ABSTRACT ( std::is_abstract_v<ValType> || (std::is_polymorphic_v<ValType> && ArchiveConstructorType<ValType, IArchive>::Type != ArchiveConstructorType<ValType, IArchive>::None) )
+
+/** Helper that fetches the type used to represent an abstract object type */
+#define ABSTRACT_TYPE ArchiveConstructorType<ValType, IArchive>::ObjType
 
 /** IArchive - Main serializer archive interface */
 class IArchive
@@ -723,7 +726,6 @@ public:
     virtual void SerializePrimitive(float& rValue, uint32 Flags) = 0;
     virtual void SerializePrimitive(double& rValue, uint32 Flags) = 0;
     virtual void SerializePrimitive(TString& rValue, uint32 Flags) = 0;
-    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags) = 0;
     virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags) = 0;
     virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags) = 0;
     virtual void SerializeBulkData(void* pData, uint32 DataSize, uint32 Flags) = 0;
@@ -732,6 +734,21 @@ public:
     virtual void SerializeArraySize(uint32& Value)
     {
         *this << SerialParameter("Size", Value, SH_Attribute);
+    }
+
+    // Non-virtual primitive serialization
+    void SerializePrimitive(T16String& rValue, uint32 Flags)
+    {
+        TString String = (IsReader() ? "" : rValue.ToUTF8());
+        SerializePrimitive(String, Flags);
+        if (IsWriter()) rValue = String.ToUTF16();
+    }
+
+    void SerializePrimitive(T32String& rValue, uint32 Flags)
+    {
+        TString String = (IsReader() ? "" : rValue.ToUTF8());
+        SerializePrimitive(String, Flags);
+        if (IsWriter()) rValue = String.ToUTF32();
     }
 
     // Accessors
@@ -774,7 +791,7 @@ public:
 
 /** Class that determines if the type is a primitive */
 template<typename T>
-class TIsPrimitive : std::conditional< SerialType<T,IArchive>::Type == SerialType<T,IArchive>::Primitive, std::true_type, std::false_type >::type
+class TIsPrimitive : public std::conditional< SerialType<T,IArchive>::Type == SerialType<T,IArchive>::Primitive, std::true_type, std::false_type >::type
 {};
 
 #if WITH_CODEGEN
@@ -862,19 +879,6 @@ inline void Serialize(IArchive& Arc, std::list<T>& List)
 
     for (auto Iter = List.begin(); Iter != List.end(); Iter++)
         Arc << SerialParameter("Element", *Iter, SH_IgnoreName | SH_InheritHints);
-}
-
-// Overload for TStringList and TWideStringList so they can use the TString/TWideString serialize functions
-inline void Serialize(IArchive& Arc, TStringList& List)
-{
-    std::list<TString>& GenericList = *reinterpret_cast< std::list<TString>* >(&List);
-    Serialize(Arc, GenericList);
-}
-
-inline void Serialize(IArchive& Arc, TWideStringList& List)
-{
-    std::list<TWideString>& GenericList = *reinterpret_cast< std::list<TWideString>* >(&List);
-    Serialize(Arc, GenericList);
 }
 
 // std::set

@@ -38,8 +38,7 @@ void CFileOutStream::Open(const TString& rkFile, EEndian FileEndianness)
     if (IsValid())
         Close();
 
-    TWideString WideFile = rkFile.ToUTF16();
-    _wfopen_s(&mpFStream, (const wchar_t*) *WideFile, L"wb");
+    _wfopen_s(&mpFStream, ToWChar(rkFile), L"wb");
     mName = rkFile;
     mDataEndianness = FileEndianness;
     mSize = 0;
@@ -50,8 +49,7 @@ void CFileOutStream::Update(const TString& rkFile, EEndian FileEndianness)
     if (IsValid())
         Close();
 
-    TWideString WideFile = rkFile.ToUTF16();
-    _wfopen_s(&mpFStream, (const wchar_t*) *WideFile, L"rb+");
+    _wfopen_s(&mpFStream, ToWChar(rkFile), L"rb+");
     mName = rkFile;
     mDataEndianness = FileEndianness;
     Seek(0x0, SEEK_END);

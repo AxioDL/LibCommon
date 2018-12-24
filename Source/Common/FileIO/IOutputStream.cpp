@@ -68,7 +68,7 @@ void IOutputStream::WriteSizedString(const TString& rkVal)
     WriteBytes(rkVal.Data(), rkVal.Size());
 }
 
-void IOutputStream::WriteWString(const TWideString& rkVal, int Count /*= -1*/, bool Terminate /*= true*/)
+void IOutputStream::Write16String(const T16String& rkVal, int Count /*= -1*/, bool Terminate /*= true*/)
 {
     if (Count < 0)
         Count = rkVal.Size();
@@ -80,7 +80,7 @@ void IOutputStream::WriteWString(const TWideString& rkVal, int Count /*= -1*/, b
         WriteShort(0);
 }
 
-void IOutputStream::WriteSizedWString(const TWideString& rkVal)
+void IOutputStream::WriteSized16String(const T16String& rkVal)
 {
     WriteLong(rkVal.Size());
 

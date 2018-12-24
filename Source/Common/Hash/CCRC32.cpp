@@ -126,3 +126,10 @@ uint32 CCRC32::StaticHashString(const char* pkString)
     Hasher.Hash(pkString);
     return Hasher.Digest();
 }
+
+uint32 CCRC32::StaticHashData(const void* pkData, uint Size)
+{
+    CCRC32 Hasher;
+    Hasher.Hash(pkData, Size);
+    return Hasher.Digest();
+}

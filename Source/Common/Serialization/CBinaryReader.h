@@ -178,7 +178,6 @@ public:
     virtual void SerializePrimitive(float& rValue, uint32 Flags)            { rValue = mpStream->ReadFloat(); }
     virtual void SerializePrimitive(double& rValue, uint32 Flags)           { rValue = mpStream->ReadDouble(); }
     virtual void SerializePrimitive(TString& rValue, uint32 Flags)          { rValue = mpStream->ReadSizedString(); }
-    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)      { rValue = mpStream->ReadSizedWString(); }
     virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)          { rValue = CFourCC(*mpStream); }
     virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)         { rValue = CAssetID(*mpStream, Game()); }
     virtual void SerializeBulkData(void* pData, uint32 Size, uint32 Flags)  { mpStream->ReadBytes(pData, Size); }

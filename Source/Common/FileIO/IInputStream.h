@@ -24,9 +24,9 @@ public:
     TString ReadString();
     TString ReadString(uint32 Count);
     TString ReadSizedString();
-    TWideString ReadWString();
-    TWideString ReadWString(uint32 Count);
-    TWideString ReadSizedWString();
+    T16String Read16String();
+    T16String Read16String(uint32 Count);
+    T16String ReadSized16String();
 
     int8 PeekByte();
     int16 PeekShort();

@@ -21,8 +21,8 @@ public:
     void WriteFourCC(uint32 Val);
     void WriteString(const TString& rkVal, int Count = -1, bool Terminate = true);
     void WriteSizedString(const TString& rkVal);
-    void WriteWString(const TWideString& rkVal, int Count = -1, bool Terminate = true);
-    void WriteSizedWString(const TWideString& rkVal);
+    void Write16String(const T16String& rkVal, int Count = -1, bool Terminate = true);
+    void WriteSized16String(const T16String& rkVal);
 
     bool GoTo(uint32 Address);
     bool Skip(int32 SkipAmount);

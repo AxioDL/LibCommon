@@ -3,6 +3,8 @@
 
 #include "BasicTypes.h"
 #include "FileIO/IOUtil.h"
+#include "Hash/CCRC32.h"
+#include "Hash/CFNV1A.h"
 #include "Macros.h"
 
 #include <cstdarg>
@@ -12,38 +14,44 @@
 #include <string>
 #include <vector>
 
-/* This is a string class which is essentially a wrapper around std::basic_string.
- * The reason for this is because there are a lot of string functions I use very
- * frequently that std::string is missing and this is more convenient than creating
- * all these functions externally. I've chosen to remove access to the default
- * std::basic_string functions and replace them with a custom API for consistency.
+/**
+ * This is a string class which is essentially a wrapper around std::basic_string.
+ * The reason for this is because there are a lot of extremely common string operations
+ * that are not supported by std::string.
  *
  * Most of the file contains an implementation for a template base class, TBasicString.
  * Afterwards we define the following subclasses/typedefs:
  *
- * - TBasicString<char> - TString
- * - TBasicString<char16_t> - TWideString
- * - std::list<TString> - TStringList
- * - std::list<TWideString> - TWideStringList
+ * - TString (char, utf-8)
+ * - T16String (char16_t, utf-16)
+ * - T32String (char32_t, utf-32)
  *
- * TString and TWideString have functions for converting between each other. For these
- * functions, TString is expected to be encoded in UTF-8 and TWideString is expected to
- * be encoded in UTF-16.
+ * String types have functions for converting between each other. For these functions,
+ * the above encoding conventions need to be respected for correct results.
+ *
+ * To convert to wchar_t*, enclose the string in the ToWChar() macro.
  */
 
 // Helper macros for creating string literals of the correct char type. Internal use only! Invalid outside of this header!
-#define LITERAL(Text) (typeid(CharType) == typeid(char) ? (const CharType*) ##Text : (const CharType*) u##Text)
+#define LITERAL(Text) \
+    (typeid(CharType) == typeid(char16_t) ? (const CharType*) u##Text : \
+    (typeid(CharType) == typeid(char32_t) ? (const CharType*) U##Text : \
+     ##Text ))
+
 #define CHAR_LITERAL(Text) (CharType) Text
 
 // ************ TBasicString ************
-template<class CharType>
+template<class _CharType, class _ListType>
 class TBasicString
 {
-    typedef TBasicString<CharType> _TString;
-    typedef std::basic_string<CharType> _TStdString;
-    typedef std::list<_TString> _TStringList;
+public:
+    typedef _CharType CharType;
 
 protected:
+    typedef TBasicString<_CharType, _ListType> _TString;
+    typedef std::basic_string<_CharType> _TStdString;
+    typedef _ListType _TStringList;
+
     _TStdString mInternalString;
 
 public:
@@ -92,10 +100,12 @@ public:
 
     inline CharType At(uint Pos) const
     {
-#ifdef _DEBUG
         if (Size() <= Pos)
-            throw std::out_of_range("Invalid position passed to TBasicString::At()");
-#endif
+        {
+            errorf("Invalid position passed to TBasicString::At()");
+            return 0;
+        }
+
         return mInternalString.at(Pos);
     }
 
@@ -227,19 +237,23 @@ public:
 
     inline void Insert(uint Pos, CharType Chr)
     {
-#ifdef _DEBUG
         if (Size() < Pos)
-            throw std::out_of_range("Invalid position passed to TBasicString::Insert()");
-#endif
+        {
+            errorf("Invalid position passed to TBasicString::Insert()");
+            return;
+        }
+
         mInternalString.insert(Pos, 1, Chr);
     }
 
     inline void Insert(uint Pos, const CharType* pkStr)
     {
-#ifdef _DEBUG
         if (Size() < Pos)
-            throw std::out_of_range("Invalid position passed to TBasicString::Insert()");
-#endif
+        {
+            errorf("Invalid position passed to TBasicString::Insert()");
+            return;
+        }
+
         mInternalString.insert(Pos, pkStr);
     }
 
@@ -252,7 +266,10 @@ public:
     {
 #ifdef _DEBUG
         if (Size() <= Pos)
-            throw std::out_of_range("Invalid position passed to TBasicString::Remove()");
+        {
+            errorf("Invalid position passed to TBasicString::Remove()");
+            return;
+        }
 #endif
         mInternalString.erase(Pos, Len);
     }
@@ -599,6 +616,17 @@ public:
                 return false;
 
         return true;
+    }
+
+    // Hashing
+    inline uint32 Hash32() const
+    {
+        return CCRC32::StaticHashData( Data(), Size() * sizeof(CharType) );
+    }
+
+    inline uint64 Hash64() const
+    {
+        return CFNV1A::StaticHashData64( Data(), Size() * sizeof(CharType) );
     }
 
     // Get Filename Components
@@ -1099,41 +1127,108 @@ public:
 #undef CHAR_LITERAL
 
 // ************ TString ************
-class TString : public TBasicString<char>
+class TString : public TBasicString<char, std::list<TString> >
 {
-public:
-    TString()                                   : TBasicString<char>() {}
-    TString(uint Size)                          : TBasicString<char>(Size) {}
-    TString(uint Size, char Fill)               : TBasicString<char>(Size, Fill) {}
-    TString(const char* pkText)                 : TBasicString<char>(pkText) {}
-    TString(const char* pkText, uint Length)    : TBasicString<char>(pkText, Length) {}
-    TString(const std::string& rkText)          : TBasicString<char>(rkText) {}
-    TString(const TBasicString<char>& rkStr)    : TBasicString<char>(rkStr) {}
+    using BaseClass = TBasicString<char, std::list<TString> >;
 
-    uint32 Hash32() const;
-    uint64 Hash64() const;
-    class TWideString ToUTF16() const;
+public:
+    TString() {}
+    TString(const BaseClass& kIn) : BaseClass(kIn) {}
+    using BaseClass::BaseClass;
+
+    void AppendCodePoint(uint32 CodePoint);
+    class T16String ToUTF16() const;
+    class T32String ToUTF32() const;
 };
 
-// ************ TWideString ************
-class TWideString : public TBasicString<char16_t>
+// ************ T16String ************
+class T16String : public TBasicString<char16_t, std::list<T16String> >
 {
-public:
-    TWideString()                                       : TBasicString<char16_t>() {}
-    TWideString(uint Size)                              : TBasicString<char16_t>(Size) {}
-    TWideString(uint Size, char16_t Fill)               : TBasicString<char16_t>(Size, Fill) {}
-    TWideString(const char16_t* pkText)                 : TBasicString<char16_t>(pkText) {}
-    TWideString(const char16_t* pkText, uint Length)    : TBasicString<char16_t>(pkText, Length) {}
-    TWideString(const std::u16string& rkText)           : TBasicString<char16_t>(rkText) {}
-    TWideString(const TBasicString<char16_t>& rkStr)    : TBasicString<char16_t>(rkStr) {}
+    using BaseClass = TBasicString<char16_t, std::list<T16String> >;
 
-    uint32 Hash32() const;
-    uint64 Hash64() const;
+public:
+    T16String() {}
+    T16String(const BaseClass& kIn) : BaseClass(kIn) {}
+    using BaseClass::BaseClass;
+
+    void AppendCodePoint(uint32 CodePoint);
     class TString ToUTF8() const;
+    class T32String ToUTF32() const;
 };
+
+// ************ T32String ************
+class T32String : public TBasicString<char32_t, std::list<T32String> >
+{
+    using BaseClass = TBasicString<char32_t, std::list<T32String> >;
+
+public:
+    T32String() {}
+    T32String(const BaseClass& kIn) : BaseClass(kIn) {}
+    using BaseClass::BaseClass;
+
+    void AppendCodePoint(uint32 CodePoint);
+    class TString ToUTF8() const;
+    class T16String ToUTF16() const;
+};
+
+// ************ CToWChar ************
+#define WCHAR_IS_16BIT WIN32
+
+/** Class for converting strings to a wchar_t array.
+ *  Generally meant for passing to functions; don't keep it resident.
+ */
+class CToWChar
+{
+#if WCHAR_IS_16BIT
+    const T16String* mpStringPtr;
+    T16String mConvertedString;
+#else
+    const T32String* mpStringPtr;
+    T32String mConvertedString;
+#endif
+
+public:
+#if WCHAR_IS_16BIT
+    CToWChar(const TString& kInString)
+        : mpStringPtr(nullptr)
+        , mConvertedString( kInString.ToUTF16() )
+    {}
+    CToWChar(const T16String& kInString)
+        : mpStringPtr(&kInString)
+    {}
+    CToWChar(const T32String& kInString)
+        : mpStringPtr(nullptr)
+        , mConvertedString( kInString.ToUTF16() )
+    {}
+#else
+    CToWChar(const TString& kInString)
+        : mpStringPtr(nullptr)
+        , mConvertedString( kInString.ToUTF32() )
+    {}
+    CToWChar(const T16String& kInString)
+        : mpStringPtr(nullptr)
+        , mConvertedString( kInString.ToUTF32() )
+    {}
+    CToWChar(const T32String& kInString)
+        : mpStringPtr(&kInString)
+    {}
+#endif
+
+    inline const wchar_t* Decay() const
+    {
+        return reinterpret_cast<const wchar_t*>( mpStringPtr ? **mpStringPtr : *mConvertedString );
+    }
+    inline const wchar_t* operator*() const
+    {
+        return Decay();
+    }
+};
+
+#define ToWChar *CToWChar
 
 // ************ Typedefs ************
-typedef std::list<TBasicString<char>>       TStringList;
-typedef std::list<TBasicString<char16_t>>   TWideStringList;
+typedef std::list< TString >    TStringList;
+typedef std::list< T16String >  T16StringList;
+typedef std::list< T32String >  T32StringList;
 
 #endif // TSTRING_H

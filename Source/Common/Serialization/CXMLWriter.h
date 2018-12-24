@@ -150,7 +150,6 @@ public:
     virtual void SerializePrimitive(float& rValue, uint32 Flags)        { WriteParam( *TString::FromFloat(rValue, 1, true) ); }
     virtual void SerializePrimitive(double& rValue, uint32 Flags)       { WriteParam( *TString::FromFloat((float) rValue, 1, true) ); }
     virtual void SerializePrimitive(TString& rValue, uint32 Flags)      { WriteParam( *rValue ); }
-    virtual void SerializePrimitive(TWideString& rValue, uint32 Flags)  { WriteParam( *rValue.ToUTF8() ); }
     virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)      { WriteParam( *rValue.ToString() ); }
     virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)     { WriteParam( *rValue.ToString( CAssetID::GameIDLength(Game()) ) ); }
 

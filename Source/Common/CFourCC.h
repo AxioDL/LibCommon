@@ -25,7 +25,6 @@ public:
     inline CFourCC()                        { mFourCC = 0; }
     inline CFourCC(const char *pkSrc)       { mFourCC = FOURCC_FROM_TEXT(pkSrc); }
     inline CFourCC(const TString& rkSrc)    { ASSERT(rkSrc.Length() == 4); mFourCC = FOURCC_FROM_TEXT(rkSrc); }
-    inline CFourCC(const TWideString& rkSrc){ ASSERT(rkSrc.Length() == 4); mFourCC = FOURCC_FROM_TEXT(rkSrc); }
     inline CFourCC(uint32 Src)              { mFourCC = Src; }
     inline CFourCC(IInputStream& rSrc)      { Read(rSrc); }
 
