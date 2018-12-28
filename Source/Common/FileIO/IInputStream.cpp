@@ -1,5 +1,5 @@
 #include "IInputStream.h"
-#include <assert.h>
+#include "Common/Macros.h"
 
 IInputStream::~IInputStream()
 {
@@ -9,7 +9,7 @@ bool IInputStream::ReadBool()
 {
     char Val;
     ReadBytes(&Val, 1);
-    assert(Val == 0 || Val == 1);
+    ASSERT(Val == 0 || Val == 1);
     return (Val != 0 ? true : false);
 }
 

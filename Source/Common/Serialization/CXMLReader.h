@@ -2,6 +2,7 @@
 #define CXMLREADER
 
 #include "IArchive.h"
+#include "XMLCommon.h"
 #include <tinyxml2.h>
 
 class CXMLReader : public IArchive
@@ -20,16 +21,17 @@ public:
         mArchiveFlags = AF_Reader | AF_Text;
 
         // Load XML and set current element to the root element; read version
-        mDoc.LoadFile(*rkFileName);
-        mpCurElem = mDoc.FirstChildElement();
+        tinyxml2::XMLError Error = mDoc.LoadFile(*rkFileName);
 
-        if (mpCurElem != nullptr)
+        if (Error != tinyxml2::XML_SUCCESS)
         {
-            SerializeVersion();
+            errorf("%s: Failed to open XML for read: %s", *rkFileName, XMLErrorString(Error));
         }
         else
         {
-            errorf("Failed to open XML for read: %s", *rkFileName);
+            mpCurElem = mDoc.FirstChildElement();
+            ASSERT( mpCurElem != nullptr );
+            SerializeVersion();
         }
     }
 
