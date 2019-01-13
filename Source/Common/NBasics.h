@@ -64,32 +64,35 @@ inline int ListRemoveAll(std::list<T>& List, const T& kElement)
     return ContainerRemoveAll< T, std::list<T> >(List, kElement);
 }
 
-/** Returns whether the vector contains the given element */
+/** Returns the index of an element in a vector. Returns -1 if the element is not present. */
 template<typename T>
-bool VectorContains(std::vector<T>& Vector, const T& kElement)
+int VectorFind(std::vector<T>& Vector, const T& kElement)
 {
-    for (auto Iter = Vector.begin(); Iter != Vector.end(); Iter++)
+    for (int i=0; i<Vector.size(); i++)
     {
-        if (*Iter == kElement)
+        if (Vector[i] == kElement)
         {
-            return true;
+            return i;
         }
     }
 
-    return false;
+    return -1;
 }
 
-/** Adds an element to a vector only if it is not already present */
+/** Adds an element to a vector only if it is not already present. Returns the index of the element. */
 template<typename T>
-bool VectorAddUnique(std::vector<T>& Vector, const T& kElement)
+int VectorAddUnique(std::vector<T>& Vector, const T& kElement)
 {
-    if (!VectorContains(Vector, kElement))
+    for (int i=0; i<Vector.size(); i++)
     {
-        Vector.push_back(kElement);
-        return true;
+        if (Vector[i] == kElement)
+        {
+            return i;
+        }
     }
 
-    return false;
+    Vector.push_back(kElement);
+    return Vector.size() - 1;
 }
 
 }
