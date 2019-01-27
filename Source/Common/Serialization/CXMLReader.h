@@ -41,10 +41,6 @@ public:
     }
 
     // Interface
-    virtual bool IsReader() const       { return true; }
-    virtual bool IsWriter() const       { return false; }
-    virtual bool IsTextFormat() const   { return true; }
-
     virtual bool ParamBegin(const char *pkName, uint32 Flags)
     {
         ASSERT(IsValid());
@@ -137,14 +133,14 @@ public:
 
     virtual void SerializePrimitive(bool& rValue, uint32 Flags)         { rValue = (ReadParam() == "true" ? true : false); }
     virtual void SerializePrimitive(char& rValue, uint32 Flags)         { rValue = ReadParam().Front(); }
-    virtual void SerializePrimitive(int8& rValue, uint32 Flags)         { rValue = (int8)   ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(uint8& rValue, uint32 Flags)        { rValue = (uint8)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(int16& rValue, uint32 Flags)        { rValue = (int16)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(uint16& rValue, uint32 Flags)       { rValue = (uint16) ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(int32& rValue, uint32 Flags)        { rValue = (int32)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(uint32& rValue, uint32 Flags)       { rValue = (uint32) ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(int64& rValue, uint32 Flags)        { rValue = (int64)  ReadParam().ToInt64( (Flags & SH_HexDisplay) ? 16 : 10 ); }
-    virtual void SerializePrimitive(uint64& rValue, uint32 Flags)       { rValue = (uint64) ReadParam().ToInt64( (Flags & SH_HexDisplay) ? 16 : 10 ); }
+    virtual void SerializePrimitive(int8& rValue, uint32 Flags)         { rValue = (int8)   ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(uint8& rValue, uint32 Flags)        { rValue = (uint8)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(int16& rValue, uint32 Flags)        { rValue = (int16)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(uint16& rValue, uint32 Flags)       { rValue = (uint16) ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(int32& rValue, uint32 Flags)        { rValue = (int32)  ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(uint32& rValue, uint32 Flags)       { rValue = (uint32) ReadParam().ToInt32( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(int64& rValue, uint32 Flags)        { rValue = (int64)  ReadParam().ToInt64( (Flags & SH_HexDisplay) ? 16 : 0 ); }
+    virtual void SerializePrimitive(uint64& rValue, uint32 Flags)       { rValue = (uint64) ReadParam().ToInt64( (Flags & SH_HexDisplay) ? 16 : 0 ); }
     virtual void SerializePrimitive(float& rValue, uint32 Flags)        { rValue = ReadParam().ToFloat(); }
     virtual void SerializePrimitive(double& rValue, uint32 Flags)       { rValue = (double) ReadParam().ToFloat(); }
     virtual void SerializePrimitive(TString& rValue, uint32 Flags)      { rValue = ReadParam(); }
