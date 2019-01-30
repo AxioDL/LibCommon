@@ -756,6 +756,30 @@ public:
         *this = *this + rkOther;
     }
 
+    inline _TString operator/(const CharType* pkOther) const
+    {
+        // Append operator that ensures a slash separates the element being appended
+        // Useful for constructing filesystem paths
+        _TString Out = *this;
+
+        if (Back() != '/' && Back() != '\\')
+        {
+            Out.Append('\\');
+        }
+
+        return Out.operator+(pkOther);
+    }
+
+    inline _TString operator/(const _TString& kOther) const
+    {
+        return operator/(*kOther);
+    }
+
+    inline friend _TString operator/(const CharType* pkLeft, const _TString& rkRight)
+    {
+        return  _TString(pkLeft).operator/(*rkRight);
+    }
+
     inline friend _TString operator+(CharType Left, const _TString& rkRight)
     {
         _TString Out(rkRight.Size() + 1);
