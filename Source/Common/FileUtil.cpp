@@ -6,6 +6,15 @@
 #include <experimental/filesystem>
 #include <system_error>
 
+#if WIN32
+#include <Windows.h>
+
+// Windows why
+#undef CopyFile
+#undef DeleteFile
+#undef MoveFile
+#endif
+
 // These are mostly just wrappers around std::filesystem functions.
 using namespace std::experimental::filesystem::v1;
 
@@ -201,6 +210,23 @@ bool ClearDirectory(const TString& rkDirPath)
     }
 
     return true;
+}
+
+void MarkHidden(const TString& rkFilePath, bool Hidden)
+{
+#if WIN32
+    T16String FilePath16 = rkFilePath.ToUTF16();
+    DWORD Attrs = GetFileAttributesW( ToWChar(FilePath16) );
+
+    if (Hidden)
+        Attrs |= FILE_ATTRIBUTE_HIDDEN;
+    else
+        Attrs &= ~FILE_ATTRIBUTE_HIDDEN;
+
+    SetFileAttributesW( ToWChar(FilePath16), Attrs );
+#else
+    errorf("MarkHidden unimplemented: %s", *rkFilePath);
+#endif
 }
 
 void UpdateLastModifiedTime(const TString& rkFilePath)
