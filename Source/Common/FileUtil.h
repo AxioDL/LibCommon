@@ -22,6 +22,7 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath);
 bool DeleteFile(const TString& rkFilePath);
 bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty); // This is an extremely destructive function, be careful using it!
 bool ClearDirectory(const TString& rkDirPath);  // This is an extremely destructive function, be careful using it!
+void UpdateLastModifiedTime(const TString& rkFilePath);
 uint64 FileSize(const TString& rkFilePath);
 uint64 LastModifiedTime(const TString& rkFilePath);
 TString WorkingDirectory();

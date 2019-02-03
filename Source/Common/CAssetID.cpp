@@ -1,12 +1,11 @@
 #include "CAssetID.h"
+#include "CRandom.h"
 #include "TString.h"
-#include <random>
 
 CAssetID::CAssetID()
     : mLength(kInvalidIDLength)
     , mID(0xFFFFFFFFFFFFFFFF)
 {
-
 }
 
 CAssetID::CAssetID(uint64 ID)
@@ -86,12 +85,27 @@ CAssetID CAssetID::FromString(const TString& rkString)
     return CAssetID(rkString.Hash64());
 }
 
-CAssetID CAssetID::RandomID()
+CAssetID CAssetID::RandomID(EIDLength Length)
 {
-    CAssetID ID;
-    ID.mLength = k64Bit;
-    ID.mID = (uint64(rand()) << 32) | rand();
-    return ID;
+    if (Length != k64Bit)
+    {
+        CAssetID Out;
+        Out.mLength = k32Bit;
+        Out.mID = ((uint64) CRandom::GlobalRandom()->Int32()) & 0xFFFFFFFF;
+        return Out;
+    }
+    else
+    {
+        CAssetID Out;
+        Out.mLength = k64Bit;
+        Out.mID = (uint64) CRandom::GlobalRandom()->Int64();
+        return Out;
+    }
+}
+
+CAssetID CAssetID::RandomID(EGame Game)
+{
+    return RandomID( GameIDLength(Game) );
 }
 
 // ************ STATIC MEMBER INITIALIZATION ************

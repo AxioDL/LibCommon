@@ -32,8 +32,11 @@ public:
             SetVersion(skCurrentArchiveVersion, FileVersion, Game);
         }
 
+        mpStream->WriteShort(mArchiveVersion);
+        mpStream->WriteShort(mFileVersion);
+        mpStream->WriteFourCC( GameTo4CC(mGame).ToLong() );
+
         InitParamStack();
-        SerializeVersion();
     }
 
     CBinaryWriter(IOutputStream *pStream, uint16 FileVersion = 0, EGame Game = EGame::Invalid)

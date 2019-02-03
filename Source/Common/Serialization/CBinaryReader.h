@@ -35,8 +35,19 @@ public:
             mMagicValid = (mpStream->ReadLong() == Magic);
         }
 
-        InitParamStack();
-        SerializeVersion();
+        // check for incorrectly-formatted data (bug with older version of binary serializer)
+        if (mpStream->PeekShort() == -1)
+        {
+            InitParamStack();
+            SerializeVersion();
+        }
+        else
+        {
+            mArchiveVersion = mpStream->ReadShort();
+            mFileVersion = mpStream->ReadShort();
+            mGame = GameFrom4CC( mpStream->ReadFourCC() );
+            InitParamStack();
+        }
     }
 
     CBinaryReader(IInputStream *pStream, const CSerialVersion& rkVersion)

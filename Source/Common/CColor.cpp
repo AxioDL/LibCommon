@@ -1,4 +1,5 @@
 #include "CColor.h"
+#include "CRandom.h"
 
 CColor::CColor()
     : R(0.f), G(0.f), B(0.f), A(0.f)
@@ -189,29 +190,22 @@ CColor CColor::Integral(uint8 _R, uint8 _G, uint8 _B, uint8 _A /*= 255*/)
 
 CColor CColor::RandomColor(bool Transparent)
 {
-    float _R = (rand() % 255) / 255.f;
-    float _G = (rand() % 255) / 255.f;
-    float _B = (rand() % 255) / 255.f;
-    float _A = (Transparent ? (rand() % 255) / 255.f : 0);
+    float _R = CRandom::GlobalRandom()->Float();
+    float _G = CRandom::GlobalRandom()->Float();
+    float _B = CRandom::GlobalRandom()->Float();
+    float _A = (Transparent ? CRandom::GlobalRandom()->Float() : 1.0f);
     return CColor(_R, _G, _B, _A);
 }
 
 CColor CColor::RandomLightColor(bool Transparent)
 {
-    float _R = 0.5f + (rand() % 128) / 255.f;
-    float _G = 0.5f + (rand() % 128) / 255.f;
-    float _B = 0.5f + (rand() % 128) / 255.f;
-    float _A = (Transparent ? 0.5f + ((rand() % 128) / 255.f) : 0);
-    return CColor(_R, _G, _B, _A);
+    return (RandomColor(Transparent) * 0.5f) +
+            CColor(0.5f, 0.5f, 0.5f, Transparent ? 0.5f : 0.0f);
 }
 
 CColor CColor::RandomDarkColor(bool Transparent)
 {
-    float _R = (rand() % 128) / 255.f;
-    float _G = (rand() % 128) / 255.f;
-    float _B = (rand() % 128) / 255.f;
-    float _A = (Transparent ? (rand() % 128) / 255.f : 0);
-    return CColor(_R, _G, _B, _A);
+    return RandomColor(Transparent) * 0.5f;
 }
 
 // defining predefined colors

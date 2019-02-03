@@ -102,7 +102,8 @@ HEADERS += \
     Common/Math/ETransformSpace.h \
     Common/Math/MathUtil.h \
     Common/Math/EAxis.h \
-    Common/Serialization/XMLCommon.h
+    Common/Serialization/XMLCommon.h \
+    Common/CRandom.h
 
 # Source Files
 SOURCES += \
@@ -133,7 +134,8 @@ SOURCES += \
     Common/Math/CVector2i.cpp \
     Common/Math/CVector3f.cpp \
     Common/Math/CVector4f.cpp \
-    Common/Math/MathUtil.cpp
+    Common/Math/MathUtil.cpp \
+    Common/CRandom.cpp
 
 # Codegen
 CODEGEN_DIR = $$EXTERNALS_DIR/CodeGen

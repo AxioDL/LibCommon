@@ -47,7 +47,8 @@ public:
 
     // Static
     static CAssetID FromString(const TString& rkString);
-    static CAssetID RandomID();
+    static CAssetID RandomID(EIDLength Length);
+    static CAssetID RandomID(EGame Game);
 
     inline static EIDLength GameIDLength(EGame Game)        { return (Game == EGame::Invalid ? kInvalidIDLength : (Game <= EGame::Echoes ? k32Bit : k64Bit)); }
     inline static CAssetID InvalidID(EIDLength IDLength)    { return (IDLength == k32Bit ? skInvalidID32 : skInvalidID64); }

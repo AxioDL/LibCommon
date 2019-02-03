@@ -2,6 +2,7 @@
 #include "Macros.h"
 #include "Common/FileIO/CFileInStream.h"
 
+#include <chrono>
 #include <experimental/filesystem>
 #include <system_error>
 
@@ -200,6 +201,11 @@ bool ClearDirectory(const TString& rkDirPath)
     }
 
     return true;
+}
+
+void UpdateLastModifiedTime(const TString& rkFilePath)
+{
+    last_write_time( ToPath(*rkFilePath), std::chrono::system_clock::now() );
 }
 
 uint64 FileSize(const TString &rkFilePath)
