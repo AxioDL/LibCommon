@@ -22,25 +22,30 @@ CVector3f::CVector3f(float _X, float _Y, float _Z)
     Z = _Z;
 }
 
-CVector3f::CVector3f(IInputStream& rInput)
+CVector3f::CVector3f(IInputStream& Input)
 {
-    X = rInput.ReadFloat();
-    Y = rInput.ReadFloat();
-    Z = rInput.ReadFloat();
+    Read(Input);
 }
 
-void CVector3f::Write(IOutputStream& rOutput) const
+void CVector3f::Read(IInputStream& Input)
 {
-    rOutput.WriteFloat(X);
-    rOutput.WriteFloat(Y);
-    rOutput.WriteFloat(Z);
+    X = Input.ReadFloat();
+    Y = Input.ReadFloat();
+    Z = Input.ReadFloat();
 }
 
-void CVector3f::Serialize(IArchive& rArc)
+void CVector3f::Write(IOutputStream& Output) const
 {
-    rArc << SerialParameter("X", X)
-         << SerialParameter("Y", Y)
-         << SerialParameter("Z", Z);
+    Output.WriteFloat(X);
+    Output.WriteFloat(Y);
+    Output.WriteFloat(Z);
+}
+
+void CVector3f::Serialize(IArchive& Arc)
+{
+    Arc << SerialParameter("X", X)
+        << SerialParameter("Y", Y)
+        << SerialParameter("Z", Z);
 }
 
 TString CVector3f::ToString() const

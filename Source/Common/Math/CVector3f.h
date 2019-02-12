@@ -19,9 +19,10 @@ public:
     CVector3f();
     CVector3f(float XYZ);
     CVector3f(float _X, float _Y, float _Z);
-    CVector3f(IInputStream& rInput);
-    void Write(IOutputStream& rOutput) const;
-    void Serialize(IArchive& rArc);
+    CVector3f(IInputStream& Input);
+    void Read(IInputStream& Input);
+    void Write(IOutputStream& Output) const;
+    void Serialize(IArchive& Arc);
     TString ToString() const;
 
     // Swizzle
