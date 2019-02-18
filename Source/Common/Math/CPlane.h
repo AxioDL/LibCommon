@@ -30,6 +30,16 @@ public:
         mDist = -rkNormal.Dot(rkOrigin);
     }
 
+    float DistanceFromPoint(const CVector3f& kPoint) const
+    {
+        return kPoint.Dot(mNormal) + mDist;
+    }
+
+    inline bool operator==(const CPlane& kOther) const
+    {
+        return mNormal == kOther.mNormal && mDist == kOther.mDist;
+    }
+
     CVector3f Normal() const                    { return mNormal; }
     float Dist() const                          { return mDist; }
     void SetNormal(const CVector3f& rkNormal)   { mNormal = rkNormal; }

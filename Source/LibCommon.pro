@@ -103,7 +103,8 @@ HEADERS += \
     Common/Math/MathUtil.h \
     Common/Math/EAxis.h \
     Common/Serialization/XMLCommon.h \
-    Common/CRandom.h
+    Common/CRandom.h \
+    Common/Math/NConvexHull.h
 
 # Source Files
 SOURCES += \
@@ -135,7 +136,8 @@ SOURCES += \
     Common/Math/CVector3f.cpp \
     Common/Math/CVector4f.cpp \
     Common/Math/MathUtil.cpp \
-    Common/CRandom.cpp
+    Common/CRandom.cpp \
+    Common/Math/NConvexHull.cpp
 
 # Codegen
 CODEGEN_DIR = $$EXTERNALS_DIR/CodeGen
