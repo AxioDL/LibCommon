@@ -59,7 +59,7 @@ class CQuickhullImpl
     std::vector<SVertex> mVertices;
 
     /** Face linked list tail */
-    SFace* mpFaceHead;
+    SFace* mpFaceTail;
 
     /** The number of faces in the hull */
     uint mNumFaces;
@@ -74,15 +74,15 @@ class CQuickhullImpl
     SFace* CreateFace()
     {
         SFace* pFace = new SFace;
-        pFace->pPrev = mpFaceHead;
+        pFace->pPrev = mpFaceTail;
         pFace->pNext = nullptr;
         pFace->pFirstEdge = nullptr;
         pFace->Visited = false;
 
-        if (mpFaceHead)
-            mpFaceHead->pNext = pFace;
+        if (mpFaceTail)
+            mpFaceTail->pNext = pFace;
 
-        mpFaceHead = pFace;
+        mpFaceTail = pFace;
         mNumFaces++;
         return pFace;
     }
@@ -96,8 +96,8 @@ class CQuickhullImpl
         if (pFace->pNext)
             pFace->pNext->pPrev = pFace->pPrev;
 
-        if (pFace == mpFaceHead)
-            mpFaceHead = pFace->pPrev;
+        if (pFace == mpFaceTail)
+            mpFaceTail = pFace->pPrev;
 
         SHalfEdge* pEdge = pFace->pFirstEdge;
         do
@@ -181,7 +181,7 @@ class CQuickhullImpl
             V.pConflictFace = nullptr;
             V.ConflictDistance = FLT_MAX;
 
-            for (SFace* pFace = mpFaceHead; pFace; pFace = pFace->pPrev)
+            for (SFace* pFace = mpFaceTail; pFace; pFace = pFace->pPrev)
             {
                 float Dist = pFace->Plane.DistanceFromPoint(V.Position);
 
@@ -531,7 +531,7 @@ public:
     /** Quickhull entry point; instantiating the class will run the algorithm */
     CQuickhullImpl(const std::vector<CVector3f>& kInPoints)
         : mEpsilon(FLT_EPSILON)
-        , mpFaceHead(nullptr)
+        , mpFaceTail(nullptr)
         , mNumFaces(0)
         , mSuccess(false)
     {
@@ -546,9 +546,9 @@ public:
 
     ~CQuickhullImpl()
     {
-        while (mpFaceHead)
+        while (mpFaceTail)
         {
-            DeleteFace(mpFaceHead);
+            DeleteFace(mpFaceTail);
         }
     }
 
@@ -564,7 +564,7 @@ public:
         // Note that our internal vertex array matches the input vertices, not the output vertices.
         // Iterate all faces to get a list of used vertices.
         OutVertices.reserve(mVertices.size());
-        SFace* pFace = mpFaceHead;
+        SFace* pFace = mpFaceTail;
 
         while (pFace)
         {
@@ -583,7 +583,7 @@ public:
     {
         // This is a slight hack due to the fact that there is currently no face merging
         OutPlanes.reserve(mNumFaces);
-        SFace* pFace = mpFaceHead;
+        SFace* pFace = mpFaceTail;
 
         while (pFace)
         {
@@ -602,7 +602,7 @@ public:
         // This function assumes that faces may have more than 3 edges.
         OutVertices.reserve(mVertices.size());
         OutTriangleIndices.reserve(mNumFaces * 3);
-        SFace* pFace = mpFaceHead;
+        SFace* pFace = mpFaceTail;
 
         while (pFace)
         {

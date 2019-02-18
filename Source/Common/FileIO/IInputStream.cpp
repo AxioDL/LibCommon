@@ -9,7 +9,14 @@ bool IInputStream::ReadBool()
 {
     char Val;
     ReadBytes(&Val, 1);
-    ASSERT(Val == 0 || Val == 1);
+
+#if _DEBUG
+    if (Val != 0 && Val != 1)
+    {
+        errorf("ReadBool() got invalid value: %d", Val);
+    }
+#endif
+
     return (Val != 0 ? true : false);
 }
 
