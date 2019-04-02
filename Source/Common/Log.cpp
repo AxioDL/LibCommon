@@ -6,6 +6,66 @@
 #include <ctime>
 #include <iostream>
 
+#if WIN32
+// Windows text color attributes
+#include <windows.h>
+
+#define WIN_BLACK           0
+#define WIN_RED             FOREGROUND_RED
+#define WIN_GREEN           FOREGROUND_GREEN
+#define WIN_YELLOW          FOREGROUND_RED | FOREGROUND_GREEN
+#define WIN_BLUE            FOREGROUND_BLUE
+#define WIN_MAGENTA         FOREGROUND_RED | FOREGROUND_BLUE
+#define WIN_CYAN            FOREGROUND_GREEN | FOREGROUND_BLUE
+#define WIN_WHITE           FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN
+#define WIN_BOLD            FOREGROUND_INTENSITY
+#define WIN_RESET           WIN_WHITE
+
+WORD GetColorCode(NLog::EMsgType Type)
+{
+    switch (Type)
+    {
+    case NLog::EMsgType::Warning:   return WIN_BOLD | WIN_YELLOW;
+    case NLog::EMsgType::Error:     return WIN_BOLD | WIN_RED;
+    case NLog::EMsgType::Fatal:     return WIN_RED;
+    default:                        return WIN_RESET;
+    }
+}
+
+#else
+
+// ANSI color codes for Unix
+#define ANSI_BLACK          "\x1b[30m"
+#define ANSI_RED            "\x1b[31m"
+#define ANSI_GREEN          "\x1b[32m"
+#define ANSI_YELLOW         "\x1b[33m"
+#define ANSI_BLUE           "\x1b[34m"
+#define ANSI_MAGENTA        "\x1b[35m"
+#define ANSI_CYAN           "\x1b[36m"
+#define ANSI_WHITE          "\x1b[37m"
+#define ANSI_BOLD_BLACK     "\x1b[1;30m"
+#define ANSI_BOLD_RED       "\x1b[1;31m"
+#define ANSI_BOLD_GREEN     "\x1b[1;32m"
+#define ANSI_BOLD_YELLOW    "\x1b[1;33m"
+#define ANSI_BOLD_BLUE      "\x1b[1;34m"
+#define ANSI_BOLD_MAGENTA   "\x1b[1;35m"
+#define ANSI_BOLD_CYAN      "\x1b[1;36m"
+#define ANSI_BOLD_WHITE     "\x1b[1;37m"
+#define ANSI_RESET          "\x1b[0m"
+
+const char* GetColorCode(NLog::EMsgType Type)
+{
+    switch (Type)
+    {
+    case NLog::EMsgType::Warning:   return ANSI_BOLD_YELLOW;
+    case NLog::EMsgType::Error:     return ANSI_BOLD_RED;
+    case NLog::EMsgType::Fatal:     return ANSI_RED;
+    default:                        return ANSI_RESET;
+    }
+}
+
+#endif
+
 namespace NLog
 {
 
@@ -74,22 +134,39 @@ bool InitLog(const TString& rkFilename)
 
 void WriteInternal(EMsgType Type, const char* pkMsg, const va_list& VarArgs)
 {
-    char LineBuffer[512];
+    // Format current time to a string
+    char TimeBuffer[16];
     double Time = CTimer::GlobalTime() - gAppStartTime;
-    int Offset = sprintf(LineBuffer, "[%08.3f] ", Time);
-    vsprintf(&LineBuffer[Offset], pkMsg, VarArgs);
+    sprintf(TimeBuffer, "[%08.3f]", Time);
+
+    // Format message with varargs
+    char MsgBuffer[512];
+    vsprintf(MsgBuffer, pkMsg, VarArgs);
 
     // Write to log file
     if (!gInitialized)
-        gPreInitLogs.push_back(LineBuffer);
-
+    {
+        gPreInitLogs.push_back(TimeBuffer);
+    }
     else if (gpLogFile)
     {
-        fprintf(gpLogFile, "%s\n", LineBuffer);
+        fprintf(gpLogFile, "%s %s\n", TimeBuffer, MsgBuffer);
         fflush(gpLogFile);
     }
 
-    std::cout << LineBuffer << "\n";
+    // Write to stdout
+#if WIN32
+    static HANDLE sStdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(sStdOutHandle, WIN_BOLD | WIN_CYAN);
+    printf("%s ", TimeBuffer);
+    SetConsoleTextAttribute(sStdOutHandle, GetColorCode(Type));
+    printf(MsgBuffer);
+    SetConsoleTextAttribute(sStdOutHandle, WIN_RESET);
+    printf("\n");
+#else
+    printf(ANSI_BOLD_CYAN "%s %s%s" ANSI_RESET "\n",
+           TimeBuffer, GetColorCode(Type), MsgBuffer);
+#endif
 }
 
 #define DEFINE_LOG_FUNC(MsgType) \
