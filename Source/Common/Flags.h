@@ -41,6 +41,7 @@ public:
     inline void ClearFlag(FlagEnum Flag)        { mValue &= ~((uint32) Flag); }
     inline void ClearFlag(TFlags Flags)         { mValue &= ~Flags; }
 
+    inline uint32 ToInt32() const               { return mValue; }
     inline void Serialize(IArchive& rArc)       { rArc.SerializePrimitive(mValue, SH_HexDisplay); }
 };
 // Note: When declaring flags for an enum class, use DECLARE_FLAGS_ENUMCLASS instead, defined below.

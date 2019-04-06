@@ -78,7 +78,7 @@ void CTransform4f::Serialize(IArchive& rOut)
          << SerialParameter("Row2Col0", m[2][0]) << SerialParameter("Row2Col1", m[2][1]) << SerialParameter("Row2Col2", m[2][2]) << SerialParameter("Row2Col3", m[2][3]);
 }
 
-void CTransform4f::Write(IOutputStream& rOut)
+void CTransform4f::Write(IOutputStream& rOut) const
 {
     for (int iFlt = 0; iFlt < 12; iFlt++)
         rOut.WriteFloat(_m[iFlt]);
@@ -189,6 +189,26 @@ CTransform4f CTransform4f::TranslationOnly() const
 CTransform4f CTransform4f::RotationOnly() const
 {
     return Inverse().Transpose();
+}
+
+void CTransform4f::SetTranslation(const CVector3f& kTranslation)
+{
+    m[0][3] = kTranslation.X;
+    m[1][3] = kTranslation.Y;
+    m[2][3] = kTranslation.Z;
+}
+
+void CTransform4f::SetRotationFromAxes(const CVector3f& kX, const CVector3f& kY, const CVector3f& kZ)
+{
+    m[0][0] = kX.X;
+    m[1][0] = kX.Y;
+    m[2][0] = kX.Z;
+    m[0][1] = kY.X;
+    m[1][1] = kY.Y;
+    m[2][1] = kY.Z;
+    m[0][2] = kZ.X;
+    m[1][2] = kZ.Y;
+    m[2][2] = kZ.Z;
 }
 
 CVector3f CTransform4f::ExtractTranslation() const

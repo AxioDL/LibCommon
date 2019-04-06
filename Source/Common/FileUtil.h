@@ -39,6 +39,9 @@ bool IsValidPath(const TString& rkPath, bool Directory);
 void GetDirectoryContents(TString DirPath, TStringList& rOut, bool Recursive = true, bool IncludeFiles = true, bool IncludeDirs = true);
 TString FindFileExtension(const TString& rkDir, const TString& rkName);
 bool LoadFileToString(const TString& rkFilePath, TString& rOut);
+bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out);
+bool SaveStringToFile(const TString& rkFilePath, const TString& kString);
+bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuffer);
 
 }
 

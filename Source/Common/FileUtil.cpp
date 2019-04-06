@@ -558,4 +558,44 @@ bool LoadFileToString(const TString& rkFilePath, TString& rOut)
         return false;
 }
 
+bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out)
+{
+    CFileInStream File(rkFilePath);
+
+    if (File.IsValid())
+    {
+        Out.resize(File.Size());
+        File.ReadBytes(Out.data(), Out.size());
+        return true;
+    }
+    else
+        return false;
+}
+
+bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
+{
+    CFileOutStream File(rkFilePath);
+
+    if (File.IsValid())
+    {
+        File.WriteBytes(&kString[0], kString.Size());
+        return true;
+    }
+    else
+        return false;
+}
+
+bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuffer)
+{
+    CFileOutStream File(rkFilePath);
+
+    if (File.IsValid())
+    {
+        File.WriteBytes(kBuffer.data(), kBuffer.size());
+        return true;
+    }
+    else
+        return false;
+}
+
 }

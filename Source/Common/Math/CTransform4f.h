@@ -22,7 +22,7 @@ public:
     CTransform4f(CVector3f Position, CQuaternion Rotation, CVector3f Scale);
     CTransform4f(CVector3f Position, CVector3f Rotation, CVector3f Scale);
     void Serialize(IArchive& rOut);
-    void Write(IOutputStream& rOut);
+    void Write(IOutputStream& rOut) const;
 
     // Math
     void Translate(CVector3f Translation);
@@ -39,6 +39,8 @@ public:
     CTransform4f NoTranslation() const;
     CTransform4f TranslationOnly() const;
     CTransform4f RotationOnly() const;
+    void SetTranslation(const CVector3f& kTranslation);
+    void SetRotationFromAxes(const CVector3f& kX, const CVector3f& kY, const CVector3f& kZ);
 
     CVector3f ExtractTranslation() const;
     CQuaternion ExtractRotation() const;
