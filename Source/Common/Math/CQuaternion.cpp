@@ -110,9 +110,9 @@ CVector3f CQuaternion::ToEuler() const
     // we can just have a single conversion function. Handy!
     // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
-    float EulerX = atan2f(2 * (W*X + Y*Z), 1 - (2 * (Math::Pow(X,2) + Math::Pow(Y,2))));
+    float EulerX = atan2f(2 * (W*X + Y*Z), 1 - (2 * (Math::Square(X) + Math::Square(Y))));
     float EulerY = asinf(2 * (W*Y - Z*X));
-    float EulerZ = atan2f(2 * (W*Z + X*Y), 1 - (2 * (Math::Pow(Y,2) + Math::Pow(Z,2))));
+    float EulerZ = atan2f(2 * (W*Z + X*Y), 1 - (2 * (Math::Square(Y) + Math::Square(Z))));
     return CVector3f(Math::RadiansToDegrees(EulerX), Math::RadiansToDegrees(EulerY), Math::RadiansToDegrees(EulerZ));
 }
 

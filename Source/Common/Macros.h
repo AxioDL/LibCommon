@@ -40,14 +40,24 @@ void Fatalf(const char* pkMsg, ...);
 /** Returns the offset of a class member within that class */
 #define MEMBER_OFFSET(TypeName, MemberName) ( (int) (long long) &((TypeName*)0)->MemberName )
 
+/** Force a function to be inlined (disabled in debug builds) */
+#if _DEBUG
+    #define FORCEINLINE inline
+#elif _MSC_VER
+    #define FORCEINLINE __forceinline
+#elif __GNUC__
+    #define FORCEINLINE __attribute__((always_inline))
+#endif
+
 /**
- * This header declares a macro, ASSERT(Expression). ASSERT evaluates the input expression and verifies that
- * it is true. If the expression is false, an error message will be printed to the log with info on what went
- * wrong and (in debug builds) trigger a debug break. Application execution is aborted. In public release builds,
- * asserts are compiled out entirely, so neither log messages nor debug breaks will occur.
+ * Custom assert macro. ASSERT evaluates the input expression and verifies that it is true. If the
+ * expression is false, an error message will be printed to the log with info on what went wrong
+ * and (in debug builds) trigger a debug break. Application execution is aborted. In public
+ * release builds, asserts are compiled out entirely, so neither log messages nor debug breaks will
+ * occur.
  *
- * Alternatively, this file also declares an ENSURE macro, which is guaranteed always executes and will never be
- * compiled out, regardless of build configuration.
+ * Alternatively, this file also declares an ENSURE macro, which is guaranteed always executes and
+ * will never be compiled out, regardless of build configuration.
  */
 #define __FILE_SHORT__ strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__
 

@@ -4,38 +4,6 @@
 namespace Math
 {
 
-float Abs(float Value)
-{
-    return fabs(Value);
-}
-
-float Pow(float Base, float Exponent)
-{
-    return pow(Base, Exponent);
-}
-
-float Sqrt(float Value)
-{
-    return sqrtf(Value);
-}
-
-float Distance(const CVector3f& rkA, const CVector3f& rkB)
-{
-    return sqrtf( Pow(rkB.X - rkA.X, 2.f) +
-                  Pow(rkB.Y - rkA.Y, 2.f) +
-                  Pow(rkB.Z - rkA.Z, 2.f) );
-}
-
-float DegreesToRadians(float Deg)
-{
-    return Deg * skPi / 180.f;
-}
-
-float RadiansToDegrees(float Rad)
-{
-    return Rad * 180.f / skPi;
-}
-
 std::pair<bool,float> RayPlaneIntersection(const CRay& rkRay, const CPlane& rkPlane)
 {
     // Code based on ray/plane intersect code from Ogre
