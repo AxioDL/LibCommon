@@ -4,7 +4,7 @@
 
 TString GetGameName(EGame Game)
 {
-    static const TString skGameNames[EGame::Max] =
+    static const TString skGameNames[int(EGame::Max)] =
     {
         "Metroid Prime Demo",
         "Metroid Prime",
@@ -21,7 +21,7 @@ TString GetGameName(EGame Game)
 
 TString GetGameShortName(EGame Game)
 {
-    static const TString skGameNames[EGame::Max] = {
+    static const TString skGameNames[int(EGame::Max)] = {
         "MP1Demo",
         "MP1",
         "MP2Demo",
@@ -32,12 +32,12 @@ TString GetGameShortName(EGame Game)
     };
 
     int GameIdx = (int) Game;
-    return (GameIdx >= 0 && GameIdx < (int) EGame::Max) ? skGameNames[GameIdx] : "Unknown";
+    return (GameIdx >= 0 && GameIdx < int(EGame::Max)) ? skGameNames[GameIdx] : "Unknown";
 }
 
 CFourCC GameTo4CC(EGame Game)
 {
-    static const CFourCC skGame4CCs[EGame::Max] =
+    static const CFourCC skGame4CCs[int(EGame::Max)] =
     {
         FOURCC('MP1D'), FOURCC('MPRM'),
         FOURCC('MP2D'), FOURCC('MP2E'),

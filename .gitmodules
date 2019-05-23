@@ -1,6 +1,0 @@
-[submodule "Externals/tinyxml2"]
-	path = Externals/tinyxml2
-	url = https://github.com/leethomason/tinyxml2
-[submodule "Externals/CodeGen"]
-	path = Externals/CodeGen
-	url = https://github.com/arukibree/CodeGen
