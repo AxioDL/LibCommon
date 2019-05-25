@@ -16,51 +16,51 @@ namespace Math
 static constexpr float skPi = 3.14159265358979323846f;
 static constexpr float skHalfPi = skPi / 2.f;
 
-FORCEINLINE float Abs(float Value)
+constexpr float Abs(float Value)
 { return std::fabs(Value); }
 
-FORCEINLINE double Abs(double Value)
+constexpr double Abs(double Value)
 { return std::fabs(Value); }
 
-FORCEINLINE float Pow(float Base, float Exp)
+constexpr float Pow(float Base, float Exp)
 { return std::pow(Base, Exp); }
 
-FORCEINLINE double Pow(double Base, double Exp)
+constexpr double Pow(double Base, double Exp)
 { return std::pow(Base, Exp); }
 
-FORCEINLINE float Sqrt(float V)
+constexpr float Sqrt(float V)
 { return std::sqrt(V); }
 
-FORCEINLINE double Sqrt(double V)
+constexpr double Sqrt(double V)
 { return std::sqrt(V); }
 
 template<typename T>
-FORCEINLINE T Square(const T& V)
+constexpr T Square(const T& V)
 { return V * V; }
 
 template<typename T>
-FORCEINLINE T Cube(const T& V)
+constexpr T Cube(const T& V)
 { return V * V * V; }
 
-FORCEINLINE float Log(float V)
+constexpr float Log(float V)
 { return std::log(V); }
 
-FORCEINLINE double Log(double V)
+constexpr double Log(double V)
 { return std::log(V); }
 
-FORCEINLINE float Log2(float V)
+constexpr float Log2(float V)
 { return std::log2(V); }
 
-FORCEINLINE double Log2(double V)
+constexpr double Log2(double V)
 { return std::log2(V); }
 
-FORCEINLINE float Log10(float V)
+constexpr float Log10(float V)
 { return std::log10(V); }
 
-FORCEINLINE double Log10(double V)
+constexpr double Log10(double V)
 { return std::log10(V); }
 
-FORCEINLINE uint FloorLog2(uint V)
+constexpr uint FloorLog2(uint V)
 {
     // Binary search approach to calculating log2 of an integer
     // http://codinggorilla.domemtech.com/?p=81
@@ -73,23 +73,23 @@ FORCEINLINE uint FloorLog2(uint V)
     return Out;
 }
 
-FORCEINLINE float Distance(const CVector3f& kA, const CVector3f& kB)
+constexpr float Distance(const CVector3f& kA, const CVector3f& kB)
 { return kA.Distance(kB); }
 
-FORCEINLINE float DegreesToRadians(float Deg)
+constexpr float DegreesToRadians(float Deg)
 {
     static constexpr float Factor = skPi / 180.f;
     return Deg * Factor;
 }
 
-FORCEINLINE float RadiansToDegrees(float Rad)
+constexpr float RadiansToDegrees(float Rad)
 {
     static constexpr float Factor = 180.f / skPi;
     return Rad * Factor;
 }
 
 template<typename T>
-FORCEINLINE T Clamp(const T& kMin, const T& kMax, const T& kVal)
+constexpr T Clamp(const T& kMin, const T& kMax, const T& kVal)
 {
     return (kVal < kMin) ? kMin :
            (kVal > kMax) ? kMax :
@@ -97,19 +97,19 @@ FORCEINLINE T Clamp(const T& kMin, const T& kMax, const T& kVal)
 }
 
 template<typename T>
-FORCEINLINE T Min(const T& kA, const T& kB)
+constexpr T Min(const T& kA, const T& kB)
 {
     return (kA < kB ? kA : kB);
 }
 
 template<typename T>
-FORCEINLINE T Max(const T& kA, const T& kB)
+constexpr T Max(const T& kA, const T& kB)
 {
     return (kA > kB ? kA : kB);
 }
 
 template<typename T>
-FORCEINLINE T Lerp(const T& kA, const T& kB, float t)
+constexpr T Lerp(const T& kA, const T& kB, float t)
 {
     T Diff = kB - kA;
     return kA + T(Diff * t);
