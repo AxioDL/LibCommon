@@ -119,6 +119,16 @@ public:
         return (Size() > 0 ? mInternalString[Size() - 1] : 0);
     }
 
+    inline CharType* Begin() const
+    {
+        return mInternalString.data();
+    }
+
+    inline CharType* End() const
+    {
+        return mInternalString.data() + mInternalString.size();
+    }
+
     inline uint Size() const
     {
         return mInternalString.size();

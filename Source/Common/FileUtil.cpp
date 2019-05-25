@@ -268,6 +268,8 @@ TString MakeAbsolute(TString Path)
     }
 
     TString Out;
+    for (auto I = Path.Begin(), E = Path.End(); I != E && (*I == '/' || *I == '\\'); ++I)
+        Out += *I;
     for (auto it = Components.begin(); it != Components.end(); it++)
         Out += *it + "/";
 
