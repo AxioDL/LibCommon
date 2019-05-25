@@ -78,13 +78,13 @@ constexpr float Distance(const CVector3f& kA, const CVector3f& kB)
 
 constexpr float DegreesToRadians(float Deg)
 {
-    static constexpr float Factor = skPi / 180.f;
+    constexpr float Factor = skPi / 180.f;
     return Deg * Factor;
 }
 
 constexpr float RadiansToDegrees(float Rad)
 {
-    static constexpr float Factor = 180.f / skPi;
+    constexpr float Factor = 180.f / skPi;
     return Rad * Factor;
 }
 
