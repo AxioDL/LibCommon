@@ -1153,9 +1153,9 @@ public:
 // ************ TString ************
 class TString : public TBasicString<char, std::list<TString> >
 {
+public:
     using BaseClass = TBasicString<char, std::list<TString> >;
 
-public:
     TString() {}
     TString(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
@@ -1168,9 +1168,9 @@ public:
 // ************ T16String ************
 class T16String : public TBasicString<char16_t, std::list<T16String> >
 {
+public:
     using BaseClass = TBasicString<char16_t, std::list<T16String> >;
 
-public:
     T16String() {}
     T16String(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
@@ -1183,9 +1183,9 @@ public:
 // ************ T32String ************
 class T32String : public TBasicString<char32_t, std::list<T32String> >
 {
+public:
     using BaseClass = TBasicString<char32_t, std::list<T32String> >;
 
-public:
     T32String() {}
     T32String(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
