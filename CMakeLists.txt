@@ -34,8 +34,8 @@ target_include_directories(libcommon
 
 target_link_libraries(
     libcommon
-    PUBLIC tinyxml2::tinyxml2
-    PRIVATE codegen::codegen "${FS_LIBRARY}"
+    PUBLIC tinyxml2::tinyxml2 "${FS_LIBRARY}"
+    PRIVATE codegen::codegen
 )
 
 get_target_property(tinyxml_include_dir tinyxml2::tinyxml2 INTERFACE_INCLUDE_DIRECTORIES)
