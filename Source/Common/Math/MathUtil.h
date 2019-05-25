@@ -73,7 +73,7 @@ constexpr uint FloorLog2(uint V)
     return Out;
 }
 
-constexpr float Distance(const CVector3f& kA, const CVector3f& kB)
+inline float Distance(const CVector3f& kA, const CVector3f& kB)
 { return kA.Distance(kB); }
 
 constexpr float DegreesToRadians(float Deg)
