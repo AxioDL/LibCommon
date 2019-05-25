@@ -6,8 +6,28 @@ project(libcommon VERSION 0.1 LANGUAGES C CXX)
 find_package(codegen CONFIG REQUIRED)
 find_package(tinyxml2 CONFIG REQUIRED)
 
-if(NOT MSVC)
-  find_library(FS_LIBRARY c++fs)
+include(CheckCXXSourceCompiles)
+
+check_cxx_source_compiles("
+#include <filesystem>
+#ifndef _GLIBCXX_FILESYSTEM
+#error NO STDLIBCXX
+#endif
+int main() { return 0; }
+" HAVE_STDLIBCXX_FILESYSTEM)
+
+check_cxx_source_compiles("
+#include <filesystem>
+#ifndef _LIBCPP_FILESYSTEM
+#error NO LIBCXX
+#endif
+int main() { return 0; }
+" HAVE_LIBCXX_FILESYSTEM)
+
+if (HAVE_STDLIBCXX_FILESYSTEM)
+    find_library(FS_LIBRARY stdc++fs)
+elseif (HAVE_LIBCXX_FILESYSTEM)
+    find_library(FS_LIBRARY c++fs)
 endif()
 
 include(codegen)

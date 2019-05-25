@@ -3,7 +3,7 @@
 #include "Common/FileIO/CFileInStream.h"
 
 #include <chrono>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <system_error>
 
 #if WIN32
@@ -16,7 +16,7 @@
 #endif
 
 // These are mostly just wrappers around std::filesystem functions.
-using namespace std::experimental::filesystem::v1;
+using namespace std::filesystem;
 
 namespace FileUtil
 {
@@ -89,7 +89,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
     MakeDirectory(rkNewPath.GetFileDirectory());
     std::error_code Error;
     // call std::filesystem::copy, not std::copy
-    std::experimental::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
+    std::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
     return (Error.value() == 0);
 }
 
@@ -104,7 +104,7 @@ bool CopyDirectory(const TString& rkOrigPath, const TString& rkNewPath)
     MakeDirectory(rkNewPath.GetFileDirectory());
     std::error_code Error;
     // call std::filesystem::copy, not std::copy
-    std::experimental::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
+    std::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
     return (Error.value() == 0);
 }
 
