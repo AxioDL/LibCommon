@@ -181,7 +181,7 @@ static OutStringType ConvertString(const InStringType& kInString)
     OutStringType Out;
     Out.Reserve( kInString.Size() );
 
-    const InStringType::CharType* pkString = *kInString;
+    const typename InStringType::CharType* pkString = *kInString;
 
     while (*pkString != 0)
     {

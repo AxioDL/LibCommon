@@ -297,10 +297,10 @@ struct ArchiveConstructorType
 };
 
 /** Helper that turns functions on or off depending on their serialize type */
-#define IS_SERIAL_TYPE(SType) (SerialType<ValType, IArchive>::Type == SerialType<ValType, IArchive>::##SType)
+#define IS_SERIAL_TYPE(SType) (SerialType<ValType, IArchive>::Type == SerialType<ValType, IArchive>:: SType )
 
 /** Helper that turns functions on or off depending on their StaticConstructor type */
-#define IS_ARCHIVE_CONSTRUCTOR_TYPE(CType) (ArchiveConstructorType<ValType, IArchive>::Type == ArchiveConstructorType<ValType, IArchive>::##CType)
+#define IS_ARCHIVE_CONSTRUCTOR_TYPE(CType) (ArchiveConstructorType<ValType, IArchive>::Type == ArchiveConstructorType<ValType, IArchive>:: CType )
 
 /** Helper that turns functions on or off depending on if the parameter type is abstract */
 #define IS_ABSTRACT ( std::is_abstract_v<ValType> || (std::is_polymorphic_v<ValType> && ArchiveConstructorType<ValType, IArchive>::Type != ArchiveConstructorType<ValType, IArchive>::None) )
@@ -412,7 +412,7 @@ private:
 
     // Instantiate an abstract object from the file
     // Only readers are allowed to instantiate objects
-    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
     ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(Basic), ValType* )
     inline InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
@@ -421,7 +421,7 @@ private:
         return (ValType*) ValType::ArchiveConstructor(Type);
     }
 
-    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
     ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(Advanced), ValType* )
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
@@ -430,13 +430,14 @@ private:
         return (ValType*) ValType::ArchiveConstructor(Type, *this);
     }
 
-    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
     ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(None), ValType* )
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
         // If you fail here, you are missing an ArchiveConstructor() function, or you do have one but it is malformed.
         // Check the comments at the top of this source file for details on serialization requirements for abstract objects.
-        static_assert(false, "Abstract objects being serialized must have virtual Type() and static ArchiveConstructor() functions.");
+        static_assert(!IS_ARCHIVE_CONSTRUCTOR_TYPE(None),
+                      "Abstract objects being serialized must have virtual Type() and static ArchiveConstructor() functions.");
     }
 
     // Parameter stack handling
@@ -698,7 +699,8 @@ public:
     ENABLE_IF( IS_SERIAL_TYPE(Global) && IS_ABSTRACT, IArchive& )
     operator<<(TSerialParameter<ValType*>)
     {
-        static_assert(false, "Global Serialize method for polymorphic type pointers is not supported.");
+        static_assert(!(IS_SERIAL_TYPE(Global) && IS_ABSTRACT),
+                      "Global Serialize method for polymorphic type pointers is not supported.");
     }
 
     // Generate compiler errors for classes with no valid Serialize function defined
@@ -706,7 +708,8 @@ public:
     ENABLE_IF( IS_SERIAL_TYPE(None), IArchive& )
     operator<<(TSerialParameter<ValType>)
     {
-        static_assert(false, "Object being serialized has no valid Serialize method defined.");
+        static_assert(!IS_SERIAL_TYPE(None),
+                      "Object being serialized has no valid Serialize method defined.");
     }
 
     // Interface

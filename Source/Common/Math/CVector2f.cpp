@@ -1,4 +1,5 @@
 #include "CVector2f.h"
+#include <cmath>
 
 CVector2f::CVector2f()
 {
@@ -30,7 +31,7 @@ void CVector2f::Write(IOutputStream& rOutput) const
 
 float CVector2f::Magnitude() const
 {
-    return sqrtf(SquaredMagnitude());
+    return std::sqrt(SquaredMagnitude());
 }
 
 float CVector2f::SquaredMagnitude() const

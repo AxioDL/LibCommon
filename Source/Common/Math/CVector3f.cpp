@@ -4,6 +4,7 @@
 #include "CTransform4f.h"
 #include <iomanip>
 #include <float.h>
+#include <cmath>
 
 CVector3f::CVector3f()
 {
@@ -75,7 +76,7 @@ CVector2f CVector3f::YZ()
 // ************ MATH ************
 float CVector3f::Magnitude() const
 {
-    return sqrtf(SquaredMagnitude());
+    return std::sqrt(SquaredMagnitude());
 }
 
 float CVector3f::SquaredMagnitude() const

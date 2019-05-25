@@ -78,9 +78,30 @@ double gAppStartTime = CTimer::GlobalTime();
 bool gInitialized = false;
 TStringList gPreInitLogs;
 
+#ifdef _WIN32
+static int log_fopen(FILE** pFile, const char *filename, const char *mode)
+{
+    return fopen_s(pFile, filename, mode);
+}
+static int log_localtime(struct tm* const tmDest, time_t const* const sourceTime)
+{
+    return localtime_s(tmDest, sourceTime);
+}
+#else
+static int log_fopen(FILE** pFile, const char *filename, const char *mode)
+{
+    *pFile = fopen(filename, mode);
+    return *pFile == nullptr;
+}
+static int log_localtime(struct tm* const tmDest, time_t const* const sourceTime)
+{
+    return localtime_r(sourceTime, tmDest) == nullptr;
+}
+#endif
+
 bool InitLog(const TString& rkFilename)
 {
-    fopen_s(&gpLogFile, *rkFilename, "w");
+    log_fopen(&gpLogFile, *rkFilename, "w");
     gLogFilename = rkFilename;
 
     if (!gpLogFile)
@@ -93,7 +114,7 @@ bool InitLog(const TString& rkFilename)
         {
             if (Num > 999) break;
             TString NewFilename = FileName + "_" + TString::FromInt32(Num, 0, 10) + "." + Extension;
-            fopen_s(&gpLogFile, *NewFilename, "w");
+            log_fopen(&gpLogFile, *NewFilename, "w");
             Num++;
         }
 
@@ -106,7 +127,7 @@ bool InitLog(const TString& rkFilename)
     time(&RawTime);
 
     tm pTimeInfo;
-    localtime_s(&pTimeInfo, &RawTime);
+    log_localtime(&pTimeInfo, &RawTime);
 
     char Buffer[80];
     strftime(Buffer, 80, "%m/%d/%y %H:%M:%S", &pTimeInfo);
@@ -132,7 +153,7 @@ bool InitLog(const TString& rkFilename)
     return true;
 }
 
-void WriteInternal(EMsgType Type, const char* pkMsg, const va_list& VarArgs)
+void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
 {
     // Format current time to a string
     char TimeBuffer[16];

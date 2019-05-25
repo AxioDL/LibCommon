@@ -105,10 +105,10 @@ bool CColor::operator!=(const CColor& rkOther) const
 
 CColor CColor::operator+(const CColor& rkOther) const
 {
-    float NewR = fmin(R + rkOther.R, 1.f);
-    float NewG = fmin(G + rkOther.G, 1.f);
-    float NewB = fmin(B + rkOther.B, 1.f);
-    float NewA = fmin(A + rkOther.A, 1.f);
+    float NewR = std::min(R + rkOther.R, 1.f);
+    float NewG = std::min(G + rkOther.G, 1.f);
+    float NewB = std::min(B + rkOther.B, 1.f);
+    float NewA = std::min(A + rkOther.A, 1.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -119,10 +119,10 @@ void CColor::operator+=(const CColor& rkOther)
 
 CColor CColor::operator-(const CColor& rkOther) const
 {
-    float NewR = fmax(R - rkOther.R, 0.f);
-    float NewG = fmax(G - rkOther.G, 0.f);
-    float NewB = fmax(B - rkOther.B, 0.f);
-    float NewA = fmax(A - rkOther.A, 0.f);
+    float NewR = std::max(R - rkOther.R, 0.f);
+    float NewG = std::max(G - rkOther.G, 0.f);
+    float NewB = std::max(B - rkOther.B, 0.f);
+    float NewA = std::max(A - rkOther.A, 0.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -147,10 +147,10 @@ void CColor::operator*=(const CColor& rkOther)
 
 CColor CColor::operator*(float Other) const
 {
-    float NewR = fmin( fmax(R * Other, 0.f), 1.f);
-    float NewG = fmin( fmax(G * Other, 0.f), 1.f);
-    float NewB = fmin( fmax(B * Other, 0.f), 1.f);
-    float NewA = fmin( fmax(A * Other, 0.f), 1.f);
+    float NewR = std::min( std::max(R * Other, 0.f), 1.f);
+    float NewG = std::min( std::max(G * Other, 0.f), 1.f);
+    float NewB = std::min( std::max(B * Other, 0.f), 1.f);
+    float NewA = std::min( std::max(A * Other, 0.f), 1.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 

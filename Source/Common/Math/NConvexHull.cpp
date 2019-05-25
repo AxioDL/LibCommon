@@ -4,6 +4,7 @@
 #include "Common/Macros.h"
 #include "Common/NBasics.h"
 #include <vector>
+#include <cfloat>
 
 namespace NConvexHull
 {

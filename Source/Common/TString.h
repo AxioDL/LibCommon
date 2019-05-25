@@ -36,7 +36,7 @@
 #define LITERAL(Text) \
     (typeid(CharType) == typeid(char16_t) ? (const CharType*) u##Text : \
     (typeid(CharType) == typeid(char32_t) ? (const CharType*) U##Text : \
-     ##Text ))
+     Text ))
 
 #define CHAR_LITERAL(Text) (CharType) Text
 
@@ -969,9 +969,9 @@ public:
         va_start(Args, pkFmt);
 
         if (typeid(CharType) == typeid(char))
-            vsprintf_s((char*) StringBuffer, kBufferSize, (char*) pkFmt, Args);
+            vsnprintf((char*) StringBuffer, kBufferSize, (char*) pkFmt, Args);
         else
-            vswprintf_s((wchar_t*) StringBuffer, kBufferSize, (wchar_t*) pkFmt, Args);
+            vswprintf((wchar_t*) StringBuffer, kBufferSize, (wchar_t*) pkFmt, Args);
 
         va_end(Args);
         return _TString(StringBuffer);

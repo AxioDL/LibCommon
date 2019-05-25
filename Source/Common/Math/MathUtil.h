@@ -7,6 +7,7 @@
 #include "CPlane.h"
 #include "CVector3f.h"
 #include <utility>
+#include <cmath>
 
 namespace Math
 {
@@ -16,22 +17,22 @@ static constexpr float skPi = 3.14159265358979323846f;
 static constexpr float skHalfPi = skPi / 2.f;
 
 FORCEINLINE float Abs(float Value)
-{ return fabs(Value); }
+{ return std::fabs(Value); }
 
 FORCEINLINE double Abs(double Value)
-{ return abs(Value); }
+{ return std::fabs(Value); }
 
 FORCEINLINE float Pow(float Base, float Exp)
-{ return powf(Base, Exp); }
+{ return std::pow(Base, Exp); }
 
 FORCEINLINE double Pow(double Base, double Exp)
-{ return pow(Base, Exp); }
+{ return std::pow(Base, Exp); }
 
 FORCEINLINE float Sqrt(float V)
-{ return sqrtf(V); }
+{ return std::sqrt(V); }
 
 FORCEINLINE double Sqrt(double V)
-{ return sqrt(V); }
+{ return std::sqrt(V); }
 
 template<typename T>
 FORCEINLINE T Square(const T& V)
@@ -42,22 +43,22 @@ FORCEINLINE T Cube(const T& V)
 { return V * V * V; }
 
 FORCEINLINE float Log(float V)
-{ return logf(V); }
+{ return std::log(V); }
 
 FORCEINLINE double Log(double V)
-{ return log(V); }
+{ return std::log(V); }
 
 FORCEINLINE float Log2(float V)
-{ return log2f(V); }
+{ return std::log2(V); }
 
 FORCEINLINE double Log2(double V)
-{ return log2(V); }
+{ return std::log2(V); }
 
 FORCEINLINE float Log10(float V)
-{ return log10f(V); }
+{ return std::log10(V); }
 
 FORCEINLINE double Log10(double V)
-{ return log10(V); }
+{ return std::log10(V); }
 
 FORCEINLINE uint FloorLog2(uint V)
 {
