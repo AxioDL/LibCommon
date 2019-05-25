@@ -119,12 +119,12 @@ public:
         return (Size() > 0 ? mInternalString[Size() - 1] : 0);
     }
 
-    inline CharType* Begin() const
+    inline const CharType* Begin() const
     {
         return mInternalString.data();
     }
 
-    inline CharType* End() const
+    inline const CharType* End() const
     {
         return mInternalString.data() + mInternalString.size();
     }
