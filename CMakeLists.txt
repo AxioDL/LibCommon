@@ -58,8 +58,7 @@ target_link_libraries(
     PRIVATE codegen::codegen
 )
 
-get_target_property(tinyxml_include_dir tinyxml2::tinyxml2 INTERFACE_INCLUDE_DIRECTORIES)
-set(libcommon_include_directories ${CMAKE_CURRENT_SOURCE_DIR}/Source ${tinyxml_include_dir})
+gather_include_directories(libcommon_include_directories libcommon)
 
 add_codegen_targets(
     "${source_files}"
