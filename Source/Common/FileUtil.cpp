@@ -75,7 +75,9 @@ bool MakeDirectory(const TString& rkNewDir)
         return false;
     }
 
-    return create_directories(ToPath(*rkNewDir));
+    // Sometimes the MS implementation returns false with a zero-error for some reason
+    std::error_code err;
+    return create_directories(ToPath(*rkNewDir), err) || !err;
 }
 
 bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
