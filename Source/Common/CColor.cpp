@@ -1,6 +1,8 @@
 #include "CColor.h"
 #include "CRandom.h"
 
+#include <algorithm>
+
 CColor::CColor()
     : R(0.f), G(0.f), B(0.f), A(0.f)
 {

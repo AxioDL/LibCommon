@@ -231,7 +231,7 @@ void MarkHidden(const TString& rkFilePath, bool Hidden)
 
 void UpdateLastModifiedTime(const TString& rkFilePath)
 {
-    last_write_time( ToPath(*rkFilePath), std::chrono::system_clock::now() );
+    last_write_time( ToPath(*rkFilePath), file_time_type::clock::now() );
 }
 
 uint64 FileSize(const TString &rkFilePath)

@@ -16,22 +16,22 @@ namespace Math
 static constexpr float skPi = 3.14159265358979323846f;
 static constexpr float skHalfPi = skPi / 2.f;
 
-constexpr float Abs(float Value)
+inline float Abs(float Value)
 { return std::fabs(Value); }
 
-constexpr double Abs(double Value)
+inline double Abs(double Value)
 { return std::fabs(Value); }
 
-constexpr float Pow(float Base, float Exp)
+inline float Pow(float Base, float Exp)
 { return std::pow(Base, Exp); }
 
-constexpr double Pow(double Base, double Exp)
+inline double Pow(double Base, double Exp)
 { return std::pow(Base, Exp); }
 
-constexpr float Sqrt(float V)
+inline float Sqrt(float V)
 { return std::sqrt(V); }
 
-constexpr double Sqrt(double V)
+inline double Sqrt(double V)
 { return std::sqrt(V); }
 
 template<typename T>
@@ -42,22 +42,22 @@ template<typename T>
 constexpr T Cube(const T& V)
 { return V * V * V; }
 
-constexpr float Log(float V)
+inline float Log(float V)
 { return std::log(V); }
 
-constexpr double Log(double V)
+inline double Log(double V)
 { return std::log(V); }
 
-constexpr float Log2(float V)
+inline float Log2(float V)
 { return std::log2(V); }
 
-constexpr double Log2(double V)
+inline double Log2(double V)
 { return std::log2(V); }
 
-constexpr float Log10(float V)
+inline float Log10(float V)
 { return std::log10(V); }
 
-constexpr double Log10(double V)
+inline double Log10(double V)
 { return std::log10(V); }
 
 constexpr uint FloorLog2(uint V)
