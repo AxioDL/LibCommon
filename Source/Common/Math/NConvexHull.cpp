@@ -3,8 +3,9 @@
 #include "Common/CScopedTimer.h"
 #include "Common/Macros.h"
 #include "Common/NBasics.h"
-#include <vector>
+
 #include <cfloat>
+#include <vector>
 
 namespace NConvexHull
 {
