@@ -251,7 +251,7 @@ TString WorkingDirectory()
 
 TString MakeAbsolute(TString Path)
 {
-    if (!ToPath(*Path).has_root_name())
+    if (!ToPath(*Path).has_root_path())
         Path = WorkingDirectory() + "/" + Path;
 
     TStringList Components = Path.Split("/\\");
