@@ -11,6 +11,7 @@ bool Exists(const TString& rkFilePath);
 bool IsRoot(const TString& rkPath);
 bool IsFile(const TString& rkFilePath);
 bool IsDirectory(const TString& rkDirPath);
+bool IsDirectoryWritable(const TString& rkDirPath);
 bool IsAbsolute(const TString& rkDirPath);
 bool IsRelative(const TString& rkDirPath);
 bool IsEmpty(const TString& rkDirPath);

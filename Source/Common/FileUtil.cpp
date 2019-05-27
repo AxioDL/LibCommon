@@ -13,6 +13,14 @@
 #undef CopyFile
 #undef DeleteFile
 #undef MoveFile
+
+#define check_dir_access(path) _access(path, R_OK | W_OK)
+
+#else
+
+#include <unistd.h>
+#define check_dir_access(path) access(path, R_OK | W_OK | X_OK)
+
 #endif
 
 // These are mostly just wrappers around std::filesystem functions.
@@ -44,6 +52,11 @@ bool IsFile(const TString& rkFilePath)
 bool IsDirectory(const TString& rkDirPath)
 {
     return is_directory(ToPath(*rkDirPath));
+}
+
+bool IsDirectoryWritable(const TString& rkDirPath)
+{
+    return check_dir_access(*rkDirPath) == 0;
 }
 
 bool IsAbsolute(const TString& rkDirPath)
