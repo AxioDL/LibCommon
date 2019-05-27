@@ -47,7 +47,7 @@ void CVectorOutStream::WriteBytes(const void *pkSrc, uint32 Count)
     if (NewSize > mpVector->size())
     {
         if (NewSize > mpVector->capacity())
-            mpVector->reserve( ALIGN(mPos + Count, skAllocSize) );
+            mpVector->reserve( VAL_ALIGN(mPos + Count, skAllocSize) );
 
         mpVector->resize(NewSize);
     }
