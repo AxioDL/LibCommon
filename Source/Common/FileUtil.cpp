@@ -14,7 +14,8 @@
 #undef DeleteFile
 #undef MoveFile
 
-#define check_dir_access(path) _access(path, R_OK | W_OK)
+#include <io.h>
+#define check_dir_access(path) _access(path, 0x6)
 
 #else
 
