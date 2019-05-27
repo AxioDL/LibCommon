@@ -775,7 +775,7 @@ public:
 
         if (Back() != '/' && Back() != '\\')
         {
-            Out.Append('\\');
+            Out.Append('/');
         }
 
         return Out.operator+(pkOther);

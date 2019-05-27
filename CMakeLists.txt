@@ -38,18 +38,27 @@ file(GLOB_RECURSE source_files
     "Source/*.hpp"
 )
 
-add_library(libcommon ${source_files})
+if (APPLE)
+    set(PLAT_INCLUDE_DIRS MacFilesystem)
+    file(GLOB_RECURSE fs_files
+        "MacFilesystem/*.cpp"
+        "MacFilesystem/*.h"
+    )
+endif()
+
+add_library(libcommon ${source_files} ${fs_files})
 
 target_compile_features(libcommon PRIVATE cxx_std_17 c_std_11)
 
 # Make MSVC act like a real C/C++ compiler
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
     target_compile_options(libcommon PRIVATE "/permissive-")
 endif()
 
 target_include_directories(libcommon
     PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source>
+        ${PLAT_INCLUDE_DIRS}
 )
 
 target_link_libraries(

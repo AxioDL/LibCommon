@@ -98,7 +98,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        errorf("Unable to copy file because destination name contains illegal characters: %s", rkNewPath);
+        errorf("Unable to copy file because destination name contains illegal characters: %s", *rkNewPath);
         return false;
     }
 
@@ -128,7 +128,7 @@ bool MoveFile(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        errorf("Unable to move file because destination name contains illegal characters: %s", rkNewPath);
+        errorf("Unable to move file because destination name contains illegal characters: %s", *rkNewPath);
         return false;
     }
 
@@ -153,7 +153,7 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath)
 
     if (Exists(rkNewPath))
     {
-        errorf("Unable to move directory because there is an existing directory at the destination path: %s", rkNewPath);
+        errorf("Unable to move directory because there is an existing directory at the destination path: %s", *rkNewPath);
         return false;
     }
 
