@@ -8,6 +8,7 @@
 #include "Macros.h"
 
 #include <cstdarg>
+#include <cstdlib>
 #include <iomanip>
 #include <list>
 #include <sstream>
@@ -471,7 +472,7 @@ public:
 
     inline float ToFloat() const
     {
-        return std::stof(mInternalString, nullptr);
+        return std::strtof(mInternalString.c_str(), nullptr);
     }
 
     inline _TStdString ToStdString() const
