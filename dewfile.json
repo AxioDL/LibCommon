@@ -6,7 +6,7 @@
             "type": "git",
             "url":  "https://github.com/jackoalan/CodeGen",
             "head": "cmake",
-            "ref": "306a856ff541b9de6f3131eed8f958e91f4bf23d"
+            "ref": "e5df94de136afc93c4edcce48030ffdd22250308"
         },
         {
             "name": "tinyxml2",
