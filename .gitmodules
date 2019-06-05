@@ -1,0 +1,3 @@
+[submodule "Externals/CodeGen"]
+	path = Externals/CodeGen
+	url = ../CodeGen.git

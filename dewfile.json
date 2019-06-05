@@ -2,13 +2,6 @@
     "dependencies": 
     [
         {
-            "name": "CodeGen",
-            "type": "git",
-            "url":  "https://github.com/jackoalan/CodeGen",
-            "head": "cmake",
-            "ref": "abfbe39870a0de99a31d536fa958e5391977b85c"
-        },
-        {
             "name": "tinyxml2",
             "type": "git",
             "url":  "https://github.com/leethomason/tinyxml2",
