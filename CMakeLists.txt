@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 include(CMakePackageConfigHelpers)
-cmake_policy(SET CMP0077 NEW)
+if (POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
 
 project(libcommon VERSION 0.1 LANGUAGES C CXX)
 
