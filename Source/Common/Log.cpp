@@ -6,7 +6,7 @@
 #include <ctime>
 #include <iostream>
 
-#if WIN32
+#ifdef WIN32
 // Windows text color attributes
 #include <windows.h>
 
@@ -158,11 +158,11 @@ void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
     // Format current time to a string
     char TimeBuffer[16];
     double Time = CTimer::GlobalTime() - gAppStartTime;
-    sprintf(TimeBuffer, "[%08.3f]", Time);
+    snprintf(TimeBuffer, 16, "[%08.3f]", Time);
 
     // Format message with varargs
     char MsgBuffer[512];
-    vsprintf(MsgBuffer, pkMsg, VarArgs);
+    vsnprintf(MsgBuffer, 512, pkMsg, VarArgs);
 
     // Write to log file
     if (!gInitialized)
@@ -176,7 +176,7 @@ void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
     }
 
     // Write to stdout
-#if WIN32
+#ifdef WIN32
     static HANDLE sStdOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(sStdOutHandle, WIN_BOLD | WIN_CYAN);
     printf("%s ", TimeBuffer);
@@ -184,6 +184,10 @@ void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
     printf(MsgBuffer);
     SetConsoleTextAttribute(sStdOutHandle, WIN_RESET);
     printf("\n");
+    // Also output using MS' debugger API
+    char DebugBuffer[530];
+    snprintf(DebugBuffer, 530, "%s %s\n", TimeBuffer, MsgBuffer);
+    OutputDebugStringA(DebugBuffer);
 #else
     printf(ANSI_BOLD_CYAN "%s %s%s" ANSI_RESET "\n",
            TimeBuffer, GetColorCode(Type), MsgBuffer);

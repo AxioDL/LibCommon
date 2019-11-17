@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <system_error>
 
-#if WIN32
+#ifdef WIN32
 #include <Windows.h>
 
 // Windows why
@@ -230,7 +230,7 @@ bool ClearDirectory(const TString& rkDirPath)
 
 void MarkHidden(const TString& rkFilePath, bool Hidden)
 {
-#if WIN32
+#ifdef WIN32
     T16String FilePath16 = rkFilePath.ToUTF16();
     DWORD Attrs = GetFileAttributesW( ToWChar(FilePath16) );
 
