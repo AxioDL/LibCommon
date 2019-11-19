@@ -32,7 +32,7 @@ public:
 #ifdef _WIN32
         mpFile = _wfopen(ToWChar(rkPath), L"a+");
 #else
-        mpFile = open(*rkPath, O_CREAT | O_APPEND | O_RDWR);
+        mpFile = open(*rkPath, O_CREAT | O_APPEND | O_RDWR, 0644);
         flock(mpFile, LOCK_EX);
 #endif
     }

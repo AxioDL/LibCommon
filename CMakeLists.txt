@@ -33,9 +33,9 @@ int main() { return 0; }
 " HAVE_LIBCXX_FILESYSTEM)
 
 if (HAVE_STDLIBCXX_FILESYSTEM)
-    find_library(FS_LIBRARY stdc++fs)
+    set(FS_LIBRARY stdc++fs)
 elseif (HAVE_LIBCXX_FILESYSTEM)
-    find_library(FS_LIBRARY c++fs)
+    set(FS_LIBRARY c++fs)
 endif()
 
 file(GLOB_RECURSE source_files
