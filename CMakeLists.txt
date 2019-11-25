@@ -14,28 +14,30 @@ endif()
 add_subdirectory(Externals/CodeGen)
 find_package(tinyxml2 CONFIG REQUIRED)
 
-include(CheckCXXSourceCompiles)
+if (NOT APPLE AND NOT MSVC)
+    include(CheckCXXSourceCompiles)
 
-check_cxx_source_compiles("
-#include <filesystem>
-#ifndef _GLIBCXX_FILESYSTEM
-#error NO STDLIBCXX
-#endif
-int main() { return 0; }
-" HAVE_STDLIBCXX_FILESYSTEM)
+    check_cxx_source_compiles("
+    #include <filesystem>
+    #ifndef _GLIBCXX_FILESYSTEM
+    #error NO STDLIBCXX
+    #endif
+    int main() { return 0; }
+    " HAVE_STDLIBCXX_FILESYSTEM)
 
-check_cxx_source_compiles("
-#include <filesystem>
-#ifndef _LIBCPP_FILESYSTEM
-#error NO LIBCXX
-#endif
-int main() { return 0; }
-" HAVE_LIBCXX_FILESYSTEM)
+    check_cxx_source_compiles("
+    #include <filesystem>
+    #ifndef _LIBCPP_FILESYSTEM
+    #error NO LIBCXX
+    #endif
+    int main() { return 0; }
+    " HAVE_LIBCXX_FILESYSTEM)
 
-if (HAVE_STDLIBCXX_FILESYSTEM)
-    set(FS_LIBRARY stdc++fs)
-elseif (HAVE_LIBCXX_FILESYSTEM)
-    set(FS_LIBRARY c++fs)
+    if (HAVE_STDLIBCXX_FILESYSTEM)
+        set(FS_LIBRARY stdc++fs)
+    elseif (HAVE_LIBCXX_FILESYSTEM)
+        set(FS_LIBRARY c++fs)
+    endif()
 endif()
 
 file(GLOB_RECURSE source_files
@@ -44,15 +46,7 @@ file(GLOB_RECURSE source_files
     "Source/*.hpp"
 )
 
-if (APPLE)
-    set(PLAT_INCLUDE_DIRS MacFilesystem)
-    file(GLOB_RECURSE fs_files
-        "MacFilesystem/*.cpp"
-        "MacFilesystem/*.h"
-    )
-endif()
-
-add_library(libcommon ${source_files} ${fs_files})
+add_library(libcommon ${source_files})
 
 target_compile_features(libcommon PRIVATE cxx_std_17 c_std_11)
 
