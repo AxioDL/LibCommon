@@ -5,45 +5,47 @@
 
 class CPlane
 {
-    CVector3f mNormal;
-    float mDist;
+    CVector3f mNormal{CVector3f::skUp};
+    float mDist = 0.0f;
 
 public:
-    CPlane()
-        : mNormal(CVector3f::skUp)
-        , mDist(0.f)
+    CPlane() = default;
+
+    constexpr CPlane(const CVector3f& normal, float dist)
+        : mNormal(normal)
+        , mDist(dist)
     {}
 
-    CPlane(const CVector3f& rkNormal, float Dist)
-        : mNormal(rkNormal)
-        , mDist(Dist)
-    {}
-
-    CPlane(const CVector3f& rkNormal, const CVector3f& rkOrigin)
+    constexpr CPlane(const CVector3f& normal, const CVector3f& origin)
     {
-        Redefine(rkNormal, rkOrigin);
+        Redefine(normal, origin);
     }
 
-    void Redefine(const CVector3f& rkNormal, const CVector3f& rkOrigin)
+    constexpr void Redefine(const CVector3f& normal, const CVector3f& origin)
     {
-        mNormal = rkNormal;
-        mDist = -rkNormal.Dot(rkOrigin);
+        mNormal = normal;
+        mDist = -normal.Dot(origin);
     }
 
-    float DistanceFromPoint(const CVector3f& kPoint) const
+    [[nodiscard]] constexpr float DistanceFromPoint(const CVector3f& point) const
     {
-        return kPoint.Dot(mNormal) + mDist;
+        return point.Dot(mNormal) + mDist;
     }
 
-    inline bool operator==(const CPlane& kOther) const
+    [[nodiscard]] constexpr bool operator==(const CPlane& other) const
     {
-        return mNormal == kOther.mNormal && mDist == kOther.mDist;
+        return mNormal == other.mNormal && mDist == other.mDist;
     }
 
-    CVector3f Normal() const                    { return mNormal; }
-    float Dist() const                          { return mDist; }
-    void SetNormal(const CVector3f& rkNormal)   { mNormal = rkNormal; }
-    void SetDist(float Dist)                    { mDist = Dist; }
+    [[nodiscard]] constexpr bool operator!=(const CPlane& other) const
+    {
+        return !operator==(other);
+    }
+
+    [[nodiscard]] constexpr CVector3f Normal() const  { return mNormal; }
+    [[nodiscard]] constexpr float Dist() const        { return mDist; }
+    constexpr void SetNormal(const CVector3f& normal) { mNormal = normal; }
+    constexpr void SetDist(float dist)                { mDist = dist; }
 };
 
 #endif // CPLANE_H
