@@ -9,38 +9,64 @@
 class CColor
 {
 public:
-    float R, G, B, A;
+    float R = 0.0f;
+    float G = 0.0f;
+    float B = 0.0f;
+    float A = 0.0f;
 
-    CColor();
-    CColor(IInputStream& rInput, bool Integral = false);
-    CColor(float RGBA);
-    CColor(float _R, float _G, float _B, float A = 1.f);
-    void SetIntegral(uint8 RGBA);
-    void SetIntegral(uint8 _R, uint8 _G, uint8 _B, uint8 _A = 255);
+    constexpr CColor() = default;
+    explicit CColor(IInputStream& rInput, bool Integral = false);
+    constexpr CColor(float RGBA) : R{RGBA}, G{RGBA}, B{RGBA}, A{RGBA} {}
+    constexpr CColor(float R_, float G_, float B_, float A_ = 1.f) : R{R_}, G{G_}, B{B_}, A{A_} {}
+
+    constexpr void SetIntegral(uint8 RGBA) {
+        const float f = RGBA / 255.f;
+        R = G = B = A = f;
+    }
+    constexpr void SetIntegral(uint8 R_, uint8 G_, uint8 B_, uint8 A_ = 255) {
+        R = R_ / 255.f;
+        G = G_ / 255.f;
+        B = B_ / 255.f;
+        A = A_ / 255.f;
+    }
+
     void Write(IOutputStream& rOutput, bool Integral = false) const;
     void Serialize(IArchive& rArc);
 
-    long ToLongRGBA() const;
-    long ToLongARGB() const;
-    bool operator==(const CColor& rkOther) const;
-    bool operator!=(const CColor& rkOther) const;
-    CColor operator+(const CColor& rkOther) const;
+    [[nodiscard]] long ToLongRGBA() const;
+    [[nodiscard]] long ToLongARGB() const;
+
+    [[nodiscard]] constexpr bool operator==(const CColor& other) const {
+        return R == other.R && G == other.G && B == other.B && A == other.A;
+    }
+    [[nodiscard]] constexpr bool operator!=(const CColor& other) const {
+        return !operator==(other);
+    }
+    [[nodiscard]] CColor operator+(const CColor& rkOther) const;
     void operator+=(const CColor& rkOther);
-    CColor operator-(const CColor& rkOther) const;
+    [[nodiscard]] CColor operator-(const CColor& rkOther) const;
     void operator-=(const CColor& rkOther);
-    CColor operator*(const CColor& rkOther) const;
+    [[nodiscard]] CColor operator*(const CColor& rkOther) const;
     void operator*=(const CColor& rkOther);
-    CColor operator*(float Other) const;
+    [[nodiscard]] CColor operator*(float Other) const;
     void operator*=(float Other);
-    CColor operator/(const CColor& rkOther) const;
+    [[nodiscard]] CColor operator/(const CColor& rkOther) const;
     void operator/=(const CColor& rkOther);
 
     // Static
-    static CColor Integral(uint8 RGBA);
-    static CColor Integral(uint8 _R, uint8 _G, uint8 _B, uint8 _A = 255);
-    static CColor RandomColor(bool Transparent);
-    static CColor RandomLightColor(bool Transparent);
-    static CColor RandomDarkColor(bool Transparent);
+    [[nodiscard]] static constexpr CColor Integral(uint8 RGBA) {
+        CColor out;
+        out.SetIntegral(RGBA);
+        return out;
+    }
+    [[nodiscard]] static constexpr CColor Integral(uint8 R_, uint8 G_, uint8 B_, uint8 A_ = 255) {
+        CColor out;
+        out.SetIntegral(R_, G_, B_, A_);
+        return out;
+    }
+    [[nodiscard]] static CColor RandomColor(bool Transparent);
+    [[nodiscard]] static CColor RandomLightColor(bool Transparent);
+    [[nodiscard]] static CColor RandomDarkColor(bool Transparent);
 
     // some predefined colors below for ease of use
     static const CColor skRed;
