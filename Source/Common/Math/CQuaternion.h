@@ -6,33 +6,42 @@
 class CQuaternion
 {
 public:
-    float W, X, Y, Z;
+    float W = 1.0f;
+    float X = 0.0f;
+    float Y = 0.0f;
+    float Z = 0.0f;
 
-    CQuaternion();
-    CQuaternion(float _W, float _X, float _Y, float _Z);
-    CQuaternion(IInputStream& rInput);
+    constexpr CQuaternion() = default;
+    constexpr CQuaternion(float W_, float X_, float Y_, float Z_) : W{W_}, X{X_}, Y{Y_}, Z{Z_} {}
+    explicit CQuaternion(IInputStream& rInput);
 
-    CVector3f XAxis() const;
-    CVector3f YAxis() const;
-    CVector3f ZAxis() const;
-    CQuaternion Normalized() const;
-    CQuaternion Inverse() const;
-    CQuaternion Lerp(const CQuaternion& rkRight, float t) const;
-    CQuaternion Slerp(const CQuaternion& rkRight, float t) const;
-    CVector3f ToEuler() const;
+    [[nodiscard]] CVector3f XAxis() const {
+        return *this * CVector3f::skUnitX;
+    }
+    [[nodiscard]] CVector3f YAxis() const {
+        return *this * CVector3f::skUnitY;
+    }
+    [[nodiscard]] CVector3f ZAxis() const {
+        return *this * CVector3f::skUnitZ;
+    }
+    [[nodiscard]] CQuaternion Normalized() const;
+    [[nodiscard]] CQuaternion Inverse() const;
+    [[nodiscard]] CQuaternion Lerp(const CQuaternion& rkRight, float t) const;
+    [[nodiscard]] CQuaternion Slerp(const CQuaternion& rkRight, float t) const;
+    [[nodiscard]] CVector3f ToEuler() const;
 
     // Operators
-    CVector3f operator*(const CVector3f& rkVec) const;
-    CQuaternion operator*(const CQuaternion& rkOther) const;
+    [[nodiscard]] CVector3f operator*(const CVector3f& rkVec) const;
+    [[nodiscard]] CQuaternion operator*(const CQuaternion& rkOther) const;
     void operator *= (const CQuaternion& rkOther);
-    CQuaternion operator*(const CTransform4f& rkMtx) const;
+    [[nodiscard]] CQuaternion operator*(const CTransform4f& rkMtx) const;
     void operator *= (const CTransform4f& rkMtx);
 
     // Static
-    static CQuaternion FromEuler(CVector3f Euler);
-    static CQuaternion FromAxisAngle(float Angle, CVector3f Axis);
-    static CQuaternion FromRotationMatrix(const CMatrix4f& rkRotMtx);
-    static CQuaternion FromAxes(const CVector3f& rkX, const CVector3f& rkY, const CVector3f& rkZ);
+    [[nodiscard]] static CQuaternion FromEuler(CVector3f Euler);
+    [[nodiscard]] static CQuaternion FromAxisAngle(float Angle, CVector3f Axis);
+    [[nodiscard]] static CQuaternion FromRotationMatrix(const CMatrix4f& rkRotMtx);
+    [[nodiscard]] static CQuaternion FromAxes(const CVector3f& rkX, const CVector3f& rkY, const CVector3f& rkZ);
 
     static CQuaternion skIdentity;
     static CQuaternion skZero;

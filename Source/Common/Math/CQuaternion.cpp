@@ -2,23 +2,6 @@
 #include "CMatrix4f.h"
 #include "MathUtil.h"
 #include <cmath>
-#include <math.h>
-
-CQuaternion::CQuaternion()
-    : W(1.f)
-    , X(0.f)
-    , Y(0.f)
-    , Z(0.f)
-{
-}
-
-CQuaternion::CQuaternion(float _W, float _X, float _Y, float _Z)
-    : W(_W)
-    , X(_X)
-    , Y(_Y)
-    , Z(_Z)
-{
-}
 
 CQuaternion::CQuaternion(IInputStream& rInput)
     : W(rInput.ReadFloat())
@@ -26,21 +9,6 @@ CQuaternion::CQuaternion(IInputStream& rInput)
     , Y(rInput.ReadFloat())
     , Z(rInput.ReadFloat())
 {
-}
-
-CVector3f CQuaternion::XAxis() const
-{
-    return (*this * CVector3f::skUnitX);
-}
-
-CVector3f CQuaternion::YAxis() const
-{
-    return (*this * CVector3f::skUnitY);
-}
-
-CVector3f CQuaternion::ZAxis() const
-{
-    return (*this * CVector3f::skUnitZ);
 }
 
 CQuaternion CQuaternion::Normalized() const
