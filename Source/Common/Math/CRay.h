@@ -10,28 +10,28 @@ class CRay
     CVector3f mDirection;
 
 public:
-    CRay() {}
+    constexpr CRay() = default;
 
-    CRay(const CVector3f& rkOrigin, const CVector3f& rkDirection)
-        : mOrigin(rkOrigin), mDirection(rkDirection) {}
+    constexpr CRay(const CVector3f& origin, const CVector3f& direction)
+        : mOrigin(origin), mDirection(direction) {}
 
-    const CVector3f& Origin() const                 { return mOrigin; }
-    const CVector3f& Direction() const              { return mDirection; }
-    void SetOrigin(const CVector3f& rkOrigin)       { mOrigin = rkOrigin; }
-    void SetDirection(const CVector3f& rkDirection) { mDirection = rkDirection; }
+    [[nodiscard]] constexpr const CVector3f& Origin() const    { return mOrigin; }
+    [[nodiscard]] constexpr const CVector3f& Direction() const { return mDirection; }
+    constexpr void SetOrigin(const CVector3f& origin)          { mOrigin = origin; }
+    constexpr void SetDirection(const CVector3f& direction)    { mDirection = direction; }
 
-    CRay Transformed(const CTransform4f& rkMatrix) const
+    [[nodiscard]] CRay Transformed(const CTransform4f& matrix) const
     {
         CRay Out;
-        Out.mOrigin = rkMatrix * mOrigin;
+        Out.mOrigin = matrix * mOrigin;
 
-        CVector3f Point = rkMatrix * (mOrigin + mDirection);
+        CVector3f Point = matrix * (mOrigin + mDirection);
         Out.mDirection = (Point - Out.mOrigin).Normalized();
 
         return Out;
     }
 
-    CVector3f PointOnRay(float Distance) const { return mOrigin + (mDirection * Distance); }
+    constexpr CVector3f PointOnRay(float distance) const { return mOrigin + (mDirection * distance); }
 };
 
 #endif // CRAY_H
