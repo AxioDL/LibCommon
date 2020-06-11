@@ -97,6 +97,11 @@ public:
         return mInternalString.c_str();
     }
 
+    CharType* Data()
+    {
+        return mInternalString.data();
+    }
+
     const CharType* Data() const
     {
         return mInternalString.data();
