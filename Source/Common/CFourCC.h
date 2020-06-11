@@ -82,7 +82,7 @@ public:
     [[nodiscard]] char& operator[](int Index)
     {
         ASSERT(Index >= 0 && Index < 4);
-        if (EEndian::SystemEndian == EEndian::LittleEndian)
+        if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
             Index = 3 - Index;
 
         return ((char*)(&mFourCC))[Index];
@@ -91,7 +91,7 @@ public:
     [[nodiscard]] const char& operator[](int Index) const
     {
         ASSERT(Index >= 0 && Index < 4);
-        if (EEndian::SystemEndian == EEndian::LittleEndian)
+        if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
             Index = 3 - Index;
 
         return ((char*)(&mFourCC))[Index];
