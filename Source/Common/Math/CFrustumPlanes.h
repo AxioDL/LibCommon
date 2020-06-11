@@ -4,23 +4,27 @@
 #include "CAABox.h"
 #include "CPlane.h"
 #include "CVector3f.h"
+#include <array>
 
 class CFrustumPlanes
 {
 public:
-    enum EFrustumSide
+    enum class ESide
     {
-        kNearPlane = 0, kFarPlane    = 1,
-        kTopPlane  = 2, kBottomPlane = 3,
-        kLeftPlane = 4, kRightPlane  = 5
+        NearPlane,
+        FarPlane,
+        TopPlane,
+        BottomPlane,
+        LeftPlane,
+        RightPlane,
     };
 
 private:
-    CPlane mPlanes[6];
+    std::array<CPlane, 6> mPlanes;
 
 public:
     CFrustumPlanes();
-    const CPlane& GetPlane(EFrustumSide Side) const;
+    const CPlane& GetPlane(ESide Side) const;
     void SetPlanes(const CVector3f& rkPosition, const CVector3f& rkDirection, float FieldOfView, float AspectRatio, float Near, float Far);
     bool PointInFrustum(const CVector3f& rkPoint) const;
     bool BoxInFrustum(const CAABox& rkBox) const;
