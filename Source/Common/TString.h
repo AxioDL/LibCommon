@@ -53,21 +53,18 @@ protected:
     typedef std::basic_string<_CharType> _TStdString;
     typedef _ListType _TStringList;
 
-    _TStdString mInternalString;
+    _TStdString mInternalString{};
 
 public:
     // Constructors
-    TBasicString()
-        : mInternalString()
-    {
-    }
+    TBasicString() = default;
 
-    TBasicString(uint Size)
+    TBasicString(size_t Size)
         : mInternalString(Size, 0)
     {
     }
 
-    TBasicString(uint Size, CharType Fill)
+    TBasicString(size_t Size, CharType Fill)
         : mInternalString(Size, Fill)
     {
     }
@@ -78,7 +75,7 @@ public:
             mInternalString = pkText;
     }
 
-    TBasicString(const CharType* pkText, uint32 Length)
+    TBasicString(const CharType* pkText, size_t Length)
         : mInternalString(pkText, Length)
     {
     }
@@ -89,17 +86,17 @@ public:
     }
 
     // Data Accessors
-    inline const CharType* CString() const
+    const CharType* CString() const
     {
         return mInternalString.c_str();
     }
 
-    inline const CharType* Data() const
+    const CharType* Data() const
     {
         return mInternalString.data();
     }
 
-    inline CharType At(uint Pos) const
+    CharType At(uint Pos) const
     {
         if (Size() <= Pos)
         {
@@ -110,65 +107,65 @@ public:
         return mInternalString.at(Pos);
     }
 
-    inline CharType Front() const
+    CharType Front() const
     {
         return (Size() > 0 ? mInternalString[0] : 0);
     }
 
-    inline CharType Back() const
+    CharType Back() const
     {
         return (Size() > 0 ? mInternalString[Size() - 1] : 0);
     }
 
-    inline const CharType* Begin() const
+    const CharType* Begin() const
     {
         return mInternalString.data();
     }
 
-    inline const CharType* End() const
+    const CharType* End() const
     {
         return mInternalString.data() + mInternalString.size();
     }
 
-    inline uint Size() const
+    uint Size() const
     {
         return mInternalString.size();
     }
 
-    inline uint Length() const
+    uint Length() const
     {
         return Size();
     }
 
-    inline int IndexOf(CharType Character, uint Offset) const
+    int IndexOf(CharType Character, uint Offset) const
     {
         size_t Pos = mInternalString.find_first_of(Character, Offset);
         return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline int IndexOf(CharType Character) const
+    int IndexOf(CharType Character) const
     {
         return IndexOf(Character, 0);
     }
 
-    inline int IndexOf(const CharType* pkCharacters, uint Offset) const
+    int IndexOf(const CharType* pkCharacters, uint Offset) const
     {
         size_t Pos = mInternalString.find_first_of(pkCharacters, Offset);
         return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline int IndexOf(const CharType* pkCharacters) const
+    int IndexOf(const CharType* pkCharacters) const
     {
         return IndexOf(pkCharacters, 0);
     }
 
-    inline int LastIndexOf(CharType Character) const
+    int LastIndexOf(CharType Character) const
     {
         size_t Pos = mInternalString.find_last_of(Character);
         return (Pos == _TStdString::npos ? -1 : (int) Pos);
     }
 
-    inline int LastIndexOf(const CharType* pkCharacters) const
+    int LastIndexOf(const CharType* pkCharacters) const
     {
         size_t Pos = mInternalString.find_last_of(pkCharacters);
 
@@ -225,28 +222,28 @@ public:
         return -1;
     }
 
-    inline int IndexOfPhrase(const _TString& rkStr, bool CaseSensitive = true) const
+    int IndexOfPhrase(const _TString& rkStr, bool CaseSensitive = true) const
     {
         return IndexOfPhrase(rkStr, 0, CaseSensitive);
     }
 
     // Modify String
-    inline _TString SubString(uint StartPos, uint Length) const
+    _TString SubString(uint StartPos, uint Length) const
     {
         return mInternalString.substr(StartPos, Length);
     }
 
-    inline void Reserve(uint Amount)
+    void Reserve(uint Amount)
     {
         mInternalString.reserve(Amount);
     }
 
-    inline void Shrink()
+    void Shrink()
     {
         mInternalString.shrink_to_fit();
     }
 
-    inline void Insert(uint Pos, CharType Chr)
+    void Insert(uint Pos, CharType Chr)
     {
         if (Size() < Pos)
         {
@@ -257,7 +254,7 @@ public:
         mInternalString.insert(Pos, 1, Chr);
     }
 
-    inline void Insert(uint Pos, const CharType* pkStr)
+    void Insert(uint Pos, const CharType* pkStr)
     {
         if (Size() < Pos)
         {
@@ -268,12 +265,12 @@ public:
         mInternalString.insert(Pos, pkStr);
     }
 
-    inline void Insert(uint Pos, const _TString& rkStr)
+    void Insert(uint Pos, const _TString& rkStr)
     {
         Insert(Pos, rkStr.CString());
     }
 
-    inline void Remove(uint Pos, uint Len)
+    void Remove(uint Pos, uint Len)
     {
 #ifdef _DEBUG
         if (Size() <= Pos)
@@ -285,7 +282,7 @@ public:
         mInternalString.erase(Pos, Len);
     }
 
-    inline void Remove(const CharType* pkStr, bool CaseSensitive = false)
+    void Remove(const CharType* pkStr, bool CaseSensitive = false)
     {
         uint InStrLen = CStringLength(pkStr);
 
@@ -293,13 +290,13 @@ public:
             Remove(Idx, InStrLen);
     }
 
-    inline void Remove(CharType Chr)
+    void Remove(CharType Chr)
     {
         for (int Idx = IndexOf(Chr); Idx != -1; Idx = IndexOf(Chr, Idx))
             Remove(Idx, 1);
     }
 
-    inline void RemoveWhitespace()
+    void RemoveWhitespace()
     {
         for (uint32 Idx = 0; Idx < Size(); Idx++)
         {
@@ -311,7 +308,7 @@ public:
         }
     }
 
-    inline void Replace(const CharType* pkStr, const CharType *pkReplacement, bool CaseSensitive = false)
+    void Replace(const CharType* pkStr, const CharType *pkReplacement, bool CaseSensitive = false)
     {
         uint Offset = 0;
         uint InStrLen = CStringLength(pkStr);
@@ -325,37 +322,37 @@ public:
         }
     }
 
-    inline void Replace(const _TString& rkStr, const _TString& rkReplacement, bool CaseSensitive)
+    void Replace(const _TString& rkStr, const _TString& rkReplacement, bool CaseSensitive)
     {
         Replace(rkStr.CString(), rkReplacement.CString(), CaseSensitive);
     }
 
-    inline void Append(CharType Chr)
+    void Append(CharType Chr)
     {
         mInternalString.append(1, Chr);
     }
 
-    inline void Append(const CharType* pkText)
+    void Append(const CharType* pkText)
     {
         mInternalString.append(pkText);
     }
 
-    inline void Append(const _TString& rkStr)
+    void Append(const _TString& rkStr)
     {
         mInternalString.append(rkStr.CString());
     }
 
-    inline void Prepend(CharType Chr)
+    void Prepend(CharType Chr)
     {
         Insert(0, Chr);
     }
 
-    inline void Prepend(const CharType* pkText)
+    void Prepend(const CharType* pkText)
     {
         Insert(0, pkText);
     }
 
-    inline void Prepend(const _TString& rkStr)
+    void Prepend(const _TString& rkStr)
     {
         Insert(0, rkStr);
     }
@@ -409,24 +406,24 @@ public:
         return SubString(Start, End - Start);
     }
 
-    inline _TString Truncate(uint Amount) const
+    _TString Truncate(uint Amount) const
     {
         return SubString(0, Amount);
     }
 
-    inline _TString ChopFront(uint Amount) const
+    _TString ChopFront(uint Amount) const
     {
         if (Size() <= Amount) return _TString();
         return SubString(Amount, Size() - Amount);
     }
 
-    inline _TString ChopBack(uint Amount) const
+    _TString ChopBack(uint Amount) const
     {
         if (Size() <= Amount) return _TString();
         return SubString(0, Size() - Amount);
     }
 
-    inline int32 ToInt32(int Base = 10) const
+    int32 ToInt32(int Base = 10) const
     {
         try {
             return (int32) std::stoul(mInternalString, nullptr, Base);
@@ -437,7 +434,7 @@ public:
         }
     }
 
-    inline int64 ToInt64(int Base = 10) const
+    int64 ToInt64(int Base = 10) const
     {
         try {
             return (int64) std::stoull(mInternalString, nullptr, Base);
@@ -470,12 +467,12 @@ public:
         }
     }
 
-    inline float ToFloat() const
+    float ToFloat() const
     {
         return std::strtof(mInternalString.c_str(), nullptr);
     }
 
-    inline _TStdString ToStdString() const
+    _TStdString ToStdString() const
     {
         return mInternalString;
     }
@@ -617,7 +614,7 @@ public:
         return true;
     }
 
-    inline bool CaseInsensitiveCompare(const _TString& rkOther) const
+    bool CaseInsensitiveCompare(const _TString& rkOther) const
     {
         if (Size() != rkOther.Size())
             return false;
@@ -630,12 +627,12 @@ public:
     }
 
     // Hashing
-    inline uint32 Hash32() const
+    uint32 Hash32() const
     {
         return CCRC32::StaticHashData( Data(), Size() * sizeof(CharType) );
     }
 
-    inline uint64 Hash64() const
+    uint64 Hash64() const
     {
         return CFNV1A::StaticHashData64( Data(), Size() * sizeof(CharType) );
     }
@@ -696,35 +693,35 @@ public:
     }
 
     // Operators
-    inline _TString& operator=(CharType Char)
+    _TString& operator=(CharType Char)
     {
         mInternalString = Char;
         return *this;
     }
 
-    inline _TString& operator=(const CharType* pkText)
+    _TString& operator=(const CharType* pkText)
     {
         mInternalString = pkText;
         return *this;
     }
 
-    inline _TString& operator=(const _TString& rkText)
+    _TString& operator=(const _TString& rkText)
     {
         mInternalString = rkText.mInternalString;
         return *this;
     }
 
-    inline CharType& operator[](int Pos)
+    CharType& operator[](int Pos)
     {
         return mInternalString[Pos];
     }
 
-    inline const CharType& operator[](int Pos) const
+    const CharType& operator[](int Pos) const
     {
         return mInternalString[Pos];
     }
 
-    inline const CharType* operator*() const
+    const CharType* operator*() const
     {
         return CString();
     }
@@ -747,27 +744,27 @@ public:
         return Out;
     }
 
-    inline _TString operator+(const _TString& rkOther) const
+    _TString operator+(const _TString& rkOther) const
     {
         return (*this + rkOther.CString());
     }
 
-    inline void operator+=(CharType Other)
+    void operator+=(CharType Other)
     {
         *this = *this + Other;
     }
 
-    inline void operator+=(const CharType* pkOther)
+    void operator+=(const CharType* pkOther)
     {
         *this = *this + pkOther;
     }
 
-    inline void operator+=(const _TString& rkOther)
+    void operator+=(const _TString& rkOther)
     {
         *this = *this + rkOther;
     }
 
-    inline _TString operator/(const CharType* pkOther) const
+    _TString operator/(const CharType* pkOther) const
     {
         // Append operator that ensures a slash separates the element being appended
         // Useful for constructing filesystem paths
@@ -781,17 +778,17 @@ public:
         return Out.operator+(pkOther);
     }
 
-    inline _TString operator/(const _TString& kOther) const
+    _TString operator/(const _TString& kOther) const
     {
         return operator/(*kOther);
     }
 
-    inline friend _TString operator/(const CharType* pkLeft, const _TString& rkRight)
+    friend _TString operator/(const CharType* pkLeft, const _TString& rkRight)
     {
         return  _TString(pkLeft).operator/(*rkRight);
     }
 
-    inline friend _TString operator+(CharType Left, const _TString& rkRight)
+    friend _TString operator+(CharType Left, const _TString& rkRight)
     {
         _TString Out(rkRight.Size() + 1);
         memcpy(&Out[0], &Left, sizeof(CharType));
@@ -799,7 +796,7 @@ public:
         return Out;
     }
 
-    inline friend _TString operator+(const CharType* pkLeft, const _TString& rkRight)
+    friend _TString operator+(const CharType* pkLeft, const _TString& rkRight)
     {
         uint32 Len = CStringLength(pkLeft);
 
@@ -809,7 +806,7 @@ public:
         return Out;
     }
 
-    inline friend _TString operator+(const _TStdString& rkLeft, const _TString& rkRight)
+    friend _TString operator+(const _TStdString& rkLeft, const _TString& rkRight)
     {
         _TString Out(rkLeft.size() + rkRight.Size());
         memcpy(&Out[0], rkLeft.data(), rkLeft.size() * sizeof(CharType));
@@ -817,153 +814,153 @@ public:
         return Out;
     }
 
-    inline bool operator==(CharType Other) const
+    bool operator==(CharType Other) const
     {
         return Size() == 1 && At(0) == Other;
     }
 
-    inline bool operator==(const CharType *pkText) const
+    bool operator==(const CharType *pkText) const
     {
         return CompareCStrings(pkText, CString());
     }
 
-    inline bool operator==(const _TString& rkOther) const
+    bool operator==(const _TString& rkOther) const
     {
         return (mInternalString == rkOther.mInternalString);
     }
 
-    inline friend bool operator==(CharType Other, const _TString& rkString)
+    friend bool operator==(CharType Other, const _TString& rkString)
     {
         return (rkString == Other);
     }
 
-    inline friend bool operator==(const CharType *pkText, const _TString& rkString)
+    friend bool operator==(const CharType *pkText, const _TString& rkString)
     {
         return (rkString == pkText);
     }
 
-    inline friend bool operator==(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator==(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB == rkStringA);
     }
 
-    inline bool operator!=(CharType Other) const
+    bool operator!=(CharType Other) const
     {
         return (!(*this == Other));
     }
 
-    inline bool operator!=(const CharType *pkText) const
+    bool operator!=(const CharType *pkText) const
     {
         return (!(*this == pkText));
     }
 
-    inline bool operator!=(const _TString& rkOther) const
+    bool operator!=(const _TString& rkOther) const
     {
         return (!(*this == rkOther));
     }
 
-    inline friend bool operator!=(CharType Other, const _TString& rkString)
+    friend bool operator!=(CharType Other, const _TString& rkString)
     {
         return (rkString != Other);
     }
 
-    inline friend bool operator!=(const CharType *pkText, const _TString& rkString)
+    friend bool operator!=(const CharType *pkText, const _TString& rkString)
     {
         return (rkString != pkText);
     }
 
-    inline friend bool operator!=(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator!=(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB != rkStringA);
     }
 
-    inline bool operator<(const CharType* pkText) const
+    bool operator<(const CharType* pkText) const
     {
         return (mInternalString < pkText);
     }
 
-    inline bool operator<(const _TString& rkOther) const
+    bool operator<(const _TString& rkOther) const
     {
         return (mInternalString < rkOther.mInternalString);
     }
 
-    inline friend bool operator<(const CharType* pkText, const _TString& rkString)
+    friend bool operator<(const CharType* pkText, const _TString& rkString)
     {
         return (rkString > pkText);
     }
 
-    inline friend bool operator<(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator<(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB > rkStringA);
     }
 
-    inline bool operator<=(const CharType* pkText) const
+    bool operator<=(const CharType* pkText) const
     {
         return (mInternalString <= pkText);
     }
 
-    inline bool operator<=(const _TString& rkOther) const
+    bool operator<=(const _TString& rkOther) const
     {
         return (mInternalString <= rkOther.mInternalString);
     }
 
-    inline friend bool operator<=(const CharType* pkText, const _TString& rkString)
+    friend bool operator<=(const CharType* pkText, const _TString& rkString)
     {
         return (rkString >= pkText);
     }
 
-    inline friend bool operator<=(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator<=(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB >= rkStringA);
     }
 
-    inline bool operator>(const CharType* pkText) const
+    bool operator>(const CharType* pkText) const
     {
         return (mInternalString > pkText);
     }
 
-    inline bool operator>(const _TString& rkOther) const
+    bool operator>(const _TString& rkOther) const
     {
         return (mInternalString > rkOther.mInternalString);
     }
 
-    inline friend bool operator>(const CharType* pkText, const _TString& rkString)
+    friend bool operator>(const CharType* pkText, const _TString& rkString)
     {
         return (rkString < pkText);
     }
 
-    inline friend bool operator>(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator>(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB < rkStringA);
     }
 
-    inline bool operator>=(const CharType* pkText) const
+    bool operator>=(const CharType* pkText) const
     {
         return (mInternalString >= pkText);
     }
 
-    inline bool operator>=(const _TString& rkOther) const
+    bool operator>=(const _TString& rkOther) const
     {
         return (mInternalString >= rkOther.mInternalString);
     }
 
-    inline friend bool operator>=(const CharType* pkText, const _TString& rkString)
+    friend bool operator>=(const CharType* pkText, const _TString& rkString)
     {
         return (rkString <= pkText);
     }
 
-    inline friend bool operator>=(const _TStdString& rkStringA, const _TString& rkStringB)
+    friend bool operator>=(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB <= rkStringA);
     }
 
-    inline friend std::ostream& operator<<(std::ostream& rStream, const _TString& rkString)
+    friend std::ostream& operator<<(std::ostream& rStream, const _TString& rkString)
     {
         rStream << rkString.mInternalString;
         return rStream;
     }
 
-    inline friend std::istream& operator>>(std::istream& rStream, const _TString& rkString)
+    friend std::istream& operator>>(std::istream& rStream, const _TString& rkString)
     {
         rStream >> rkString.mInternalString;
         return rStream;
@@ -1120,13 +1117,13 @@ public:
         }
     }
 
-    inline static CharType CharToLower(CharType Chr)
+    static CharType CharToLower(CharType Chr)
     {
         // todo: doesn't handle accented characters
         return (Chr >= CHAR_LITERAL('A') && Chr <= CHAR_LITERAL('Z')) ? Chr + 0x20 : Chr;
     }
 
-    inline static CharType CharToUpper(CharType Chr)
+    static CharType CharToUpper(CharType Chr)
     {
         // todo: doesn't handle accented characters
         return (Chr >= CHAR_LITERAL('a') && Chr <= CHAR_LITERAL('z')) ? Chr - 0x20 : Chr;
@@ -1152,7 +1149,7 @@ public:
                  (Chr == CHAR_LITERAL(' '))  );
     }
 
-    static inline bool IsNumerical(CharType Chr)
+    static bool IsNumerical(CharType Chr)
     {
         return (Chr >= CHAR_LITERAL('0') && Chr <= CHAR_LITERAL('9'));
     }
@@ -1249,11 +1246,11 @@ public:
     {}
 #endif
 
-    inline const wchar_t* Decay() const
+    const wchar_t* Decay() const
     {
         return reinterpret_cast<const wchar_t*>( mpStringPtr ? **mpStringPtr : *mConvertedString );
     }
-    inline const wchar_t* operator*() const
+    const wchar_t* operator*() const
     {
         return Decay();
     }
