@@ -51,6 +51,7 @@ public:
 protected:
     using _TString = TBasicString<_CharType, _ListType>;
     using _TStdString = std::basic_string<_CharType>;
+    using _TStdStringView = std::basic_string_view<_CharType>;
     using _TStringList = _ListType;
 
     _TStdString mInternalString{};
@@ -81,6 +82,11 @@ public:
     }
 
     TBasicString(const _TStdString& rkText)
+        : mInternalString(rkText)
+    {
+    }
+
+    explicit TBasicString(_TStdStringView rkText)
         : mInternalString(rkText)
     {
     }
@@ -711,6 +717,12 @@ public:
         return *this;
     }
 
+    _TString& operator=(_TStdStringView view)
+    {
+        mInternalString = view;
+        return *this;
+    }
+
     CharType& operator[](int Pos)
     {
         return mInternalString[Pos];
@@ -719,6 +731,12 @@ public:
     const CharType& operator[](int Pos) const
     {
         return mInternalString[Pos];
+    }
+
+    // Intentionally non-explicit
+    operator _TStdStringView() const
+    {
+        return mInternalString;
     }
 
     const CharType* operator*() const
