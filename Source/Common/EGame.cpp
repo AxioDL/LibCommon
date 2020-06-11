@@ -1,68 +1,86 @@
 #include "EGame.h"
 #include "CFourCC.h"
 #include "Common/Serialization/IArchive.h"
+#include <algorithm>
+#include <array>
 
 TString GetGameName(EGame Game)
 {
-    static const TString skGameNames[int(EGame::Max)] =
-    {
+    static constexpr std::array skGameNames{
         "Metroid Prime Demo",
         "Metroid Prime",
         "Metroid Prime 2: Echoes Demo",
         "Metroid Prime 2: Echoes",
         "Metroid Prime 3: Corruption E3 2006 Prototype",
         "Metroid Prime 3: Corruption",
-        "Donkey Kong Country Returns"
+        "Donkey Kong Country Returns",
     };
 
-    int GameIdx = (int) Game;
-    return (GameIdx >= 0 && GameIdx < (int) EGame::Max) ? skGameNames[GameIdx] : "Unknown Game";
+    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+        return "Unknown Game";
+    }
+
+    return skGameNames[static_cast<size_t>(Game)];
 }
 
 TString GetGameShortName(EGame Game)
 {
-    static const TString skGameNames[int(EGame::Max)] = {
+    static constexpr std::array skGameNames{
         "MP1Demo",
         "MP1",
         "MP2Demo",
         "MP2",
         "MP3Proto",
         "MP3",
-        "DKCR"
+        "DKCR",
     };
 
-    int GameIdx = (int) Game;
-    return (GameIdx >= 0 && GameIdx < int(EGame::Max)) ? skGameNames[GameIdx] : "Unknown";
+    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+        return "Unknown";
+    }
+
+    return skGameNames[static_cast<size_t>(Game)];
 }
 
 CFourCC GameTo4CC(EGame Game)
 {
-    static const CFourCC skGame4CCs[int(EGame::Max)] =
-    {
-        FOURCC('MP1D'), FOURCC('MPRM'),
-        FOURCC('MP2D'), FOURCC('MP2E'),
-        FOURCC('MP3P'), FOURCC('MP3C'),
-        FOURCC('DKCR')
+    static constexpr std::array skGame4CCs{
+        CFourCC(FOURCC('MP1D')),
+        CFourCC(FOURCC('MPRM')),
+        CFourCC(FOURCC('MP2D')),
+        CFourCC(FOURCC('MP2E')),
+        CFourCC(FOURCC('MP3P')),
+        CFourCC(FOURCC('MP3C')),
+        CFourCC(FOURCC('DKCR')),
     };
 
-    int GameIdx = (int) Game;
-    return (GameIdx >= 0 && GameIdx < (int) EGame::Max) ? skGame4CCs[GameIdx] : FOURCC('UNKN');
+    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+        return FOURCC('UNKN');
+    }
+
+    return skGame4CCs[static_cast<size_t>(Game)];
 }
 
 EGame GameFrom4CC(CFourCC GameId)
 {
-    static const std::unordered_map<uint32, EGame> skIdToGame =
+    static constexpr std::array<std::pair<uint32_t, EGame>, 7> skIdToGame{{
+        {FOURCC('MP1D'), EGame::PrimeDemo},
+        {FOURCC('MPRM'), EGame::Prime},
+        {FOURCC('MP2D'), EGame::EchoesDemo},
+        {FOURCC('MP2E'), EGame::Echoes},
+        {FOURCC('MP3P'), EGame::CorruptionProto},
+        {FOURCC('MP3C'), EGame::Corruption},
+        {FOURCC('DKCR'), EGame::DKCReturns},
+    }};
+
+    const auto iter = std::find_if(skIdToGame.cbegin(), skIdToGame.cend(),
+                                   [GameId](const auto& entry) { return entry.first == GameId.ToLong(); });
+    if (iter == skIdToGame.cend())
     {
-        { FOURCC('MP1D'), EGame::PrimeDemo },
-        { FOURCC('MPRM'), EGame::Prime },
-        { FOURCC('MP2D'), EGame::EchoesDemo },
-        { FOURCC('MP2E'), EGame::Echoes },
-        { FOURCC('MP3P'), EGame::CorruptionProto },
-        { FOURCC('MP3C'), EGame::Corruption },
-        { FOURCC('DKCR'), EGame::DKCReturns }
-    };
-    auto MapFindIter = skIdToGame.find(GameId.ToLong());
-    return (MapFindIter != skIdToGame.end() ? MapFindIter->second : EGame::Invalid);
+        return EGame::Invalid;
+    }
+
+    return iter->second;
 }
 
 void Serialize(IArchive& rArc, EGame& rGame)
