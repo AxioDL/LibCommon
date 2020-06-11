@@ -3,67 +3,128 @@
 
 #include "Common/FileIO/IInputStream.h"
 #include "Common/FileIO/IOutputStream.h"
+#include "Common/Math/CVector2f.h"
 #include "Common/Serialization/IArchive.h"
+#include <cmath>
 #include <ostream>
 
 class CMatrix4f;
-class CVector2f;
 class CVector4f;
 class CTransform4f;
 
 class CVector3f
 {
 public:
-    float X, Y, Z;
+    float X = 0.0f;
+    float Y = 0.0f;
+    float Z = 0.0f;
 
-    CVector3f();
-    CVector3f(float XYZ);
-    CVector3f(float _X, float _Y, float _Z);
-    CVector3f(IInputStream& Input);
+    constexpr CVector3f() = default;
+    constexpr CVector3f(float XYZ) : X{XYZ}, Y{XYZ}, Z{XYZ} {}
+    constexpr CVector3f(float X_, float Y_, float Z_) : X{X_}, Y{Y_}, Z{Z_} {}
+    explicit CVector3f(IInputStream& Input);
     void Read(IInputStream& Input);
     void Write(IOutputStream& Output) const;
     void Serialize(IArchive& Arc);
     TString ToString() const;
 
     // Swizzle
-    CVector2f XY();
-    CVector2f XZ();
-    CVector2f YZ();
+    [[nodiscard]] constexpr CVector2f XY() const { return {X, Y}; }
+    [[nodiscard]] constexpr CVector2f XZ() const { return {X, Z}; }
+    [[nodiscard]] constexpr CVector2f YZ() const { return {Y, Z}; }
 
     // Math
-    float Magnitude() const;
-    float SquaredMagnitude() const;
-    CVector3f Normalized() const;
-    float Dot(const CVector3f& rkOther) const;
-    CVector3f Cross(const CVector3f& rkOther) const;
-    float Distance(const CVector3f& rkPoint) const;
-    float SquaredDistance(const CVector3f& rkPoint) const;
+    [[nodiscard]] float Magnitude() const {
+        return std::sqrt(SquaredMagnitude());
+    }
+    [[nodiscard]] float SquaredMagnitude() const {
+        return Dot(*this);
+    }
+    [[nodiscard]] CVector3f Normalized() const {
+        return *this / Magnitude();
+    }
+    [[nodiscard]] constexpr float Dot(const CVector3f& other) const {
+        return (X * other.X) + (Y * other.Y) + (Z * other.Z);
+    }
+    [[nodiscard]] constexpr CVector3f Cross(const CVector3f& other) const {
+        return {(Y * other.Z) - (Z * other.Y), (Z * other.X) - (X * other.Z), (X * other.Y) - (Y * other.X)};
+    }
+    [[nodiscard]] float Distance(const CVector3f& point) const {
+        return (*this - point).Magnitude();
+    }
+    [[nodiscard]] float SquaredDistance(const CVector3f& point) const {
+        return (*this - point).SquaredMagnitude();
+    }
 
     // Vector/Vector
-    CVector3f operator+(const CVector3f& rkOther) const;
-    CVector3f operator-(const CVector3f& rkOther) const;
-    CVector3f operator*(const CVector3f& rkOther) const;
-    CVector3f operator/(const CVector3f& rkOther) const;
-    void operator+=(const CVector3f& rkOther);
-    void operator-=(const CVector3f& rkOther);
-    void operator*=(const CVector3f& rkOther);
-    void operator/=(const CVector3f& rkOther);
-    bool operator> (const CVector3f& rkOther) const;
-    bool operator>=(const CVector3f& rkOther) const;
-    bool operator< (const CVector3f& rkOther) const;
-    bool operator<=(const CVector3f& rkOther) const;
-    bool operator==(const CVector3f& rkOther) const;
-    bool operator!=(const CVector3f& rkOther) const;
+    [[nodiscard]] constexpr CVector3f operator+(const CVector3f& other) const {
+        return {X + other.X, Y + other.Y, Z + other.Z};
+    }
+    [[nodiscard]] constexpr CVector3f operator-(const CVector3f& other) const {
+        return {X - other.X, Y - other.Y, Z - other.Z};
+    }
+    [[nodiscard]] constexpr CVector3f operator*(const CVector3f& other) const {
+        return {X * other.X, Y * other.Y, Z * other.Z};
+    }
+    [[nodiscard]] constexpr CVector3f operator/(const CVector3f& other) const {
+        return {X / other.X, Y / other.Y, Z / other.Z};
+    }
+    constexpr void operator+=(const CVector3f& other) {
+        *this = *this + other;
+    }
+    constexpr void operator-=(const CVector3f& other) {
+        *this = *this - other;
+    }
+    constexpr void operator*=(const CVector3f& other) {
+        *this = *this * other;
+    }
+    constexpr void operator/=(const CVector3f& other) {
+        *this = *this / other;
+    }
+    [[nodiscard]] constexpr bool operator> (const CVector3f& other) const {
+        return X > other.X && Y > other.Y && Z > other.Z;
+    }
+    [[nodiscard]] constexpr bool operator>=(const CVector3f& other) const {
+        return X >= other.X && Y >= other.Y && Z >= other.Z;
+    }
+    [[nodiscard]] constexpr bool operator< (const CVector3f& other) const {
+        return X < other.X && Y < other.Y && Z < other.Z;
+    }
+    [[nodiscard]] constexpr bool operator<=(const CVector3f& other) const {
+        return X <= other.X && Y <= other.Y && Z <= other.Z;
+    }
+    [[nodiscard]] constexpr bool operator==(const CVector3f& other) const {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+    [[nodiscard]] constexpr bool operator!=(const CVector3f& other) const {
+        return !operator==(other);
+    }
 
     // Vector/Float
-    CVector3f operator+(const float Other) const;
-    CVector3f operator-(const float Other) const;
-    CVector3f operator*(const float Other) const;
-    CVector3f operator/(const float Other) const;
-    void operator+=(const float Other);
-    void operator-=(const float Other);
-    void operator*=(const float Other);
-    void operator/=(const float Other);
+    [[nodiscard]] constexpr CVector3f operator+(const float other) const {
+        return {X + other, Y + other, Z + other};
+    }
+    [[nodiscard]] constexpr CVector3f operator-(const float other) const {
+        return {X - other, Y - other, Z - other};
+    }
+    [[nodiscard]] constexpr CVector3f operator*(const float other) const {
+        return {X * other, Y * other, Z * other};
+    }
+    [[nodiscard]] constexpr CVector3f operator/(const float other) const {
+        return {X / other, Y / other, Z / other};
+    }
+    constexpr void operator+=(const float other) {
+        *this = *this + other;
+    }
+    constexpr void operator-=(const float other) {
+        *this = *this - other;
+    }
+    constexpr void operator*=(const float other) {
+        *this = *this * other;
+    }
+    constexpr void operator/=(const float other) {
+        *this = *this / other;
+    }
 
     // Vector/Matrix
     CVector3f operator*(const CTransform4f& rkMtx) const;
@@ -71,9 +132,15 @@ public:
     CVector3f operator*(const CMatrix4f& rkMtx) const;
 
     // Unary
-    CVector3f operator-() const;
-    float& operator[](long Index);
-    const float& operator[](long Index) const;
+    [[nodiscard]] constexpr CVector3f operator-() const {
+        return {-X, -Y, -Z};
+    }
+    [[nodiscard]] constexpr float& operator[](long Index) {
+        return (&X)[Index];
+    }
+    [[nodiscard]] constexpr const float& operator[](long Index) const {
+        return (&X)[Index];
+    }
 
     // Constants
     static const CVector3f skZero;

@@ -10,12 +10,6 @@ CAABox::CAABox()
 {
 }
 
-CAABox::CAABox(const CVector3f& rkMin, const CVector3f& rkMax)
-    : mMin(rkMin)
-    , mMax(rkMax)
-{
-}
-
 CAABox::CAABox(IInputStream& rInput)
     : mMin(rInput)
     , mMax(rInput)
@@ -32,46 +26,6 @@ void CAABox::Write(IOutputStream& rOutput)
 {
     mMin.Write(rOutput);
     mMax.Write(rOutput);
-}
-
-CVector3f CAABox::Center() const
-{
-    return (mMax - ((mMax - mMin) * 0.5f));
-}
-
-CVector3f CAABox::Size() const
-{
-    return (mMax - mMin);
-}
-
-CVector3f CAABox::Min() const
-{
-    return mMin;
-}
-
-CVector3f CAABox::Max() const
-{
-    return mMax;
-}
-
-void CAABox::SetMin(const CVector3f& rkMin)
-{
-    mMin = rkMin;
-}
-
-void CAABox::SetMax(const CVector3f& rkMax)
-{
-    mMax = rkMax;
-}
-
-bool CAABox::IsNull() const
-{
-    return (Size() == CVector3f::skZero);
-}
-
-bool CAABox::IsInfinite() const
-{
-    return (Size() == CVector3f::skInfinite);
 }
 
 void CAABox::ExpandBounds(const CVector3f& rkVtx)
@@ -159,25 +113,6 @@ std::pair<bool,float> CAABox::IntersectsRay(const CRay& rkRay) const
 }
 
 // ************ OPERATORS ************
-CAABox CAABox::operator+(const CVector3f& rkTranslate) const
-{
-    return CAABox(mMin + rkTranslate, mMax + rkTranslate);
-}
-
-void CAABox::operator+=(const CVector3f& rkTranslate)
-{
-    *this = *this + rkTranslate;
-}
-
-CAABox CAABox::operator*(float Scalar) const
-{
-    return CAABox(mMin * Scalar, mMax * Scalar);
-}
-
-void CAABox::operator*=(float Scalar)
-{
-    *this = *this * Scalar;
-}
 
 bool CAABox::operator==(const CAABox& rkOther) const
 {

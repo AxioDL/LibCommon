@@ -2,36 +2,6 @@
 #include "CRandom.h"
 #include "TString.h"
 
-CAssetID::CAssetID()
-    : mLength(kInvalidIDLength)
-    , mID(0xFFFFFFFFFFFFFFFF)
-{
-}
-
-CAssetID::CAssetID(uint64 ID)
-    : mID(ID)
-{
-    // This constructor is intended to be used with both 32-bit and 64-bit input values
-    // 64-bit - check for valid content in upper 32 bits (at least one bit set + one bit unset)
-    if ((ID & 0xFFFFFFFF00000000) && (~ID & 0xFFFFFFFF00000000))
-        mLength = k64Bit;
-
-    // 32-bit
-    else
-    {
-        mLength = k32Bit;
-        mID &= 0xFFFFFFFF;
-    }
-}
-
-CAssetID::CAssetID(uint64 ID, EIDLength Length)
-    : mID(ID)
-    , mLength(Length)
-{
-    if (Length == k32Bit)
-        mID &= 0xFFFFFFFF;
-}
-
 void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalidIDLength*/) const
 {
     EIDLength Length = (ForcedLength == kInvalidIDLength ? mLength : ForcedLength);
@@ -62,11 +32,6 @@ TString CAssetID::ToString(EIDLength ForcedLength /*= eInvalidIDLength*/) const
         return TString::HexString(ToLong(), 8, false, true);
     else
         return TString::FromInt64(ToLongLong(), 16, 16).ToUpper();
-}
-
-bool CAssetID::IsValid() const
-{
-    return (mID != 0 && mLength != kInvalidIDLength && mID != InvalidID(mLength).mID);
 }
 
 // ************ STATIC ************

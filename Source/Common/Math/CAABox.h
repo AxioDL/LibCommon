@@ -12,44 +12,76 @@ class CRayIntersection;
 
 class CAABox
 {
-    CVector3f mMin, mMax;
+    CVector3f mMin{CVector3f::skInfinite};
+    CVector3f mMax{-CVector3f::skInfinite};
 
 public:
-    CAABox();
-    CAABox(const CVector3f& rkMin, const CVector3f& rkMax);
-    CAABox(IInputStream& rInput);
+    CAABox() = default;
+    constexpr CAABox(const CVector3f& min, const CVector3f& max) : mMin{min}, mMax{max} {}
+    explicit CAABox(IInputStream& rInput);
+
     void Serialize(IArchive& rArc);
     void Write(IOutputStream& rOutput);
-    CVector3f Center() const;
-    CVector3f Size() const;
-    CVector3f Min() const;
-    CVector3f Max() const;
-    void SetMin(const CVector3f& rkMin);
-    void SetMax(const CVector3f& rkMax);
-    bool IsNull() const;
-    bool IsInfinite() const;
+
+    [[nodiscard]] constexpr CVector3f Center() const {
+        return mMax - ((mMax - mMin) * 0.5f);
+    }
+    [[nodiscard]] constexpr CVector3f Size() const {
+        return mMax - mMin;
+    }
+    [[nodiscard]] constexpr CVector3f Min() const {
+        return mMin;
+    }
+    [[nodiscard]] constexpr CVector3f Max() const {
+        return mMax;
+    }
+    constexpr void SetMin(const CVector3f& min) {
+        mMin = min;
+    }
+    constexpr void SetMax(const CVector3f& max) {
+        mMax = max;
+    }
+
+    [[nodiscard]] bool IsNull() const {
+        return Size() == CVector3f::skZero;
+    }
+    [[nodiscard]] bool IsInfinite() const {
+        return Size() == CVector3f::skInfinite;
+    }
 
     void ExpandBounds(const CVector3f& rkVtx);
     void ExpandBounds(const CAABox& rkAABox);
     void ExpandBy(const CVector3f& rkAmount);
-    CAABox Transformed(const CTransform4f& rkTransform) const;
+    [[nodiscard]] CAABox Transformed(const CTransform4f& rkTransform) const;
 
-    bool IsPointInBox(const CVector3f& rkPoint) const;
-    CVector3f ClosestPointAlongVector(const CVector3f& rkDir) const;
-    CVector3f FurthestPointAlongVector(const CVector3f& rkDir) const;
+    [[nodiscard]] bool IsPointInBox(const CVector3f& rkPoint) const;
+    [[nodiscard]] CVector3f ClosestPointAlongVector(const CVector3f& rkDir) const;
+    [[nodiscard]] CVector3f FurthestPointAlongVector(const CVector3f& rkDir) const;
 
     // Intersection Tests
-    bool IntersectsAABox(const CAABox& rkAABox);
-    bool IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius);
-    std::pair<bool,float> IntersectsRay(const CRay& rkRay) const;
+    [[nodiscard]] bool IntersectsAABox(const CAABox& rkAABox);
+    [[nodiscard]] bool IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius);
+    [[nodiscard]] std::pair<bool,float> IntersectsRay(const CRay& rkRay) const;
 
     // Operators
-    CAABox operator+(const CVector3f& rkTranslate) const;
-    void operator+=(const CVector3f& rkTranslate);
-    CAABox operator*(float Scalar) const;
-    void operator*=(float Scalar);
-    bool operator==(const CAABox& rkOther) const;
-    bool operator!=(const CAABox& rkOther) const;
+    [[nodiscard]] constexpr CAABox operator+(const CVector3f& translate) const {
+        return {mMin + translate, mMax + translate};
+    }
+    void operator+=(const CVector3f& translate) {
+        *this = *this + translate;
+    }
+    [[nodiscard]] constexpr CAABox operator*(float scalar) const {
+        return {mMin * scalar, mMax * scalar};
+    }
+    constexpr void operator*=(float scalar) {
+        *this = *this * scalar;
+    }
+    [[nodiscard]] constexpr bool operator==(const CAABox& other) const {
+        return mMin == other.mMin && mMax == other.mMax;
+    }
+    [[nodiscard]] constexpr bool operator!=(const CAABox& other) const {
+        return !operator==(other);
+    }
 
     // Constants
     static const CAABox skInfinite;

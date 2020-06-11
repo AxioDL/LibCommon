@@ -3,11 +3,6 @@
 
 #include <algorithm>
 
-CColor::CColor()
-    : R(0.f), G(0.f), B(0.f), A(0.f)
-{
-}
-
 CColor::CColor(IInputStream& rInput, bool Integral /*= false*/)
 {
     if (Integral)
@@ -24,30 +19,6 @@ CColor::CColor(IInputStream& rInput, bool Integral /*= false*/)
         B = rInput.ReadFloat();
         A = rInput.ReadFloat();
     }
-}
-
-CColor::CColor(float RGBA)
-    : R(RGBA), G(RGBA), B(RGBA), A(RGBA)
-{
-}
-
-CColor::CColor(float _R, float _G, float _B, float _A /*= 1.f*/)
-    : R(_R), G(_G), B(_B), A(_A)
-{
-}
-
-void CColor::SetIntegral(uint8 RGBA)
-{
-    float f = RGBA / 255.f;
-    R = G = B = A = f;
-}
-
-void CColor::SetIntegral(uint8 _R, uint8 _G, uint8 _B, uint8 _A /*= 255*/)
-{
-    R = _R / 255.f;
-    G = _G / 255.f;
-    B = _B / 255.f;
-    A = _A / 255.f;
 }
 
 void CColor::Write(IOutputStream &rOutput, bool Integral /*= false*/) const
@@ -90,19 +61,6 @@ long CColor::ToLongARGB() const
     uint8 _B = (uint8) (B * 255);
     uint8 _A = (uint8) (A * 255);
     return (_A << 24) | (_R << 16) | (_G << 8) | _B;
-}
-
-bool CColor::operator==(const CColor& rkOther) const
-{
-    return ((R == rkOther.R) &&
-            (G == rkOther.G) &&
-            (B == rkOther.B) &&
-            (A == rkOther.A));
-}
-
-bool CColor::operator!=(const CColor& rkOther) const
-{
-    return (!(*this == rkOther));
 }
 
 CColor CColor::operator+(const CColor& rkOther) const
@@ -176,19 +134,6 @@ void CColor::operator/=(const CColor& rkOther)
 }
 
 // ************ STATIC ************
-CColor CColor::Integral(uint8 RGBA)
-{
-    CColor Out;
-    Out.SetIntegral(RGBA);
-    return Out;
-}
-
-CColor CColor::Integral(uint8 _R, uint8 _G, uint8 _B, uint8 _A /*= 255*/)
-{
-    CColor Out;
-    Out.SetIntegral(_R, _G, _B, _A);
-    return Out;
-}
 
 CColor CColor::RandomColor(bool Transparent)
 {
