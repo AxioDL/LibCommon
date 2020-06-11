@@ -46,12 +46,12 @@ template<class _CharType, class _ListType>
 class TBasicString
 {
 public:
-    typedef _CharType CharType;
+    using CharType = _CharType;
 
 protected:
-    typedef TBasicString<_CharType, _ListType> _TString;
-    typedef std::basic_string<_CharType> _TStdString;
-    typedef _ListType _TStringList;
+    using _TString = TBasicString<_CharType, _ListType>;
+    using _TStdString = std::basic_string<_CharType>;
+    using _TStringList = _ListType;
 
     _TStdString mInternalString{};
 
@@ -1258,9 +1258,9 @@ public:
 
 #define ToWChar *CToWChar
 
-// ************ Typedefs ************
-typedef std::list< TString >    TStringList;
-typedef std::list< T16String >  T16StringList;
-typedef std::list< T32String >  T32StringList;
+// ************ Aliases ************
+using TStringList = std::list<TString>;
+using T16StringList = std::list<T16String>;
+using T32StringList = std::list<T32String>;
 
 #endif // TSTRING_H
