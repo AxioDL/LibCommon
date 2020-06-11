@@ -6,7 +6,7 @@
 #include "FileIO.h"
 #include "TString.h"
 
-enum EIDLength
+enum class EIDLength
 {
     k32Bit = 4,
     k64Bit = 8,
@@ -15,7 +15,7 @@ enum EIDLength
 
 class CAssetID
 {
-    EIDLength mLength = kInvalidIDLength;
+    EIDLength mLength = EIDLength::kInvalidIDLength;
     uint64 mID = UINT64_MAX;
 
 public:
@@ -24,25 +24,25 @@ public:
         // This constructor is intended to be used with both 32-bit and 64-bit input values
         // 64-bit - check for valid content in upper 32 bits (at least one bit set + one bit unset)
         if ((ID & 0xFFFFFFFF00000000) && (~ID & 0xFFFFFFFF00000000)) {
-            mLength = k64Bit;
+            mLength = EIDLength::k64Bit;
         } else {
-            mLength = k32Bit;
+            mLength = EIDLength::k32Bit;
             mID &= 0xFFFFFFFF;
         }
     }
     constexpr CAssetID(uint64 ID, EIDLength Length) : mLength{Length}, mID{ID} {
-        if (Length == k32Bit) {
+        if (Length == EIDLength::k32Bit) {
             mID &= 0xFFFFFFFF;
         }
     }
     explicit CAssetID(IInputStream& rInput, EIDLength Length);
     explicit CAssetID(IInputStream& rInput, EGame Game);
 
-    void Write(IOutputStream& rOutput, EIDLength ForcedLength = kInvalidIDLength) const;
-    TString ToString(EIDLength ForcedLength = kInvalidIDLength) const;
+    void Write(IOutputStream& rOutput, EIDLength ForcedLength = EIDLength::kInvalidIDLength) const;
+    TString ToString(EIDLength ForcedLength = EIDLength::kInvalidIDLength) const;
 
     [[nodiscard]] constexpr bool IsValid() const {
-        return (mID != 0 && mLength != kInvalidIDLength && mID != InvalidID(mLength).mID);
+        return (mID != 0 && mLength != EIDLength::kInvalidIDLength && mID != InvalidID(mLength).mID);
     }
 
     // Operators
@@ -67,9 +67,20 @@ public:
     [[nodiscard]] static CAssetID RandomID(EIDLength Length);
     [[nodiscard]] static CAssetID RandomID(EGame Game);
 
-    [[nodiscard]] static constexpr EIDLength GameIDLength(EGame Game)     { return (Game == EGame::Invalid ? kInvalidIDLength : (Game <= EGame::Echoes ? k32Bit : k64Bit)); }
-    [[nodiscard]] static constexpr CAssetID InvalidID(EIDLength IDLength) { return (IDLength == k32Bit ? skInvalidID32 : skInvalidID64); }
-    [[nodiscard]] static constexpr CAssetID InvalidID(EGame Game)         { return InvalidID(Game <= EGame::Echoes ? k32Bit : k64Bit); }
+    [[nodiscard]] static constexpr EIDLength GameIDLength(EGame Game)
+    {
+        return Game == EGame::Invalid ? EIDLength::kInvalidIDLength : (Game <= EGame::Echoes ? EIDLength::k32Bit : EIDLength::k64Bit);
+    }
+
+    [[nodiscard]] static constexpr CAssetID InvalidID(EIDLength IDLength)
+    {
+        return IDLength == EIDLength::k32Bit ? skInvalidID32 : skInvalidID64;
+    }
+
+    [[nodiscard]] static constexpr CAssetID InvalidID(EGame Game)
+    {
+        return InvalidID(Game <= EGame::Echoes ? EIDLength::k32Bit : EIDLength::k64Bit);
+    }
 
     static CAssetID skInvalidID32;
     static CAssetID skInvalidID64;
