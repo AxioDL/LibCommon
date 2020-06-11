@@ -16,38 +16,42 @@ class CFourCC
     // Note: mFourCC_Chars isn't used much due to endianness.
     union
     {
-        uint32 mFourCC;
+        uint32 mFourCC = 0;
         char mFourCC_Chars[4];
     };
 
 public:
     // Constructors
-    inline CFourCC()                        { mFourCC = 0; }
-    inline CFourCC(const char *pkSrc)       { mFourCC = FOURCC_FROM_TEXT(pkSrc); }
-    inline CFourCC(const TString& rkSrc)    { ASSERT(rkSrc.Length() == 4); mFourCC = FOURCC_FROM_TEXT(rkSrc); }
-    inline CFourCC(uint32 Src)              { mFourCC = Src; }
-    inline CFourCC(IInputStream& rSrc)      { Read(rSrc); }
+    constexpr CFourCC() = default;
+    constexpr CFourCC(const char* pkSrc) : mFourCC{static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc))} {}
+    CFourCC(const TString& rkSrc)
+    {
+        ASSERT(rkSrc.Length() == 4);
+        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
+    }
+    constexpr CFourCC(uint32 Src) : mFourCC{Src} {}
+    CFourCC(IInputStream& rSrc)      { Read(rSrc); }
 
     // Functionality
-    inline void Read(IInputStream& rInput)
+    void Read(IInputStream& rInput)
     {
         mFourCC = rInput.ReadLong();
         if (rInput.GetEndianness() == EEndian::LittleEndian) Reverse();
     }
 
-    inline void Write(IOutputStream& rOutput) const
+    void Write(IOutputStream& rOutput) const
     {
         uint32 Val = mFourCC;
         if (rOutput.GetEndianness() == EEndian::LittleEndian) SwapBytes(Val);
         rOutput.WriteLong(Val);
     }
 
-    inline uint32 ToLong() const
+    [[nodiscard]] constexpr uint32 ToLong() const
     {
         return mFourCC;
     }
 
-    inline TString ToString() const
+    [[nodiscard]] TString ToString() const
     {
         char CharArray[4] = {
             (char) ((mFourCC >> 24) & 0xFF),
@@ -59,7 +63,7 @@ public:
         return TString(CharArray, 4);
     }
 
-    inline CFourCC ToUpper() const
+    [[nodiscard]] CFourCC ToUpper() const
     {
         CFourCC Out;
 
@@ -69,13 +73,13 @@ public:
         return CFourCC(Out);
     }
 
-    inline void Reverse() const
+    void Reverse() const
     {
         SwapBytes((uint32&) mFourCC);
     }
 
     // Operators
-    inline char& operator[](int Index)
+    [[nodiscard]] char& operator[](int Index)
     {
         ASSERT(Index >= 0 && Index < 4);
         if (EEndian::SystemEndian == EEndian::LittleEndian)
@@ -84,7 +88,7 @@ public:
         return ((char*)(&mFourCC))[Index];
     }
 
-    inline const char& operator[](int Index) const
+    [[nodiscard]] const char& operator[](int Index) const
     {
         ASSERT(Index >= 0 && Index < 4);
         if (EEndian::SystemEndian == EEndian::LittleEndian)
@@ -93,35 +97,50 @@ public:
         return ((char*)(&mFourCC))[Index];
     }
 
-    inline TString operator+(const char *pkText) const
+    [[nodiscard]] TString operator+(const char *pkText) const
     {
         return ToString() + pkText;
     }
 
-    inline TString operator+(const TString& rkStr) const
+    [[nodiscard]]  TString operator+(const TString& rkStr) const
     {
         return ToString() + rkStr;
     }
 
-    inline friend TString operator+(const char *pkText, const CFourCC& rkFourCC)
+    [[nodiscard]] friend TString operator+(const char *pkText, const CFourCC& rkFourCC)
     {
         return pkText + rkFourCC.ToString();
     }
 
-    inline friend TString operator+(const TString& rkStr, const CFourCC& rkFourCC)
+    [[nodiscard]] friend TString operator+(const TString& rkStr, const CFourCC& rkFourCC)
     {
         return rkStr + rkFourCC.ToString();
     }
 
-    inline CFourCC& operator=(const char *pkSrc)            { mFourCC = FOURCC_FROM_TEXT(pkSrc);    return *this;   }
-    inline CFourCC& operator=(const TString& rkSrc)         { mFourCC = FOURCC_FROM_TEXT(rkSrc);    return *this;   }
-    inline CFourCC& operator=(uint32 Src)                   { mFourCC = Src;                        return *this;   }
-    inline bool operator==(const CFourCC& rkOther) const    { return mFourCC == rkOther.mFourCC;                    }
-    inline bool operator!=(const CFourCC& rkOther) const    { return mFourCC != rkOther.mFourCC;                    }
-    inline bool operator> (const CFourCC& rkOther) const    { return mFourCC >  rkOther.mFourCC;                    }
-    inline bool operator>=(const CFourCC& rkOther) const    { return mFourCC >= rkOther.mFourCC;                    }
-    inline bool operator< (const CFourCC& rkOther) const    { return mFourCC <  rkOther.mFourCC;                    }
-    inline bool operator<=(const CFourCC& rkOther) const    { return mFourCC <= rkOther.mFourCC;                    }
+    CFourCC& operator=(const char* pkSrc)
+    {
+        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc));
+        return *this;
+    }
+
+    CFourCC& operator=(const TString& rkSrc)
+    {
+        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
+        return *this;
+    }
+
+    CFourCC& operator=(uint32 Src)
+    {
+        mFourCC = Src;
+        return *this;
+    }
+
+    [[nodiscard]] bool operator==(const CFourCC& rkOther) const    { return mFourCC == rkOther.mFourCC;                    }
+    [[nodiscard]] bool operator!=(const CFourCC& rkOther) const    { return mFourCC != rkOther.mFourCC;                    }
+    [[nodiscard]] bool operator> (const CFourCC& rkOther) const    { return mFourCC >  rkOther.mFourCC;                    }
+    [[nodiscard]] bool operator>=(const CFourCC& rkOther) const    { return mFourCC >= rkOther.mFourCC;                    }
+    [[nodiscard]] bool operator< (const CFourCC& rkOther) const    { return mFourCC <  rkOther.mFourCC;                    }
+    [[nodiscard]] bool operator<=(const CFourCC& rkOther) const    { return mFourCC <= rkOther.mFourCC;                    }
 };
 
 #endif // CFOURCC_H
