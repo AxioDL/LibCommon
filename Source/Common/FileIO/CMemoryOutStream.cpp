@@ -1,21 +1,13 @@
 #include "CMemoryOutStream.h"
 
-CMemoryOutStream::CMemoryOutStream()
-    : mpDataStart(nullptr)
-    , mDataSize(0)
-    , mPos(0)
-    , mUsed(0)
-{
-}
+CMemoryOutStream::CMemoryOutStream() = default;
 
 CMemoryOutStream::CMemoryOutStream(void *pData, uint32 Size, EEndian DataEndianness)
 {
     SetData(pData, Size, DataEndianness);
 }
 
-CMemoryOutStream::~CMemoryOutStream()
-{
-}
+CMemoryOutStream::~CMemoryOutStream() = default;
 
 void CMemoryOutStream::SetData(void *pData, uint32 Size, EEndian DataEndianness)
 {

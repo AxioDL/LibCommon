@@ -1,19 +1,13 @@
 #include "CMemoryInStream.h"
 
-CMemoryInStream::CMemoryInStream()
-    : mpDataStart(nullptr)
-    , mDataSize(0)
-    , mPos(0)
-{
-}
+CMemoryInStream::CMemoryInStream() = default;
+
 CMemoryInStream::CMemoryInStream(const void *pkData, uint32 Size, EEndian DataEndianness)
 {
     SetData(pkData, Size, DataEndianness);
 }
 
-CMemoryInStream::~CMemoryInStream()
-{
-}
+CMemoryInStream::~CMemoryInStream() = default;
 
 void CMemoryInStream::SetData(const void *pkData, uint32 Size, EEndian DataEndianness)
 {

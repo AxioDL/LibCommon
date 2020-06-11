@@ -7,27 +7,27 @@
 class CFileInStream : public IInputStream
 {
 private:
-    FILE *mpFStream;
+    FILE *mpFStream = nullptr;
     TString mName;
-    uint32 mFileSize;
+    uint32 mFileSize = 0;
 
 public:
     CFileInStream();
     CFileInStream(const TString& rkFile);
     CFileInStream(const TString& rkFile, EEndian FileEndianness);
     CFileInStream(const CFileInStream& rkSrc);
-    ~CFileInStream();
+    ~CFileInStream() override;
     void Open(const TString& rkFile, EEndian FileEndianness);
     void Close();
 
-    void ReadBytes(void *pDst, uint32 Count);
-    bool Seek(int32 Offset, uint32 Origin);
-    bool Seek64(int64 Offset, uint32 Origin);
-    uint32 Tell() const;
-    uint64 Tell64() const;
-    bool EoF() const;
-    bool IsValid() const;
-    uint32 Size() const;
+    void ReadBytes(void* pDst, uint32 Count) override;
+    bool Seek(int32 Offset, uint32 Origin) override;
+    bool Seek64(int64 Offset, uint32 Origin) override;
+    uint32 Tell() const override;
+    uint64 Tell64() const override;
+    bool EoF() const override;
+    bool IsValid() const override;
+    uint32 Size() const override;
     TString FileName() const;
 };
 

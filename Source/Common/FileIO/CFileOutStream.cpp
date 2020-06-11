@@ -1,25 +1,18 @@
 #include "CFileOutStream.h"
 
-CFileOutStream::CFileOutStream()
-    : mpFStream(nullptr)
-    , mSize(0)
-{
-}
+CFileOutStream::CFileOutStream() = default;
 
 CFileOutStream::CFileOutStream(const TString& rkFile)
-    : mpFStream(nullptr)
 {
     Open(rkFile, EEndian::BigEndian);
 }
 
 CFileOutStream::CFileOutStream(const TString& rkFile, EEndian FileEndianness)
-    : mpFStream(nullptr)
 {
     Open(rkFile, FileEndianness);
 }
 
 CFileOutStream::CFileOutStream(const CFileOutStream& rkSrc)
-    : mpFStream(nullptr)
 {
     Open(rkSrc.mName, rkSrc.mDataEndianness);
 

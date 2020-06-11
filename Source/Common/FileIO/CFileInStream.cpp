@@ -1,24 +1,18 @@
 #include "CFileInStream.h"
 
-CFileInStream::CFileInStream()
-    : mpFStream(nullptr)
-{
-}
+CFileInStream::CFileInStream() = default;
 
 CFileInStream::CFileInStream(const TString& rkFile)
-    : mpFStream(nullptr)
 {
     Open(rkFile, EEndian::BigEndian);
 }
 
 CFileInStream::CFileInStream(const TString& rkFile, EEndian FileEndianness)
-    : mpFStream(nullptr)
 {
     Open(rkFile, FileEndianness);
 }
 
 CFileInStream::CFileInStream(const CFileInStream& rkSrc)
-    : mpFStream(nullptr)
 {
     Open(rkSrc.mName, rkSrc.mDataEndianness);
 
