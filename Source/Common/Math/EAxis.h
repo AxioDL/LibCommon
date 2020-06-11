@@ -9,10 +9,10 @@ enum class EAxis
     X    = 0x1,
     Y    = 0x2,
     Z    = 0x4,
-    XY   = EAxis::X | EAxis::Y,
-    XZ   = EAxis::X | EAxis::Z,
-    YZ   = EAxis::Y | EAxis::Z,
-    XYZ  = EAxis::X | EAxis::Y | EAxis::Z
+    XY   = X | Y,
+    XZ   = X | Z,
+    YZ   = Y | Z,
+    XYZ  = X | Y | Z
 };
 DECLARE_FLAGS_ENUMCLASS(EAxis, FAxes)
 
