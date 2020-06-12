@@ -4,12 +4,6 @@
 #include "MathUtil.h"
 #include <float.h>
 
-CAABox::CAABox()
-    : mMin(CVector3f::skInfinite)
-    , mMax(-CVector3f::skInfinite)
-{
-}
-
 CAABox::CAABox(IInputStream& rInput)
     : mMin(rInput)
     , mMax(rInput)
@@ -110,18 +104,6 @@ bool CAABox::IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadiu
 std::pair<bool,float> CAABox::IntersectsRay(const CRay& rkRay) const
 {
     return Math::RayBoxIntersection(rkRay, *this);
-}
-
-// ************ OPERATORS ************
-
-bool CAABox::operator==(const CAABox& rkOther) const
-{
-    return ((mMin == rkOther.mMin) && (mMax == rkOther.mMax));
-}
-
-bool CAABox::operator!=(const CAABox& rkOther) const
-{
-    return (!(*this == rkOther));
 }
 
 // ************ CONSTANTS ************
