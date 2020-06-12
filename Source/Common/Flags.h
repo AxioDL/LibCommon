@@ -36,10 +36,10 @@ public:
     [[nodiscard]] constexpr bool HasFlag(FlagEnum Flag) const    { return ((mValue & (uint32) Flag) != 0); }
     [[nodiscard]] constexpr bool HasAnyFlags(TFlags Flags) const { return ((mValue & Flags) != 0); }
     [[nodiscard]] constexpr bool HasAllFlags(TFlags Flags) const { return ((mValue & Flags) == Flags); }
-    [[nodiscard]] constexpr void SetFlag(FlagEnum Flag)          { mValue |= uint32(Flag); }
-    [[nodiscard]] constexpr void SetFlag(TFlags Flags)           { mValue |= Flags; }
-    [[nodiscard]] constexpr void ClearFlag(FlagEnum Flag)        { mValue &= ~(uint32(Flag)); }
-    [[nodiscard]] constexpr void ClearFlag(TFlags Flags)         { mValue &= ~Flags; }
+    constexpr void SetFlag(FlagEnum Flag)   { mValue |= uint32(Flag); }
+    constexpr void SetFlag(TFlags Flags)    { mValue |= Flags; }
+    constexpr void ClearFlag(FlagEnum Flag) { mValue &= ~(uint32(Flag)); }
+    constexpr void ClearFlag(TFlags Flags)  { mValue &= ~Flags; }
 
     constexpr void AssignFlag(FlagEnum Flag, bool Value)
     {
