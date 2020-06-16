@@ -463,7 +463,7 @@ public:
             uint64 Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
             uint64 Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
 
-            if (EEndian::SystemEndian == EEndian::LittleEndian)
+            if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
             {
                 SwapBytes(Part1);
                 SwapBytes(Part2);
