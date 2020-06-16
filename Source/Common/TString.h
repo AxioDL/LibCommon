@@ -107,7 +107,7 @@ public:
         return mInternalString.data();
     }
 
-    CharType At(uint Pos) const
+    CharType At(size_t Pos) const
     {
         if (Size() <= Pos)
         {
@@ -148,7 +148,7 @@ public:
         return Size();
     }
 
-    int IndexOf(CharType Character, uint Offset) const
+    int IndexOf(CharType Character, size_t Offset) const
     {
         size_t Pos = mInternalString.find_first_of(Character, Offset);
         return (Pos == _TStdString::npos ? -1 : (int) Pos);
@@ -159,7 +159,7 @@ public:
         return IndexOf(Character, 0);
     }
 
-    int IndexOf(const CharType* pkCharacters, uint Offset) const
+    int IndexOf(const CharType* pkCharacters, size_t Offset) const
     {
         size_t Pos = mInternalString.find_first_of(pkCharacters, Offset);
         return (Pos == _TStdString::npos ? -1 : (int) Pos);
@@ -186,20 +186,22 @@ public:
             return (int) Pos;
     }
 
-    int IndexOfPhrase(const _TString& rkStr, uint Offset, bool CaseSensitive = true) const
+    int IndexOfPhrase(_TStdStringView rkStr, size_t Offset, bool CaseSensitive = true) const
     {
-        if (Size() < rkStr.Size()) return -1;
+        if (Size() < rkStr.size())
+            return -1;
 
         // Now loop from the offset provided by the user.
-        uint Pos = Offset;
-        uint LatestPossibleStart = Size() - rkStr.Size();
+        size_t Pos = Offset;
+        size_t LatestPossibleStart = Size() - rkStr.size();
         int MatchStart = -1;
         int Matched = 0;
 
         while (Pos < Size())
         {
             // If this character matches, increment Matched!
-            bool Match = CaseSensitive ? (At(Pos) == rkStr[Matched]) : (CharToUpper(At(Pos)) == CharToUpper(rkStr[Matched]));
+            const bool Match = CaseSensitive ? (mInternalString[Pos] == rkStr[Matched])
+                                             : (CharToUpper(mInternalString[Pos]) == CharToUpper(rkStr[Matched]));
 
             if (Match)
             {
@@ -209,7 +211,7 @@ public:
                     MatchStart = Pos;
 
                 // If we matched the entire string, we can return.
-                if (Matched == rkStr.Size())
+                if (Matched == rkStr.size())
                     return MatchStart;
             }
 
@@ -224,7 +226,8 @@ public:
                 }
 
                 // Check if we're too far in to find another match.
-                if (Pos > LatestPossibleStart) break;
+                if (Pos > LatestPossibleStart)
+                    break;
             }
 
             Pos++;
@@ -233,18 +236,18 @@ public:
         return -1;
     }
 
-    int IndexOfPhrase(const _TString& rkStr, bool CaseSensitive = true) const
+    int IndexOfPhrase(_TStdStringView rkStr, bool CaseSensitive = true) const
     {
         return IndexOfPhrase(rkStr, 0, CaseSensitive);
     }
 
     // Modify String
-    _TString SubString(uint StartPos, uint Length) const
+    _TString SubString(size_t StartPos, size_t Length) const
     {
         return mInternalString.substr(StartPos, Length);
     }
 
-    void Reserve(uint Amount)
+    void Reserve(size_t Amount)
     {
         mInternalString.reserve(Amount);
     }
@@ -254,7 +257,7 @@ public:
         mInternalString.shrink_to_fit();
     }
 
-    void Insert(uint Pos, CharType Chr)
+    void Insert(size_t Pos, CharType Chr)
     {
         if (Size() < Pos)
         {
@@ -265,7 +268,7 @@ public:
         mInternalString.insert(Pos, 1, Chr);
     }
 
-    void Insert(uint Pos, const CharType* pkStr)
+    void Insert(size_t Pos, const CharType* pkStr)
     {
         if (Size() < Pos)
         {
@@ -276,12 +279,12 @@ public:
         mInternalString.insert(Pos, pkStr);
     }
 
-    void Insert(uint Pos, const _TString& rkStr)
+    void Insert(size_t Pos, const _TString& rkStr)
     {
         Insert(Pos, rkStr.CString());
     }
 
-    void Remove(uint Pos, uint Len)
+    void Remove(size_t Pos, uint Len)
     {
 #ifdef _DEBUG
         if (Size() <= Pos)
@@ -309,9 +312,9 @@ public:
 
     void RemoveWhitespace()
     {
-        for (uint32 Idx = 0; Idx < Size(); Idx++)
+        for (size_t Idx = 0; Idx < Size(); Idx++)
         {
-            if (IsWhitespace(At(Idx)))
+            if (IsWhitespace(mInternalString[Idx]))
             {
                 Remove(Idx, 1);
                 Idx--;
@@ -403,7 +406,8 @@ public:
         }
 
         // If start is still -1 then there are no non-whitespace characters in this string. Return early.
-        if (Start == -1) return _TString();
+        if (Start == -1)
+            return _TString();
 
         for (int iChar = Size() - 1; iChar >= 0; iChar--)
         {
@@ -417,20 +421,24 @@ public:
         return SubString(Start, End - Start);
     }
 
-    _TString Truncate(uint Amount) const
+    _TString Truncate(size_t Amount) const
     {
         return SubString(0, Amount);
     }
 
-    _TString ChopFront(uint Amount) const
+    _TString ChopFront(size_t Amount) const
     {
-        if (Size() <= Amount) return _TString();
+        if (Size() <= Amount)
+            return _TString();
+
         return SubString(Amount, Size() - Amount);
     }
 
-    _TString ChopBack(uint Amount) const
+    _TString ChopBack(size_t Amount) const
     {
-        if (Size() <= Amount) return _TString();
+        if (Size() <= Amount)
+            return _TString();
+
         return SubString(0, Size() - Amount);
     }
 
@@ -535,7 +543,7 @@ public:
     // Check String
     bool IsEmpty() const
     {
-        return (Size() == 0);
+        return Size() == 0;
     }
 
     bool StartsWith(CharType Chr, bool CaseSensitive = true) const
@@ -546,12 +554,12 @@ public:
         return CaseSensitive ? Front() == Chr : CharToUpper(Front()) == CharToUpper(Chr);
     }
 
-    bool StartsWith(const _TString& rkStr, bool CaseSensitive = true) const
+    bool StartsWith(_TStdStringView rkStr, bool CaseSensitive = true) const
     {
-        if (Size() < rkStr.Size())
+        if (Size() < rkStr.size())
             return false;
 
-        _TString SubStr = SubString(0, rkStr.Size());
+        _TString SubStr = SubString(0, rkStr.size());
         return CaseSensitive ? SubStr == rkStr : SubStr.CaseInsensitiveCompare(rkStr);
     }
 
@@ -563,18 +571,18 @@ public:
         return CaseSensitive ? Back() == Chr : CharToUpper(Back()) == CharToUpper(Chr);
     }
 
-    bool EndsWith(const _TString& rkStr, bool CaseSensitive = true) const
+    bool EndsWith(const _TStdStringView rkStr, bool CaseSensitive = true) const
     {
-        if (Size() < rkStr.Size())
+        if (Size() < rkStr.size())
             return false;
 
-        _TString SubStr = SubString(Size() - rkStr.Size(), rkStr.Size());
+        _TString SubStr = SubString(Size() - rkStr.size(), rkStr.size());
         return CaseSensitive ? SubStr == rkStr : SubStr.CaseInsensitiveCompare(rkStr);
     }
 
-    bool Contains(_TString Str, bool CaseSensitive = true) const
+    bool Contains(_TStdStringView Str, bool CaseSensitive = true) const
     {
-        return (IndexOfPhrase(Str, CaseSensitive) != -1);
+        return IndexOfPhrase(Str, CaseSensitive) != -1;
     }
 
     bool Contains(CharType Chr) const
@@ -625,14 +633,16 @@ public:
         return true;
     }
 
-    bool CaseInsensitiveCompare(const _TString& rkOther) const
+    bool CaseInsensitiveCompare(_TStdStringView rkOther) const
     {
-        if (Size() != rkOther.Size())
+        if (Size() != rkOther.size())
             return false;
 
-        for (uint32 iChr = 0; iChr < Size(); iChr++)
+        for (size_t iChr = 0; iChr < Size(); iChr++)
+        {
             if (CharToUpper(At(iChr)) != CharToUpper(rkOther[iChr]))
                 return false;
+        }
 
         return true;
     }
@@ -640,12 +650,12 @@ public:
     // Hashing
     uint32 Hash32() const
     {
-        return CCRC32::StaticHashData( Data(), Size() * sizeof(CharType) );
+        return CCRC32::StaticHashData(Data(), Size() * sizeof(CharType));
     }
 
     uint64 Hash64() const
     {
-        return CFNV1A::StaticHashData64( Data(), Size() * sizeof(CharType) );
+        return CFNV1A::StaticHashData64(Data(), Size() * sizeof(CharType));
     }
 
     // Get Filename Components
@@ -683,11 +693,12 @@ public:
         return EndName == _TStdString::npos ? *this : SubString(0, EndName);
     }
 
-    _TString GetParentDirectoryPath(const _TString& rkParentDirName, bool CaseSensitive = true)
+    _TString GetParentDirectoryPath(_TStdStringView rkParentDirName, bool CaseSensitive = true)
     {
         int IdxA = 0;
         int IdxB = IndexOf(LITERAL("\\/"));
-        if (IdxB == -1) return _TString();
+        if (IdxB == -1)
+            return _TString();
 
         while (IdxB != -1)
         {
