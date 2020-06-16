@@ -787,6 +787,11 @@ public:
         *this = *this + rkOther;
     }
 
+    void operator+=(_TStdStringView view)
+    {
+        mInternalString += view;
+    }
+
     _TString operator/(const CharType* pkOther) const
     {
         // Append operator that ensures a slash separates the element being appended
