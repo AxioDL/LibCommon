@@ -867,6 +867,16 @@ public:
         return (rkStringB == rkStringA);
     }
 
+    friend bool operator==(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString == view;
+    }
+
+    friend bool operator==(_TStdStringView view, const _TString& str)
+    {
+        return view == str.mInternalString;
+    }
+
     bool operator!=(CharType Other) const
     {
         return (!(*this == Other));
@@ -897,6 +907,16 @@ public:
         return (rkStringB != rkStringA);
     }
 
+    friend bool operator!=(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString != view;
+    }
+
+    friend bool operator!=(_TStdStringView view, const _TString& str)
+    {
+        return view != str.mInternalString;
+    }
+
     bool operator<(const CharType* pkText) const
     {
         return (mInternalString < pkText);
@@ -915,6 +935,16 @@ public:
     friend bool operator<(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB > rkStringA);
+    }
+
+    friend bool operator<(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString < view;
+    }
+
+    friend bool operator<(_TStdStringView view, const _TString& str)
+    {
+        return view < str.mInternalString;
     }
 
     bool operator<=(const CharType* pkText) const
@@ -937,6 +967,16 @@ public:
         return (rkStringB >= rkStringA);
     }
 
+    friend bool operator<=(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString <= view;
+    }
+
+    friend bool operator<=(_TStdStringView view, const _TString& str)
+    {
+        return view <= str.mInternalString;
+    }
+
     bool operator>(const CharType* pkText) const
     {
         return (mInternalString > pkText);
@@ -957,6 +997,16 @@ public:
         return (rkStringB < rkStringA);
     }
 
+    friend bool operator>(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString > view;
+    }
+
+    friend bool operator>(_TStdStringView view, const _TString& str)
+    {
+        return view > str.mInternalString;
+    }
+
     bool operator>=(const CharType* pkText) const
     {
         return (mInternalString >= pkText);
@@ -975,6 +1025,16 @@ public:
     friend bool operator>=(const _TStdString& rkStringA, const _TString& rkStringB)
     {
         return (rkStringB <= rkStringA);
+    }
+
+    friend bool operator>=(const _TString& str, _TStdStringView view)
+    {
+        return str.mInternalString >= view;
+    }
+
+    friend bool operator>=(_TStdStringView view, const _TString& str)
+    {
+        return view >= str.mInternalString;
     }
 
     friend std::ostream& operator<<(std::ostream& rStream, const _TString& rkString)
