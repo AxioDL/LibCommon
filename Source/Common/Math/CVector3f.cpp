@@ -69,9 +69,6 @@ CVector3f CVector3f::operator*(const CMatrix4f& rkMtx) const
 }
 
 // ************ CONSTANTS ************
-const CVector3f CVector3f::skZero     = CVector3f(0.f);
-const CVector3f CVector3f::skOne      = CVector3f(1.f);
-const CVector3f CVector3f::skInfinite = CVector3f(FLT_MAX);
 const CVector3f CVector3f::skUnitX    = CVector3f(1.f, 0.f, 0.f);
 const CVector3f CVector3f::skUnitY    = CVector3f(0.f, 1.f, 0.f);
 const CVector3f CVector3f::skUnitZ    = CVector3f(0.f, 0.f, 1.f);

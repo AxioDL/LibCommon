@@ -123,14 +123,6 @@ public:
     static constexpr CVector2f Left() {
         return {-1.0f, 0.0f};
     }
-
-    // Static Members
-    static const CVector2f skZero;
-    static const CVector2f skOne;
-    static const CVector2f skUp;
-    static const CVector2f skRight;
-    static const CVector2f skDown;
-    static const CVector2f skLeft;
 };
 
 #endif // CVECTOR2F

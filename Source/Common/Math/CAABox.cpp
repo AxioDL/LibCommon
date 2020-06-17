@@ -105,14 +105,3 @@ std::pair<bool,float> CAABox::IntersectsRay(const CRay& rkRay) const
 {
     return Math::RayBoxIntersection(rkRay, *this);
 }
-
-// ************ CONSTANTS ************
-
-// min set to float maximum, max set to float minimum; ideal for creating an AABox from scratch
-const CAABox CAABox::skInfinite = CAABox(CVector3f(FLT_MAX), CVector3f(-FLT_MAX));
-
-// a 1x1x1 bounding box
-const CAABox CAABox::skOne = CAABox( CVector3f(-0.5f, -0.5f, -0.5f), CVector3f(0.5f, 0.5f, 0.5f) );
-
-// a 0x0x0 bounding box
-const CAABox CAABox::skZero = CAABox(CVector3f(0), CVector3f(0));

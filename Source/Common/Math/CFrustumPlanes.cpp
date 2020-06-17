@@ -18,7 +18,7 @@ const CPlane& CFrustumPlanes::GetPlane(ESide Side) const
 void CFrustumPlanes::SetPlanes(const CVector3f& rkPosition, const CVector3f& rkDirection, float FieldOfView, float AspectRatio, float Near, float Far)
 {
     // Calculate up/right vectors
-    const CVector3f Right = rkDirection.Cross(CVector3f::skUp).Normalized();
+    const CVector3f Right = rkDirection.Cross(CVector3f::Up()).Normalized();
     const CVector3f Up = Right.Cross(rkDirection).Normalized();
 
     // Calculate dimensions of near plane

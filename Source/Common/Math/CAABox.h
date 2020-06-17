@@ -12,11 +12,11 @@ class CRayIntersection;
 
 class CAABox
 {
-    CVector3f mMin{CVector3f::skInfinite};
-    CVector3f mMax{-CVector3f::skInfinite};
+    CVector3f mMin{CVector3f::Infinite()};
+    CVector3f mMax{-CVector3f::Infinite()};
 
 public:
-    CAABox() = default;
+    constexpr CAABox() = default;
     constexpr CAABox(const CVector3f& min, const CVector3f& max) : mMin{min}, mMax{max} {}
     explicit CAABox(IInputStream& rInput);
 
@@ -43,10 +43,10 @@ public:
     }
 
     [[nodiscard]] bool IsNull() const {
-        return Size() == CVector3f::skZero;
+        return Size() == CVector3f::Zero();
     }
     [[nodiscard]] bool IsInfinite() const {
-        return Size() == CVector3f::skInfinite;
+        return Size() == CVector3f::Infinite();
     }
 
     void ExpandBounds(const CVector3f& rkVtx);
@@ -97,11 +97,6 @@ public:
     static constexpr CAABox Zero() {
         return {{0.0f}, {0.0f}};
     }
-
-    // Constants
-    static const CAABox skInfinite;
-    static const CAABox skOne;
-    static const CAABox skZero;
 };
 
 #endif // CAABOX_H

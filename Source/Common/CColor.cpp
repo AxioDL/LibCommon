@@ -154,23 +154,3 @@ CColor CColor::RandomDarkColor(bool Transparent)
 {
     return RandomColor(Transparent) * 0.5f;
 }
-
-// defining predefined colors
-const CColor CColor::skRed   (1.0f, 0.0f, 0.0f);
-const CColor CColor::skGreen (0.0f, 1.0f, 0.0f);
-const CColor CColor::skBlue  (0.0f, 0.0f, 1.0f);
-const CColor CColor::skYellow(1.0f, 1.0f, 0.0f);
-const CColor CColor::skPurple(1.0f, 0.0f, 1.0f);
-const CColor CColor::skCyan  (0.0f, 1.0f, 1.0f);
-const CColor CColor::skWhite (1.0f, 1.0f, 1.0f);
-const CColor CColor::skBlack (0.0f, 0.0f, 0.0f);
-const CColor CColor::skGray  (0.5f, 0.5f, 0.5f);
-const CColor CColor::skTransparentRed   (1.0f, 0.0f, 0.0f, 0.0f);
-const CColor CColor::skTransparentGreen (0.0f, 1.0f, 0.0f, 0.0f);
-const CColor CColor::skTransparentBlue  (0.0f, 0.0f, 1.0f, 0.0f);
-const CColor CColor::skTransparentYellow(1.0f, 1.0f, 0.0f, 0.0f);
-const CColor CColor::skTransparentPurple(1.0f, 0.0f, 1.0f, 0.0f);
-const CColor CColor::skTransparentCyan  (0.0f, 1.0f, 1.0f, 0.0f);
-const CColor CColor::skTransparentWhite (1.0f, 1.0f, 1.0f, 0.0f);
-const CColor CColor::skTransparentBlack (0.0f, 0.0f, 0.0f, 0.0f);
-const CColor CColor::skTransparentGray  (0.5f, 0.5f, 0.5f, 0.0f);
