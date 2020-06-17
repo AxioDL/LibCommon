@@ -83,6 +83,21 @@ public:
         return !operator==(other);
     }
 
+    // min set to float maximum, max set to float minimum; ideal for creating an AABox from scratch
+    static constexpr CAABox Infinite() {
+        return {{FLT_MAX}, {-FLT_MAX}};
+    }
+
+    // A 1x1x1 bounding box
+    static constexpr CAABox One() {
+        return {{-0.5f}, {0.5}};
+    }
+
+    // A 0x0x0 bounding box
+    static constexpr CAABox Zero() {
+        return {{0.0f}, {0.0f}};
+    }
+
     // Constants
     static const CAABox skInfinite;
     static const CAABox skOne;

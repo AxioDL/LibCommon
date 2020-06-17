@@ -5,11 +5,11 @@
 
 class CPlane
 {
-    CVector3f mNormal{CVector3f::skUp};
+    CVector3f mNormal{CVector3f::Up()};
     float mDist = 0.0f;
 
 public:
-    CPlane() = default;
+    constexpr CPlane() = default;
 
     constexpr CPlane(const CVector3f& normal, float dist)
         : mNormal(normal)

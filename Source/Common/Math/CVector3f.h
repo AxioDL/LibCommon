@@ -142,7 +142,55 @@ public:
         return (&X)[Index];
     }
 
-    // Constants
+    static constexpr CVector3f Zero() {
+        return {0.0f};
+    }
+
+    static constexpr CVector3f One() {
+        return {1.0f};
+    }
+
+    static constexpr CVector3f Infinite() {
+        return {FLT_MAX};
+    }
+
+    static constexpr CVector3f UnitX() {
+        return {1.f, 0.f, 0.f};
+    }
+
+    static constexpr CVector3f UnitY() {
+        return {0.f, 1.f, 0.f};
+    }
+
+    static constexpr CVector3f UnitZ() {
+        return {0.f, 0.f, 1.f};
+    }
+
+    static constexpr CVector3f Right() {
+        return UnitX();
+    }
+
+    static constexpr CVector3f Left() {
+        return -UnitX();
+    }
+
+    static constexpr CVector3f Forward() {
+        return UnitY();
+    }
+
+    static constexpr CVector3f Back() {
+        return -UnitY();
+    }
+
+    static constexpr CVector3f Up() {
+        return UnitZ();
+    }
+
+    static constexpr CVector3f Down() {
+        return -UnitZ();
+    }
+
+    // Constants (deprecated over constexpr alternatives)
     static const CVector3f skZero;
     static const CVector3f skOne;
     static const CVector3f skInfinite;

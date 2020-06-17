@@ -78,8 +78,10 @@ public:
         return (&X)[index];
     }
 
-    // Static Members
-    static const CVector2i skZero;
+    // Static members
+    static constexpr CVector2i Zero() {
+        return {0};
+    }
 };
 
 #endif // CVECTOR2I_H

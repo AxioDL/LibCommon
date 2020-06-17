@@ -16,13 +16,13 @@ public:
     explicit CQuaternion(IInputStream& rInput);
 
     [[nodiscard]] CVector3f XAxis() const {
-        return *this * CVector3f::skUnitX;
+        return *this * CVector3f::UnitX();
     }
     [[nodiscard]] CVector3f YAxis() const {
-        return *this * CVector3f::skUnitY;
+        return *this * CVector3f::UnitY();
     }
     [[nodiscard]] CVector3f ZAxis() const {
-        return *this * CVector3f::skUnitZ;
+        return *this * CVector3f::UnitZ();
     }
     [[nodiscard]] CQuaternion Normalized() const;
     [[nodiscard]] CQuaternion Inverse() const;
@@ -42,6 +42,14 @@ public:
     [[nodiscard]] static CQuaternion FromAxisAngle(float Angle, CVector3f Axis);
     [[nodiscard]] static CQuaternion FromRotationMatrix(const CMatrix4f& rkRotMtx);
     [[nodiscard]] static CQuaternion FromAxes(const CVector3f& rkX, const CVector3f& rkY, const CVector3f& rkZ);
+
+    static constexpr CQuaternion Identity() {
+        return {1.0f, 0.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CQuaternion Zero() {
+        return {0.0f, 0.0f, 0.0f, 0.0f};
+    }
 
     static CQuaternion skIdentity;
     static CQuaternion skZero;

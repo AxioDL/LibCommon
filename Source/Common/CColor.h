@@ -68,6 +68,78 @@ public:
     [[nodiscard]] static CColor RandomLightColor(bool Transparent);
     [[nodiscard]] static CColor RandomDarkColor(bool Transparent);
 
+    static constexpr CColor Red() {
+        return {1.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor Green() {
+        return {0.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor Blue() {
+        return {0.0f, 0.0f, 1.0f};
+    }
+
+    static constexpr CColor Yellow() {
+        return {1.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor Purple() {
+        return {1.0f, 0.0f, 1.0f};
+    }
+
+    static constexpr CColor Cyan() {
+        return {0.0f, 1.0f, 1.0f};
+    }
+
+    static constexpr CColor White() {
+        return {1.0f, 1.0f, 1.0f};
+    }
+
+    static constexpr CColor Black() {
+        return {0.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor Gray() {
+        return {0.5f, 0.5f, 0.5f};
+    }
+
+    static constexpr CColor TransparentRed() {
+        return {1.0f, 0.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentGreen() {
+        return {0.0f, 1.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentBlue() {
+        return {0.0f, 0.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentYellow() {
+        return {1.0f, 1.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentPurple() {
+        return {1.0f, 0.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentCyan() {
+        return {0.0f, 1.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentWhite() {
+        return {1.0f, 1.0f, 1.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentBlack() {
+        return {0.0f, 0.0f, 0.0f, 0.0f};
+    }
+
+    static constexpr CColor TransparentGray() {
+        return {0.5f, 0.5f, 0.5f, 0.0f};
+    }
+
     // some predefined colors below for ease of use
     static const CColor skRed;
     static const CColor skGreen;

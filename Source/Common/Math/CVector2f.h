@@ -100,6 +100,30 @@ public:
         return (&X)[Index];
     }
 
+    static constexpr CVector2f Zero() {
+        return {0.0f};
+    }
+
+    static constexpr CVector2f One() {
+        return {1.0f};
+    }
+
+    static constexpr CVector2f Up() {
+        return {0.0f, 1.0f};
+    }
+
+    static constexpr CVector2f Right() {
+        return {1.0f, 0.0f};
+    }
+
+    static constexpr CVector2f Down() {
+        return {0.0f, -1.0f};
+    }
+
+    static constexpr CVector2f Left() {
+        return {-1.0f, 0.0f};
+    }
+
     // Static Members
     static const CVector2f skZero;
     static const CVector2f skOne;
