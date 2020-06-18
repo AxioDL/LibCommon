@@ -115,7 +115,7 @@ public:
             return *this;
         }
 
-        TIterator& operator++(int)
+        TIterator operator++(int)
         {
             TIterator Copy = *this;
             Next();
