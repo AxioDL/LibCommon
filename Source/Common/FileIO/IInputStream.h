@@ -15,23 +15,31 @@ protected:
 public:
     bool ReadBool();
     int8 ReadByte();
+    uint8 ReadUByte();
     int16 ReadShort();
+    uint16 ReadUShort();
     int32 ReadLong();
+    uint32 ReadULong();
     int64 ReadLongLong();
+    uint64 ReadULongLong();
     float ReadFloat();
     double ReadDouble();
     uint32 ReadFourCC();
     TString ReadString();
-    TString ReadString(uint32 Count);
+    TString ReadString(size_t Count);
     TString ReadSizedString();
     T16String Read16String();
-    T16String Read16String(uint32 Count);
+    T16String Read16String(size_t Count);
     T16String ReadSized16String();
 
     int8 PeekByte();
+    uint8 PeekUByte();
     int16 PeekShort();
+    uint16 PeekUShort();
     int32 PeekLong();
+    uint32 PeekULong();
     int64 PeekLongLong();
+    uint64 PeekULongLong();
     float PeekFloat();
     double PeekDouble();
     uint32 PeekFourCC();

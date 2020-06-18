@@ -1,12 +1,10 @@
 #include "IOutputStream.h"
 
-IOutputStream::~IOutputStream()
-{
-}
+IOutputStream::~IOutputStream() = default;
 
 void IOutputStream::WriteBool(bool Val)
 {
-    char ChrVal = (Val ? 1 : 0);
+    const auto ChrVal = static_cast<char>(Val ? 1 : 0);
     WriteBytes(&ChrVal, 1);
 }
 
@@ -15,50 +13,82 @@ void IOutputStream::WriteByte(int8 Val)
     WriteBytes(&Val, 1);
 }
 
+void IOutputStream::WriteUByte(uint8 Val)
+{
+    WriteByte(static_cast<int8>(Val));
+}
+
 void IOutputStream::WriteShort(int16 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 2);
+}
+
+void IOutputStream::WriteUShort(uint16 Val)
+{
+    WriteShort(static_cast<int16>(Val));
 }
 
 void IOutputStream::WriteLong(int32 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 4);
+}
+
+void IOutputStream::WriteULong(uint32 Val)
+{
+    WriteLong(static_cast<int32>(Val));
 }
 
 void IOutputStream::WriteLongLong(int64 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 8);
+}
+
+void IOutputStream::WriteULongLong(uint64 Val)
+{
+    WriteLongLong(static_cast<int64>(Val));
 }
 
 void IOutputStream::WriteFloat(float Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 4);
 }
 
 void IOutputStream::WriteDouble(double Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != EEndian::SystemEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 8);
 }
 
 void IOutputStream::WriteFourCC(uint32 Val)
 {
-    if (EEndian::SystemEndian == EEndian::LittleEndian) SwapBytes(Val);
+    if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
+        SwapBytes(Val);
+
     WriteBytes(&Val, 4);
 }
 
-void IOutputStream::WriteString(const TString& rkVal, int Count /*= -1*/, bool Terminate /*= true*/)
+void IOutputStream::WriteString(const TString& rkVal, int Count, bool Terminate)
 {
     if (Count < 0)
         Count = rkVal.Size();
 
     WriteBytes(rkVal.Data(), Count);
 
-    if (Terminate && (rkVal.IsEmpty() || rkVal[Count-1] != 0))
+    if (Terminate && (rkVal.IsEmpty() || rkVal[Count - 1] != 0))
         WriteByte(0);
 }
 
@@ -68,7 +98,7 @@ void IOutputStream::WriteSizedString(const TString& rkVal)
     WriteBytes(rkVal.Data(), rkVal.Size());
 }
 
-void IOutputStream::Write16String(const T16String& rkVal, int Count /*= -1*/, bool Terminate /*= true*/)
+void IOutputStream::Write16String(const T16String& rkVal, int Count, bool Terminate)
 {
     if (Count < 0)
         Count = rkVal.Size();
@@ -76,7 +106,7 @@ void IOutputStream::Write16String(const T16String& rkVal, int Count /*= -1*/, bo
     for (int ChrIdx = 0; ChrIdx < Count; ChrIdx++)
         WriteShort(rkVal[ChrIdx]);
 
-    if (Terminate && (rkVal.IsEmpty() || rkVal[Count-1] != 0))
+    if (Terminate && (rkVal.IsEmpty() || rkVal[Count - 1] != 0))
         WriteShort(0);
 }
 
@@ -84,7 +114,7 @@ void IOutputStream::WriteSized16String(const T16String& rkVal)
 {
     WriteLong(rkVal.Size());
 
-    for (uint32 ChrIdx = 0; ChrIdx < rkVal.Size(); ChrIdx++)
+    for (size_t ChrIdx = 0; ChrIdx < rkVal.Size(); ChrIdx++)
         WriteShort(rkVal[ChrIdx]);
 }
 
@@ -100,8 +130,11 @@ bool IOutputStream::Skip(int32 SkipAmount)
 
 void IOutputStream::WriteToBoundary(uint32 Boundary, uint8 Fill)
 {
-    uint32 Num = Boundary - (Tell() % Boundary);
-    if (Num == Boundary) return;
+    const uint32 Num = Boundary - (Tell() % Boundary);
+
+    if (Num == Boundary)
+        return;
+
     for (uint32 iByte = 0; iByte < Num; iByte++)
         WriteByte(Fill);
 }
@@ -128,10 +161,10 @@ TString IOutputStream::GetDestString() const
 
 bool IOutputStream::Seek64(int64 Offset, uint32 Origin)
 {
-    return Seek((int32) Offset, Origin);
+    return Seek(static_cast<int32>(Offset), Origin);
 }
 
 uint64 IOutputStream::Tell64() const
 {
-    return (uint64) (Tell());
+    return static_cast<uint64>(Tell());
 }

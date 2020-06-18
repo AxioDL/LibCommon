@@ -13,9 +13,13 @@ protected:
 public:
     void WriteBool(bool Val);
     void WriteByte(int8 Val);
+    void WriteUByte(uint8 Val);
     void WriteShort(int16 Val);
+    void WriteUShort(uint16 Val);
     void WriteLong(int32 Val);
+    void WriteULong(uint32 Val);
     void WriteLongLong(int64 Val);
+    void WriteULongLong(uint64 Val);
     void WriteFloat(float Val);
     void WriteDouble(double Val);
     void WriteFourCC(uint32 Val);
