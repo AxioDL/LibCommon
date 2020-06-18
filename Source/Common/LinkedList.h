@@ -8,24 +8,19 @@ template<typename ElemType>
 class TLink
 {
     /** Pointer to the previous link in the list. */
-    TLink* mpPrevLink;
+    TLink* mpPrevLink = nullptr;
 
     /** Pointer to the next link in the list. */
-    TLink* mpNextLink;
+    TLink* mpNextLink = nullptr;
 
     /** Data element contained in this node. */
-    ElemType mElement;
+    ElemType mElement{};
 
 public:
-    TLink()
-        : mpPrevLink(nullptr)
-        , mpNextLink(nullptr)
-    {}
+    TLink() = default;
 
     TLink(const ElemType& rkInElement)
-        : mpPrevLink(nullptr)
-        , mpNextLink(nullptr)
-        , mElement(rkInElement)
+        : mElement(rkInElement)
     {}
 
     ~TLink()
@@ -78,17 +73,17 @@ public:
     }
 
     /** Assignment */
-    inline TLink& operator=(const ElemType& rkElem)
+    TLink& operator=(const ElemType& rkElem)
     {
         mElement = rkElem;
         return *this;
     }
 
     /** Iteration */
-    inline TLink* Previous() const         { return mpPrevLink; }
-    inline TLink* Next() const             { return mpNextLink; }
-    inline ElemType& Element()             { return mElement; }
-    inline const ElemType& Element() const { return mElement; }
+    TLink* Previous() const         { return mpPrevLink; }
+    TLink* Next() const             { return mpNextLink; }
+    ElemType& Element()             { return mElement; }
+    const ElemType& Element() const { return mElement; }
 
     /** Iterator class for linked lists */
     class TIterator
@@ -114,13 +109,13 @@ public:
         }
 
         /** Increment operators */
-        inline TIterator& operator++()
+        TIterator& operator++()
         {
             Next();
             return *this;
         }
 
-        inline TIterator& operator++(int)
+        TIterator& operator++(int)
         {
             TIterator Copy = *this;
             Next();
@@ -128,9 +123,9 @@ public:
         }
 
         /** Dereference operators */
-        inline ElemType& operator*() const  { return mpCurLink->Element(); }
-        inline ElemType* operator->() const { return &mpCurLink->Element(); }
-        inline operator bool() const        { return mpCurLink != nullptr; }
+        ElemType& operator*() const  { return mpCurLink->Element(); }
+        ElemType* operator->() const { return &mpCurLink->Element(); }
+        explicit operator bool() const        { return mpCurLink != nullptr; }
     };
 };
 
