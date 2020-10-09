@@ -523,7 +523,10 @@ public:
 
         // Add final string
         if (LastSplit != Length() || KeepEmptyParts)
-            Out.push_back(SubString(LastSplit, Length() - LastSplit));
+        {
+            const uint Len = Length() - LastSplit;
+            Out.push_back(SubString(LastSplit, Len >= Length() ? Length() - 1 : Len));
+        }
 
         return Out;
     }
