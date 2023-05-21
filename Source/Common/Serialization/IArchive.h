@@ -17,6 +17,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 /* This is a custom serialization implementation intended for saving game assets out to editor-
  * friendly formats, such as XML. The main goals of the serialization system is to simplify the
