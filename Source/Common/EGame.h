@@ -18,6 +18,7 @@ enum class EGame
     CorruptionProto,
     Corruption,
     DKCReturns,
+    PrimeRemastered,
     
     Max,
     Invalid = -1

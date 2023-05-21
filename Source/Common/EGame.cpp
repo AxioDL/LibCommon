@@ -14,9 +14,10 @@ TString GetGameName(EGame Game)
         "Metroid Prime 3: Corruption E3 2006 Prototype",
         "Metroid Prime 3: Corruption",
         "Donkey Kong Country Returns",
+        "Metroid Prime Remastered",
     };
 
-    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+    if (Game < EGame::PrimeDemo || Game > EGame::PrimeRemastered) {
         return "Unknown Game";
     }
 
@@ -33,9 +34,10 @@ TString GetGameShortName(EGame Game)
         "MP3Proto",
         "MP3",
         "DKCR",
+        "MP1R",
     };
 
-    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+    if (Game < EGame::PrimeDemo || Game > EGame::PrimeRemastered) {
         return "Unknown";
     }
 
@@ -52,9 +54,10 @@ CFourCC GameTo4CC(EGame Game)
         CFourCC(FOURCC('MP3P')),
         CFourCC(FOURCC('MP3C')),
         CFourCC(FOURCC('DKCR')),
+        CFourCC(FOURCC('MP1R')),
     };
 
-    if (Game < EGame::PrimeDemo || Game > EGame::DKCReturns) {
+    if (Game < EGame::PrimeDemo || Game > EGame::PrimeRemastered) {
         return FOURCC('UNKN');
     }
 
@@ -63,7 +66,7 @@ CFourCC GameTo4CC(EGame Game)
 
 EGame GameFrom4CC(CFourCC GameId)
 {
-    static constexpr std::array<std::pair<uint32_t, EGame>, 7> skIdToGame{{
+    static constexpr std::array<std::pair<uint32_t, EGame>, 8> skIdToGame{{
         {FOURCC('MP1D'), EGame::PrimeDemo},
         {FOURCC('MPRM'), EGame::Prime},
         {FOURCC('MP2D'), EGame::EchoesDemo},
@@ -71,6 +74,7 @@ EGame GameFrom4CC(CFourCC GameId)
         {FOURCC('MP3P'), EGame::CorruptionProto},
         {FOURCC('MP3C'), EGame::Corruption},
         {FOURCC('DKCR'), EGame::DKCReturns},
+        {FOURCC('MP1R'), EGame::PrimeRemastered},
     }};
 
     const auto iter = std::find_if(skIdToGame.cbegin(), skIdToGame.cend(),
