@@ -525,7 +525,7 @@ public:
         if (LastSplit != Length() || KeepEmptyParts)
         {
             const uint Len = Length() - LastSplit;
-            Out.push_back(SubString(LastSplit, Len >= Length() ? Length() - 1 : Len));
+            Out.push_back(SubString(LastSplit, Len));
         }
 
         return Out;
