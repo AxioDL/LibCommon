@@ -89,12 +89,12 @@ CVector3f CAABox::FurthestPointAlongVector(const CVector3f& rkDir) const
 
 // ************ INTERSECTION TESTS ************
 // These tests are kinda bad and probably inaccurate, they need rewrites
-bool CAABox::IntersectsAABox(const CAABox& rkAABox)
+bool CAABox::IntersectsAABox(const CAABox& rkAABox) const
 {
     return ((mMax > rkAABox.mMin) && (mMin < rkAABox.mMax));
 }
 
-bool CAABox::IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius)
+bool CAABox::IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius) const
 {
     // Placeholder for proper sphere intersection test
     // Generate an AABox for the sphere and do an AABox/AABox intersection test instead

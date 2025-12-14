@@ -59,9 +59,9 @@ public:
     [[nodiscard]] CVector3f FurthestPointAlongVector(const CVector3f& rkDir) const;
 
     // Intersection Tests
-    [[nodiscard]] bool IntersectsAABox(const CAABox& rkAABox);
-    [[nodiscard]] bool IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius);
-    [[nodiscard]] std::pair<bool,float> IntersectsRay(const CRay& rkRay) const;
+    [[nodiscard]] bool IntersectsAABox(const CAABox& rkAABox) const;
+    [[nodiscard]] bool IntersectsSphere(const CVector3f& rkSphereCenter, float SphereRadius) const;
+    [[nodiscard]] std::pair<bool, float> IntersectsRay(const CRay& rkRay) const;
 
     // Operators
     [[nodiscard]] constexpr CAABox operator+(const CVector3f& translate) const {
