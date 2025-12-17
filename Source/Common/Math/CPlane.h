@@ -42,10 +42,10 @@ public:
         return !operator==(other);
     }
 
-    [[nodiscard]] constexpr CVector3f Normal() const  { return mNormal; }
-    [[nodiscard]] constexpr float Dist() const        { return mDist; }
-    constexpr void SetNormal(const CVector3f& normal) { mNormal = normal; }
-    constexpr void SetDist(float dist)                { mDist = dist; }
+    [[nodiscard]] constexpr const CVector3f& Normal() const { return mNormal; }
+    [[nodiscard]] constexpr float Dist() const              { return mDist; }
+    constexpr void SetNormal(const CVector3f& normal)       {  mNormal = normal; }
+    constexpr void SetDist(float dist)                      { mDist = dist; }
 };
 
 #endif // CPLANE_H

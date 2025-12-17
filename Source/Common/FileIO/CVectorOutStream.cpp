@@ -120,7 +120,17 @@ void* CVectorOutStream::Data()
     return mpVector->data();
 }
 
+const void* CVectorOutStream::Data() const
+{
+    return mpVector->data();
+}
+
 void* CVectorOutStream::DataAtPosition()
+{
+    return mpVector->data() + mPos;
+}
+
+const void* CVectorOutStream::DataAtPosition() const
 {
     return mpVector->data() + mPos;
 }

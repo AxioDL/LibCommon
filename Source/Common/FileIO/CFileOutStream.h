@@ -12,9 +12,10 @@ private:
 
 public:
     CFileOutStream();
-    CFileOutStream(const TString& rkFile);
-    CFileOutStream(const TString& rkFile, EEndian FileEndianness);
+    explicit CFileOutStream(const TString& rkFile);
+    explicit CFileOutStream(const TString& rkFile, EEndian FileEndianness);
     CFileOutStream(const CFileOutStream& rkSrc);
+
     ~CFileOutStream() override;
     void Open(const TString& rkFile, EEndian);
     void Update(const TString& rkFile, EEndian FileEndianness);

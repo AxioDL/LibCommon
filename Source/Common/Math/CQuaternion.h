@@ -3,6 +3,8 @@
 
 #include "CVector3f.h"
 
+class IInputStream;
+
 class CQuaternion
 {
 public:
@@ -38,8 +40,8 @@ public:
     void operator *= (const CTransform4f& rkMtx);
 
     // Static
-    [[nodiscard]] static CQuaternion FromEuler(CVector3f Euler);
-    [[nodiscard]] static CQuaternion FromAxisAngle(float Angle, CVector3f Axis);
+    [[nodiscard]] static CQuaternion FromEuler(const CVector3f& Euler);
+    [[nodiscard]] static CQuaternion FromAxisAngle(float Angle, const CVector3f& Axis);
     [[nodiscard]] static CQuaternion FromRotationMatrix(const CMatrix4f& rkRotMtx);
     [[nodiscard]] static CQuaternion FromAxes(const CVector3f& rkX, const CVector3f& rkY, const CVector3f& rkZ);
 

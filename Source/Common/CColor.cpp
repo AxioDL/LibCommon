@@ -1,5 +1,9 @@
 #include "CColor.h"
-#include "CRandom.h"
+
+#include "Common/CRandom.h"
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+#include "Common/Serialization/IArchive.h"
 
 #include <algorithm>
 

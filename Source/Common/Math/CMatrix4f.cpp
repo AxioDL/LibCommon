@@ -1,12 +1,10 @@
 #include "CMatrix4f.h"
-#include "CQuaternion.h"
-#include "CVector3f.h"
-#include "CVector4f.h"
-#include "CTransform4f.h"
 
-CMatrix4f::CMatrix4f()
-{
-}
+#include "Common/Math/CTransform4f.h"
+#include "Common/Math/CVector3f.h"
+#include "Common/Math/CVector4f.h"
+
+CMatrix4f::CMatrix4f() = default;
 
 CMatrix4f::CMatrix4f(float Diagonal)
 {

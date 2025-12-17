@@ -10,12 +10,11 @@ class CScopedTimer
 {
     CTimer mTimer;
     TString mTimerName;
-    bool mStopped;
+    bool mStopped = false;
 
 public:
-    CScopedTimer(const TString& rkTimeoutMessage)
-        : mTimerName(rkTimeoutMessage)
-        , mStopped(false)
+    explicit CScopedTimer(TString rkTimeoutMessage)
+        : mTimerName(std::move(rkTimeoutMessage))
     {
         mTimer.Start();
     }

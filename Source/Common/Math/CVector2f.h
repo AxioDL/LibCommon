@@ -1,9 +1,11 @@
 #ifndef CVECTOR2F
 #define CVECTOR2F
 
-#include <Common/FileIO/IInputStream.h>
-#include <Common/FileIO/IOutputStream.h>
+#include <cstdint>
 #include <cmath>
+
+class IInputStream;
+class IOutputStream;
 
 class CVector2f
 {
@@ -93,10 +95,10 @@ public:
         return {-X, -Y};
     }
 
-    [[nodiscard]] constexpr float& operator[](long Index) {
+    [[nodiscard]] constexpr float& operator[](int64_t Index) {
         return (&X)[Index];
     }
-    [[nodiscard]] constexpr const float& operator[](long Index) const {
+    [[nodiscard]] constexpr const float& operator[](int64_t Index) const {
         return (&X)[Index];
     }
 

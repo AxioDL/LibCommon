@@ -12,7 +12,7 @@ class CRandom
 
 public:
     /** Constructor with the seed default-initialized to the current time */
-    CRandom(uint32 InSeed = (uint32) time(NULL))
+    explicit CRandom(uint32 InSeed = (uint32) time(NULL))
         : mSeed(InSeed)
     {}
 
@@ -50,7 +50,7 @@ class CGlobalRandomContext
     CRandom* mpPrevRandom;
 
 public:
-    CGlobalRandomContext(CRandom& InRandom);
+    explicit CGlobalRandomContext(CRandom& InRandom);
     ~CGlobalRandomContext();
 };
 

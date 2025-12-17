@@ -9,14 +9,14 @@
 class CCRC32
 {
     /** Current hash value */
-    uint32 mHash;
+    uint32 mHash = 0xFFFFFFFF;
 
 public:
     /** Default constructor, initializes the hash to the default value */
     CCRC32();
 
     /** Allows the hash to be initialized to an arbitrary value */
-    CCRC32(uint32 InitialValue);
+    explicit CCRC32(uint32 InitialValue);
 
     /** Hash arbitrary data */
     void Hash(const void* pkData, int Size);

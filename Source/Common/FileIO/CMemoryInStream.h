@@ -11,8 +11,9 @@ class CMemoryInStream : public IInputStream
 
 public:
     CMemoryInStream();
-    CMemoryInStream(const void *pkData, uint32 Size, EEndian dataEndianness);
+    explicit CMemoryInStream(const void *pkData, uint32 Size, EEndian dataEndianness);
     ~CMemoryInStream() override;
+
     void SetData(const void *pkData, uint32 Size, EEndian dataEndianness);
 
     void ReadBytes(void* pDst, uint32 Count) override;

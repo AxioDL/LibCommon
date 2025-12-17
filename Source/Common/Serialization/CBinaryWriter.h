@@ -1,8 +1,9 @@
 #ifndef CBINARYWRITER
 #define CBINARYWRITER
 
-#include "IArchive.h"
 #include "Common/CFourCC.h"
+#include "Common/FileIO/CFileOutStream.h"
+#include "Common/Serialization/IArchive.h"
 
 class CBinaryWriter : public IArchive
 {
@@ -18,9 +19,8 @@ class CBinaryWriter : public IArchive
     bool mOwnsStream = false;
 
 public:
-    CBinaryWriter(const TString& rkFilename, uint32 Magic, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
-        : IArchive()
-        , mMagic(Magic)
+    explicit CBinaryWriter(const TString& rkFilename, uint32 Magic, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
+        : mMagic(Magic)
         , mOwnsStream(true)
     {
         mArchiveFlags = AF_Writer | AF_Binary;
@@ -39,8 +39,7 @@ public:
         InitParamStack();
     }
 
-    CBinaryWriter(IOutputStream *pStream, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
-        : IArchive()
+    explicit CBinaryWriter(IOutputStream *pStream, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
     {
         ASSERT(pStream && pStream->IsValid());
         mArchiveFlags = AF_Writer | AF_Binary;
@@ -49,8 +48,7 @@ public:
         InitParamStack();
     }
 
-    CBinaryWriter(IOutputStream *pStream, const CSerialVersion& rkVersion)
-        : IArchive()
+    explicit CBinaryWriter(IOutputStream *pStream, const CSerialVersion& rkVersion)
     {
         ASSERT(pStream && pStream->IsValid());
         mArchiveFlags = AF_Writer | AF_Binary;

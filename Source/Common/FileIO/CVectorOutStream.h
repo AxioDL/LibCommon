@@ -14,9 +14,9 @@ class CVectorOutStream : public IOutputStream
 
 public:
     CVectorOutStream();
-    CVectorOutStream(EEndian DataEndianness);
-    CVectorOutStream(uint32 InitialSize, EEndian DataEndianness);
-    CVectorOutStream(std::vector<char> *pVector, EEndian DataEndianness);
+    explicit CVectorOutStream(EEndian DataEndianness);
+    explicit CVectorOutStream(uint32 InitialSize, EEndian DataEndianness);
+    explicit CVectorOutStream(std::vector<char> *pVector, EEndian DataEndianness);
     ~CVectorOutStream() override;
 
     void WriteBytes(const void* pkSrc, uint32 Count) override;
@@ -26,8 +26,10 @@ public:
     bool IsValid() const override;
     uint32 Size() const override;
     void SetVector(std::vector<char> *pVector);
-    void *Data();
-    void *DataAtPosition();
+    void* Data();
+    const void* Data() const;
+    void* DataAtPosition();
+    const void* DataAtPosition() const;
     void Clear();
 };
 

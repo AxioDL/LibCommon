@@ -1,6 +1,9 @@
 #include "FileUtil.h"
-#include "Macros.h"
+
+#include "Common/Flags.h"
+#include "Common/Macros.h"
 #include "Common/FileIO/CFileInStream.h"
+#include "Common/FileIO/CFileOutStream.h"
 
 #include <chrono>
 #include <filesystem>

@@ -7,7 +7,7 @@
 class IOutputStream
 {
 protected:
-    EEndian mDataEndianness;
+    EEndian mDataEndianness{};
     TString mDataDest;
 
 public:

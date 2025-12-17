@@ -4,6 +4,10 @@
 #include "CQuaternion.h"
 #include "CMatrix4f.h"
 
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+#include "Common/Serialization/IArchive.h"
+
 // ************ CONSTRUCTRS ************
 CTransform4f::CTransform4f()
 {
@@ -55,7 +59,7 @@ CTransform4f::CTransform4f(float m00, float m01, float m02, float m03,
     SetupRow4();
 }
 
-CTransform4f::CTransform4f(CVector3f Position, CQuaternion Rotation, CVector3f Scale)
+CTransform4f::CTransform4f(const CVector3f& Position, const CQuaternion& Rotation, const CVector3f& Scale)
 {
     *this = skIdentity;
     this->Scale(Scale);
@@ -63,7 +67,7 @@ CTransform4f::CTransform4f(CVector3f Position, CQuaternion Rotation, CVector3f S
     Translate(Position);
 }
 
-CTransform4f::CTransform4f(CVector3f Position, CVector3f Rotation, CVector3f Scale)
+CTransform4f::CTransform4f(const CVector3f& Position, const CVector3f& Rotation, const CVector3f& Scale)
 {
     *this = skIdentity;
     this->Scale(Scale);
@@ -80,12 +84,12 @@ void CTransform4f::Serialize(IArchive& rOut)
 
 void CTransform4f::Write(IOutputStream& rOut) const
 {
-    for (int iFlt = 0; iFlt < 12; iFlt++)
+    for (size_t iFlt = 0; iFlt < 12; iFlt++)
         rOut.WriteFloat(_m[iFlt]);
 }
 
 // ************ MATH ************
-void CTransform4f::Translate(CVector3f Translation)
+void CTransform4f::Translate(const CVector3f& Translation)
 {
     CTransform4f TranslateMtx = CTransform4f::TranslationMatrix(Translation);
     *this = TranslateMtx * *this;
@@ -96,13 +100,13 @@ void CTransform4f::Translate(float XTrans, float YTrans, float ZTrans)
     Translate(CVector3f(XTrans, YTrans, ZTrans));
 }
 
-void CTransform4f::Rotate(CQuaternion Rotation)
+void CTransform4f::Rotate(const CQuaternion& Rotation)
 {
     CTransform4f RotateMtx = CTransform4f::RotationMatrix(Rotation);
     *this = RotateMtx * *this;
 }
 
-void CTransform4f::Rotate(CVector3f Rotation)
+void CTransform4f::Rotate(const CVector3f& Rotation)
 {
     CQuaternion quat = CQuaternion::FromEuler(Rotation);
     Rotate(quat);
@@ -113,7 +117,7 @@ void CTransform4f::Rotate(float XRot, float YRot, float ZRot)
     Rotate(CVector3f(XRot, YRot, ZRot));
 }
 
-void CTransform4f::Scale(CVector3f Scale)
+void CTransform4f::Scale(const CVector3f& Scale)
 {
     CTransform4f ScaleMtx = CTransform4f::ScaleMatrix(Scale);
     *this = ScaleMtx * *this;
@@ -223,12 +227,12 @@ CQuaternion CTransform4f::ExtractRotation() const
 }
 
 // ************ OPERATORS ************
-float* CTransform4f::operator[](long Index)
+float* CTransform4f::operator[](int64_t Index)
 {
     return m[Index];
 }
 
-const float* CTransform4f::operator[](long Index) const
+const float* CTransform4f::operator[](int64_t Index) const
 {
     return m[Index];
 }
@@ -302,7 +306,7 @@ bool CTransform4f::operator!=(const CTransform4f& rkMtx) const
 }
 
 // ************ STATIC ************
-CTransform4f CTransform4f::TranslationMatrix(CVector3f Translation)
+CTransform4f CTransform4f::TranslationMatrix(const CVector3f& Translation)
 {
     CTransform4f Out = skIdentity;
     Out[0][3] = Translation.X;
@@ -311,7 +315,7 @@ CTransform4f CTransform4f::TranslationMatrix(CVector3f Translation)
     return Out;
 }
 
-CTransform4f CTransform4f::RotationMatrix(CQuaternion Rotation)
+CTransform4f CTransform4f::RotationMatrix(const CQuaternion& Rotation)
 {
     CTransform4f Out = skIdentity;
     float X = Rotation.X;
@@ -334,7 +338,7 @@ CTransform4f CTransform4f::RotationMatrix(CQuaternion Rotation)
     return Out;
 }
 
-CTransform4f CTransform4f::ScaleMatrix(CVector3f Scale)
+CTransform4f CTransform4f::ScaleMatrix(const CVector3f& Scale)
 {
     CTransform4f Out = skIdentity;
     Out[0][0] = Scale.X;

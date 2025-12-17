@@ -3,23 +3,19 @@
 
 #include "IArchive.h"
 #include "Common/CFourCC.h"
-#include <iostream>
 #include <tinyxml2.h>
 
 class CXMLWriter : public IArchive
 {
     tinyxml2::XMLDocument mDoc;
-    tinyxml2::XMLElement *mpCurElem;
+    tinyxml2::XMLElement *mpCurElem = nullptr;
     TString mOutFilename;
-    const char* mpAttributeName;
-    bool mSaved;
+    const char* mpAttributeName = nullptr;
+    bool mSaved = false;
 
 public:
-    CXMLWriter(const TString& rkFileName, const TString& rkRootName, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
-        : IArchive()
-        , mOutFilename(rkFileName)
-        , mpAttributeName(nullptr)
-        , mSaved(false)
+    explicit CXMLWriter(const TString& rkFileName, const TString& rkRootName, uint16 FileVersion = 0, EGame Game = EGame::Invalid)
+        : mOutFilename(rkFileName)
     {
         mArchiveFlags = AF_Writer | AF_Text;
         SetVersion(skCurrentArchiveVersion, FileVersion, Game);
@@ -35,16 +31,16 @@ public:
         SerializeVersion();
     }
 
-    ~CXMLWriter()
+    ~CXMLWriter() override
     {
         if (!mSaved)
         {
-            bool SaveSuccess = Save();
+            [[maybe_unused]] bool SaveSuccess = Save();
             ASSERT(SaveSuccess);
         }
     }
 
-    inline bool Save()
+    bool Save()
     {
         if (mSaved)
         {
@@ -60,17 +56,17 @@ public:
             errorf("Failed to save XML file: %s", *mOutFilename);
             return false;
         }
-        else
-            return true;
+
+        return true;
     }
 
-    inline bool IsValid() const
+    bool IsValid() const
     {
         return mpCurElem != nullptr && !mSaved;
     }
 
     // Interface
-    virtual bool ParamBegin(const char *pkName, uint32 Flags)
+    bool ParamBegin(const char *pkName, uint32 Flags) override
     {
         ASSERT(IsValid());
         ASSERT(!mpAttributeName); // Attributes cannot have sub-children
@@ -90,7 +86,7 @@ public:
         return true;
     }
 
-    virtual void ParamEnd()
+    void ParamEnd() override
     {
         if (mpAttributeName)
         {
@@ -122,7 +118,7 @@ protected:
     }
 
 public:
-    virtual bool PreSerializePointer(void*& Pointer, uint32 Flags)
+    bool PreSerializePointer(void*& Pointer, uint32 Flags) override
     {
         if (!Pointer)
         {
@@ -132,28 +128,28 @@ public:
         return true;
     }
 
-    virtual void SerializeArraySize(uint32& Value)
+    void SerializeArraySize(uint32& Value) override
     {
         // Do nothing. Reader obtains container size from number of child elements
     }
 
-    virtual void SerializePrimitive(bool& rValue, uint32 Flags)         { WriteParam(rValue ? "true" : "false"); }
-    virtual void SerializePrimitive(char& rValue, uint32 Flags)         { WriteParam(*TString(rValue)); }
-    virtual void SerializePrimitive(int8& rValue, uint32 Flags)         { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint8&)  rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(uint8& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint8&)  rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(int16& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(uint16& rValue, uint32 Flags)       { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint16&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(int32& rValue, uint32 Flags)        { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(uint32& rValue, uint32 Flags)       { WriteParam( (Flags & SH_HexDisplay) ? *TString::HexString((uint32&) rValue, 0) : *TString::FromInt32(rValue, 0, 10) ); }
-    virtual void SerializePrimitive(int64& rValue, uint32 Flags)        { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
-    virtual void SerializePrimitive(uint64& rValue, uint32 Flags)       { WriteParam( *TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10) ); }
-    virtual void SerializePrimitive(float& rValue, uint32 Flags)        { WriteParam( *TString::FromFloat(rValue, 1, true) ); }
-    virtual void SerializePrimitive(double& rValue, uint32 Flags)       { WriteParam( *TString::FromFloat((float) rValue, 1, true) ); }
-    virtual void SerializePrimitive(TString& rValue, uint32 Flags)      { WriteParam( *rValue ); }
-    virtual void SerializePrimitive(CFourCC& rValue, uint32 Flags)      { WriteParam( *rValue.ToString() ); }
-    virtual void SerializePrimitive(CAssetID& rValue, uint32 Flags)     { WriteParam( *rValue.ToString( CAssetID::GameIDLength(Game()) ) ); }
+    void SerializePrimitive(bool& rValue, uint32 Flags) override     { WriteParam(rValue ? "true" : "false"); }
+    void SerializePrimitive(char& rValue, uint32 Flags) override     { WriteParam(*TString(rValue)); }
+    void SerializePrimitive(int8& rValue, uint32 Flags) override     { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint8)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(uint8& rValue, uint32 Flags) override    { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(int16& rValue, uint32 Flags) override    { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint16)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(uint16& rValue, uint32 Flags) override   { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(int32& rValue, uint32 Flags) override    { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint32)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(uint32& rValue, uint32 Flags) override   { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
+    void SerializePrimitive(int64& rValue, uint32 Flags) override    { WriteParam(*TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10)); }
+    void SerializePrimitive(uint64& rValue, uint32 Flags) override   { WriteParam(*TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10)); }
+    void SerializePrimitive(float& rValue, uint32 Flags) override    { WriteParam(*TString::FromFloat(rValue, 1, true)); }
+    void SerializePrimitive(double& rValue, uint32 Flags) override   { WriteParam(*TString::FromFloat((float)rValue, 1, true)); }
+    void SerializePrimitive(TString& rValue, uint32 Flags) override  { WriteParam(*rValue); }
+    void SerializePrimitive(CFourCC& rValue, uint32 Flags) override  { WriteParam(*rValue.ToString()); }
+    void SerializePrimitive(CAssetID& rValue, uint32 Flags) override { WriteParam(*rValue.ToString(CAssetID::GameIDLength(Game()))); }
 
-    virtual void SerializeBulkData(void* pData, uint32 Size, uint32 Flags)
+    void SerializeBulkData(void* pData, uint32 Size, uint32 Flags) override
     {
         char* pCharData = (char*) pData;
         TString OutString(Size*2);

@@ -2,9 +2,10 @@
 #define CCOLOR_H
 
 #include "BasicTypes.h"
-#include "FileIO/IInputStream.h"
-#include "FileIO/IOutputStream.h"
-#include "Serialization/IArchive.h"
+
+class IArchive;
+class IInputStream;
+class IOutputStream;
 
 class CColor
 {

@@ -2,7 +2,6 @@
 #define EGAME_H
 
 #include "TString.h"
-#include "BasicTypes.h"
 
 class CFourCC;
 class IArchive;

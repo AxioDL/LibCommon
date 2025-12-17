@@ -2,6 +2,9 @@
 #include "CRandom.h"
 #include "TString.h"
 
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+
 void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalidIDLength*/) const
 {
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);

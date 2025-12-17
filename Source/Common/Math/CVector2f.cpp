@@ -1,5 +1,8 @@
 #include "CVector2f.h"
 
+#include <Common/FileIO/IInputStream.h>
+#include <Common/FileIO/IOutputStream.h>
+
 CVector2f::CVector2f(IInputStream& rInput)
 {
     X = rInput.ReadFloat();

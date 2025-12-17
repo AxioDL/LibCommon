@@ -1,5 +1,9 @@
 #include "MathUtil.h"
+
+#include "CAABox.h"
 #include "CMatrix4f.h"
+#include "CRay.h"
+#include "CPlane.h"
 
 #include <cfloat>
 
@@ -15,20 +19,22 @@ std::pair<bool,float> RayPlaneIntersection(const CRay& rkRay, const CPlane& rkPl
     float Denom = rkPlane.Normal().Dot(rkRay.Direction());
 
     if (Abs(Denom) < FLT_EPSILON)
-        return std::pair<bool,float>(false, 0.f);
+        return {false, 0.f};
 
     // Not parallel
     float Nom = rkPlane.Normal().Dot(rkRay.Origin()) + rkPlane.Dist();
     float t = -(Nom / Denom);
-    return std::pair<bool,float>(t >= 0.f, t);
+    return {t >= 0.f, t};
 }
 
 std::pair<bool,float> RayBoxIntersection(const CRay& rkRay, const CAABox& rkBox)
 {
     // Code slightly modified from Ogre
     // https://github.com/ehsan/ogre/blob/master/OgreMain/src/OgreMath.cpp
-    if (rkBox.IsNull())     return std::pair<bool,float>(false, 0.f);
-    if (rkBox.IsInfinite()) return std::pair<bool,float>(true, 0.f);
+    if (rkBox.IsNull())
+        return {false, 0.f};
+    if (rkBox.IsInfinite())
+        return {true, 0.f};
 
     float lowt = 0.0f;
     float t;
@@ -42,7 +48,7 @@ std::pair<bool,float> RayBoxIntersection(const CRay& rkRay, const CAABox& rkBox)
     // Check origin inside first
     if ( RayOrig > Min && RayOrig < Max )
     {
-        return std::pair<bool, float>(true, 0.f);
+        return {true, 0.f};
     }
 
     // Check each face in turn, only check closest 3
@@ -149,7 +155,7 @@ std::pair<bool,float> RayBoxIntersection(const CRay& rkRay, const CAABox& rkBox)
         }
     }
 
-    return std::pair<bool,float>(Hit, lowt);
+    return {Hit, lowt};
 }
 
 std::pair<bool,float> RayLineIntersection(const CRay& rkRay, const CVector3f& rkPointA,
@@ -212,12 +218,12 @@ std::pair<bool,float> RayLineIntersection(const CRay& rkRay, const CVector3f& rk
 
     CVector3f dP = w + (u * sc) - (v * tc);
     bool hit = (dP.Magnitude() <= Threshold);
-    return std::pair<bool,float>(hit, sc);
+    return {hit, sc};
 }
 
 std::pair<bool,float> RaySphereIntersection(const CRay& rkRay, const CVector3f& rkSpherePos, float SphereRadius, bool AllowBackfaces /*= false*/)
 {
-    std::pair<bool,float> Out(false, 0.f);
+    std::pair Out(false, 0.f);
     float SquaredRadius = (SphereRadius * SphereRadius);
 
     // Test for ray origin inside sphere
@@ -261,13 +267,13 @@ std::pair<bool,float> RayTriangleIntersection(const CRay& rkRay,
         if (denom > + std::numeric_limits<float>::epsilon())
         {
             if (!AllowBackfaces)
-                return std::pair<bool,float>(false, 0.f);
+                return {false, 0.f};
         }
         else if (denom >= - std::numeric_limits<float>::epsilon())
         {
             // Parallel or triangle area is close to zero when
             // the plane normal not normalised.
-            return std::pair<bool,float>(false, 0.f);
+            return {false, 0.f};
         }
 
         t = FaceNormal.Dot(rkVtxA - rkRay.Origin()) / denom;
@@ -275,7 +281,7 @@ std::pair<bool,float> RayTriangleIntersection(const CRay& rkRay,
         if (t < 0)
         {
             // Intersection is behind origin
-            return std::pair<bool,float>(false, 0.f);
+            return {false, 0.f};
         }
     }
 
@@ -291,11 +297,13 @@ std::pair<bool,float> RayTriangleIntersection(const CRay& rkRay,
         i0 = 1; i1 = 2;
         if (n1 > n2)
         {
-            if (n1 > n0) i0 = 0;
+            if (n1 > n0)
+                i0 = 0;
         }
         else
         {
-            if (n2 > n0) i1 = 0;
+            if (n2 > n0)
+                i1 = 0;
         }
     }
 
@@ -322,16 +330,16 @@ std::pair<bool,float> RayTriangleIntersection(const CRay& rkRay,
         if (area > 0)
         {
             if (alpha < tolerance || beta < tolerance || alpha+beta > area-tolerance)
-                return std::pair<bool,float>(false, 0.f);
+                return {false, 0.f};
         }
         else
         {
             if (alpha > tolerance || beta > tolerance || alpha+beta < area-tolerance)
-                return std::pair<bool,float>(false, 0.f);
+                return {false, 0.f};
         }
     }
 
-    return std::pair<bool,float>(true, t);
+    return {true, t};
 }
 
 CMatrix4f PerspectiveMatrix(float FOV, float Aspect, float Near, float Far)

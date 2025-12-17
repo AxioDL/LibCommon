@@ -12,8 +12,9 @@ class CMemoryOutStream : public IOutputStream
 
 public:
     CMemoryOutStream();
-    CMemoryOutStream(void *pData, uint32 Size, EEndian mDataEndianness);
-    ~CMemoryOutStream();
+    explicit CMemoryOutStream(void *pData, uint32 Size, EEndian mDataEndianness);
+    ~CMemoryOutStream() override;
+
     void SetData(void *pData, uint32 Size, EEndian mDataEndianness);
 
     void WriteBytes(const void* pkSrc, uint32 Count) override;
