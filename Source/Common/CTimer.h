@@ -3,12 +3,12 @@
 
 class CTimer
 {
-    double mStartTime;
-    double mPauseStartTime;
-    double mTotalPauseTime;
-    double mStopTime;
-    bool mStarted;
-    bool mPaused;
+    double mStartTime = 0.0;
+    double mPauseStartTime = 0.0;
+    double mTotalPauseTime = 0.0;
+    double mStopTime = 0.0;
+    bool mStarted = false;
+    bool mPaused = false;
 
 public:
     CTimer();
@@ -17,7 +17,7 @@ public:
     void Restart();
     double Stop();
     double Pause();
-    bool IsPaused();
+    bool IsPaused() const;
     void Resume();
     double Time();
 

@@ -1,10 +1,10 @@
 #include "CBitStreamInWrapper.h"
 
+#include "IInputStream.h"
+
 CBitStreamInWrapper::CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize /*= e32Bit*/)
     : mpSourceStream(pStream)
     , mChunkSize(ChunkSize)
-    , mBitPool(0)
-    , mBitsRemaining(0)
 {
 }
 
@@ -13,7 +13,7 @@ void CBitStreamInWrapper::SetChunkSize(EChunkSize Size)
     mChunkSize = Size;
 }
 
-long CBitStreamInWrapper::ReadBits(uint32 NumBits, bool ExtendSignBit /*= true*/)
+long CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true*/)
 {
     uint32 BitsRemaining = NumBits;
     uint32 Out = 0;

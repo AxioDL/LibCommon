@@ -1,7 +1,9 @@
 #ifndef CBITSTREAMINWRAPPER_H
 #define CBITSTREAMINWRAPPER_H
 
-#include "IInputStream.h"
+#include <cstdint>
+
+class IInputStream;
 
 class CBitStreamInWrapper
 {
@@ -12,15 +14,15 @@ public:
     };
 
 private:
-    IInputStream *mpSourceStream;
-    EChunkSize mChunkSize;
-    uint32 mBitPool;
-    uint32 mBitsRemaining;
+    IInputStream *mpSourceStream = nullptr;
+    EChunkSize mChunkSize{};
+    uint32_t mBitPool = 0;
+    uint32_t mBitsRemaining = 0;
 
 public:
-    CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize = k32Bit);
+    explicit CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize = k32Bit);
     void SetChunkSize(EChunkSize Size);
-    long ReadBits(uint32 NumBits, bool ExtendSignBit = true);
+    long ReadBits(uint32_t NumBits, bool ExtendSignBit = true);
     bool ReadBit();
 
 private:

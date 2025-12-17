@@ -1,8 +1,8 @@
 #ifndef FILEUTIL
 #define FILEUTIL
 
-#include "Flags.h"
 #include "TString.h"
+#include <vector>
 
 namespace FileUtil
 {

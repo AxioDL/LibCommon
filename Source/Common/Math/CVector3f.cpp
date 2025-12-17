@@ -1,10 +1,10 @@
 #include "CVector3f.h"
-#include "CVector2f.h"
-#include "CVector4f.h"
 #include "CTransform4f.h"
 #include <iomanip>
-#include <float.h>
-#include <cmath>
+
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+#include "Common/Serialization/IArchive.h"
 
 CVector3f::CVector3f(IInputStream& Input)
 {

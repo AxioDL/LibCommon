@@ -1,10 +1,11 @@
 #ifndef CFRUSTUMPLANES_H
 #define CFRUSTUMPLANES_H
 
-#include "CAABox.h"
 #include "CPlane.h"
-#include "CVector3f.h"
 #include <array>
+
+class CAABox;
+class CVector3f;
 
 class CFrustumPlanes
 {

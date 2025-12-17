@@ -4,12 +4,11 @@
 #include "IOUtil.h"
 #include "Common/BasicTypes.h"
 #include "Common/TString.h"
-#include <vector>
 
 class IInputStream
 {
 protected:
-    EEndian mDataEndianness;
+    EEndian mDataEndianness{};
     TString mDataSource;
     
 public:

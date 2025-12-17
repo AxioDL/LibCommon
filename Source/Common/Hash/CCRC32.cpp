@@ -47,10 +47,7 @@ const uint32 gkCrcTable[] = {
 };
 
 /** Default constructor, initializes the hash to the default value */
-CCRC32::CCRC32()
-    : mHash( 0xFFFFFFFF )
-{
-}
+CCRC32::CCRC32() = default;
 
 /** Allows the hash to be initialized to an arbitrary value */
 CCRC32::CCRC32(uint32 InitialValue)

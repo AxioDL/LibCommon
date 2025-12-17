@@ -1,6 +1,8 @@
 #include "CFrustumPlanes.h"
+
+#include "CAABox.h"
+#include "CVector3f.h"
 #include "MathUtil.h"
-#include "Common/BasicTypes.h"
 #include <algorithm>
 
 static constexpr size_t SideToIndex(CFrustumPlanes::ESide side)

@@ -1,9 +1,10 @@
 #ifndef CBINARYREADER
 #define CBINARYREADER
 
-#include "IArchive.h"
-#include "CSerialVersion.h"
 #include "Common/CFourCC.h"
+#include "Common/FileIO/CFileInStream.h"
+#include "Common/Serialization/IArchive.h"
+#include "Common/Serialization/CSerialVersion.h"
 
 class CBinaryReader : public IArchive
 {
@@ -22,9 +23,8 @@ class CBinaryReader : public IArchive
     bool mInAttribute = false;
 
 public:
-    CBinaryReader(const TString& rkFilename, uint32 Magic)
-        : IArchive()
-        , mOwnsStream(true)
+    explicit CBinaryReader(const TString& rkFilename, uint32 Magic)
+        : mOwnsStream(true)
     {
         mArchiveFlags = AF_Reader | AF_Binary;
         mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
@@ -49,9 +49,8 @@ public:
         }
     }
 
-    CBinaryReader(IInputStream *pStream, const CSerialVersion& rkVersion)
-        : IArchive()
-        , mMagicValid(true)
+    explicit CBinaryReader(IInputStream *pStream, const CSerialVersion& rkVersion)
+        : mMagicValid(true)
     {
         ASSERT(pStream && pStream->IsValid());
         mArchiveFlags = AF_Reader | AF_Binary;

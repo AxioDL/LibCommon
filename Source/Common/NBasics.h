@@ -1,7 +1,7 @@
 #ifndef NBASICS_H
 #define NBASICS_H
 
-#include "BasicTypes.h"
+#include <list>
 #include <vector>
 
 namespace NBasics

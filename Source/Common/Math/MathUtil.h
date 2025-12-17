@@ -1,13 +1,15 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include "Common/Macros.h"
-#include "CAABox.h"
-#include "CRay.h"
-#include "CPlane.h"
-#include "CVector3f.h"
-#include <utility>
 #include <cmath>
+#include <cstdint>
+#include <utility>
+
+#include <Common/Math/CVector3f.h>
+
+class CAABox;
+class CPlane;
+class CRay;
 
 namespace Math
 {
@@ -60,11 +62,11 @@ inline float Log10(float V)
 inline double Log10(double V)
 { return std::log10(V); }
 
-constexpr uint FloorLog2(uint V)
+constexpr uint32_t FloorLog2(uint32_t V)
 {
     // Binary search approach to calculating log2 of an integer
     // http://codinggorilla.domemtech.com/?p=81
-    uint Out = 0;
+    uint32_t Out = 0;
     if (V >= 1 << 16) { Out  = 16; V >>= 16; }
     if (V >= 1 <<  8) { Out +=  8; V >>=  8; }
     if (V >= 1 <<  4) { Out +=  4; V >>=  4; }

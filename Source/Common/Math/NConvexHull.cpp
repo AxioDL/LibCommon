@@ -1,8 +1,11 @@
 #include "NConvexHull.h"
 #include "MathUtil.h"
+
 #include "Common/CScopedTimer.h"
 #include "Common/Macros.h"
 #include "Common/NBasics.h"
+#include "Common/Math/CPlane.h"
+#include "Common/Math/CVector3f.h"
 
 #include <cfloat>
 #include <vector>
@@ -61,16 +64,16 @@ class CQuickhullImpl
     std::vector<SVertex> mVertices;
 
     /** Face linked list tail */
-    SFace* mpFaceTail;
+    SFace* mpFaceTail = nullptr;
 
     /** The number of faces in the hull */
-    uint mNumFaces;
+    uint mNumFaces = 0;
     
     /** Threshold for distance comparisons (epsilon) */
-    float mEpsilon;
+    float mEpsilon = FLT_EPSILON;
 
     /** True if the algorithm completed successfully */
-    bool mSuccess;
+    bool mSuccess = false;
 
     /** Create and initialize a new empty face with no edges */
     SFace* CreateFace()
@@ -90,7 +93,7 @@ class CQuickhullImpl
     }
 
     /** Delete a face from the hull. This function can leave dangling pointers. */
-    void DeleteFace(SFace* pFace)
+    void DeleteFace(const SFace* pFace)
     {
         if (pFace->pPrev)
             pFace->pPrev->pNext = pFace->pNext;
@@ -101,10 +104,10 @@ class CQuickhullImpl
         if (pFace == mpFaceTail)
             mpFaceTail = pFace->pPrev;
 
-        SHalfEdge* pEdge = pFace->pFirstEdge;
+        const SHalfEdge* pEdge = pFace->pFirstEdge;
         do
         {
-            SHalfEdge* pNext = pEdge->pNext;
+            const SHalfEdge* pNext = pEdge->pNext;
             delete pEdge;
             pEdge = pNext;
         }
@@ -115,7 +118,7 @@ class CQuickhullImpl
     }
     
     /** Creates and initializes a half edge. */
-    SHalfEdge* CreateHalfEdge(SFace* pFace, uint TailVertexIdx, SHalfEdge* pPrev, SHalfEdge* pNext, SHalfEdge* pTwin)
+    static SHalfEdge* CreateHalfEdge(SFace* pFace, uint TailVertexIdx, SHalfEdge* pPrev, SHalfEdge* pNext, SHalfEdge* pTwin)
     {
         SHalfEdge* pEdge = new SHalfEdge;
         pEdge->Tail = TailVertexIdx;
@@ -137,11 +140,11 @@ class CQuickhullImpl
     }
     
     /** Calculate and set the plane that a face lies on */
-    void CalcFacePlane(SFace* pFace)
+    void CalcFacePlane(SFace* pFace) const
     {
-        ASSERT( pFace->pFirstEdge != nullptr );
-        ASSERT( pFace->pFirstEdge->pNext != nullptr );
-        ASSERT( pFace->pFirstEdge->pNext->pNext != nullptr );
+        ASSERT(pFace->pFirstEdge != nullptr);
+        ASSERT(pFace->pFirstEdge->pNext != nullptr);
+        ASSERT(pFace->pFirstEdge->pNext->pNext != nullptr);
         
         uint Idx0 = pFace->pFirstEdge->Tail;
         uint Idx1 = pFace->pFirstEdge->pNext->Tail;
@@ -157,12 +160,12 @@ class CQuickhullImpl
     }
     
     /** Calculate the centroid of a face */
-    CVector3f CalcFaceCentroid(SFace* pFace)
+    CVector3f CalcFaceCentroid(const SFace* pFace) const
     {
         CVector3f Out;
         uint NumVertices = 0;
 
-        SHalfEdge* pEdge = pFace->pFirstEdge;
+        const SHalfEdge* pEdge = pFace->pFirstEdge;
         do
         {
             Out += mVertices[pEdge->Tail].Position;
@@ -531,11 +534,7 @@ class CQuickhullImpl
 
 public:
     /** Quickhull entry point; instantiating the class will run the algorithm */
-    CQuickhullImpl(const std::vector<CVector3f>& kInPoints)
-        : mEpsilon(FLT_EPSILON)
-        , mpFaceTail(nullptr)
-        , mNumFaces(0)
-        , mSuccess(false)
+    explicit CQuickhullImpl(const std::vector<CVector3f>& kInPoints)
     {
         SCOPED_TIMER(Quickhull);
 
@@ -597,7 +596,7 @@ public:
     }
 
     void GetHullTriangles(std::vector<CVector3f>& OutVertices,
-                      std::vector<uint16>& OutTriangleIndices) const
+                          std::vector<uint16>& OutTriangleIndices) const
     {
         // Note that our internal vertex array matches the input vertices, not the output vertices.
         // Iterate all faces to get a list of used vertices and generate triangle data.
@@ -642,8 +641,8 @@ public:
 };
 
 /** Generate vertices for a convex hull */
-bool BuildConvexHullVertices( const std::vector<CVector3f>& kInPoints,
-                              std::vector<CVector3f>& OutVertices )
+bool BuildConvexHullVertices(const std::vector<CVector3f>& kInPoints,
+                             std::vector<CVector3f>& OutVertices)
 {
     CQuickhullImpl Quickhull(kInPoints);
 
@@ -652,13 +651,13 @@ bool BuildConvexHullVertices( const std::vector<CVector3f>& kInPoints,
         Quickhull.GetHullVertices(OutVertices);
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 /** Generate face planes for a convex hull */
-bool BuildConvexHullPlanes( const std::vector<CVector3f>& kInPoints,
-                            std::vector<CPlane>& OutPlanes )
+bool BuildConvexHullPlanes(const std::vector<CVector3f>& kInPoints,
+                           std::vector<CPlane>& OutPlanes)
 {
     CQuickhullImpl Quickhull(kInPoints);
 
@@ -667,14 +666,14 @@ bool BuildConvexHullPlanes( const std::vector<CVector3f>& kInPoints,
         Quickhull.GetHullPlanes(OutPlanes);
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 /** Generate mesh data for a convex hull */
-bool BuildConvexHullMesh( const std::vector<CVector3f>& kInPoints,
-                          std::vector<CVector3f>& OutVertices,
-                          std::vector<uint16>& OutTriangleIndices )
+bool BuildConvexHullMesh(const std::vector<CVector3f>& kInPoints,
+                         std::vector<CVector3f>& OutVertices,
+                         std::vector<uint16_t>& OutTriangleIndices)
 {
     CQuickhullImpl Quickhull(kInPoints);
 
@@ -683,8 +682,8 @@ bool BuildConvexHullMesh( const std::vector<CVector3f>& kInPoints,
         Quickhull.GetHullTriangles(OutVertices, OutTriangleIndices);
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 }

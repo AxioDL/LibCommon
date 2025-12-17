@@ -1,8 +1,11 @@
 #include "CAABox.h"
-#include "CRay.h"
-#include "CTransform4f.h"
-#include "MathUtil.h"
-#include <float.h>
+
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+#include "Common/Math/CRay.h"
+#include "Common/Math/CTransform4f.h"
+#include "Common/Math/MathUtil.h"
+#include "Common/Serialization/IArchive.h"
 
 CAABox::CAABox(IInputStream& rInput)
     : mMin(rInput)

@@ -1,13 +1,14 @@
 #ifndef CVECTOR4F
 #define CVECTOR4F
 
-#include "Common/FileIO/IInputStream.h"
-#include "Common/FileIO/IOutputStream.h"
 #include "Common/Math/CVector2f.h"
 #include "Common/Math/CVector3f.h"
+#include <cstdint>
 
 class CMatrix4f;
 class CTransform4f;
+class IInputStream;
+class IOutputStream;
 
 class CVector4f
 {
@@ -103,10 +104,10 @@ public:
     void operator*=(const CMatrix4f& rkMtx);
 
     // Unary
-    [[nodiscard]] constexpr float& operator[](long Index) {
+    [[nodiscard]] constexpr float& operator[](int64_t Index) {
         return (&X)[Index];
     }
-    [[nodiscard]] constexpr const float& operator[](long Index) const {
+    [[nodiscard]] constexpr const float& operator[](int64_t Index) const {
         return (&X)[Index];
     }
 };

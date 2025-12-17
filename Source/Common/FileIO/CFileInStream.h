@@ -13,10 +13,11 @@ private:
 
 public:
     CFileInStream();
-    CFileInStream(const TString& rkFile);
-    CFileInStream(const TString& rkFile, EEndian FileEndianness);
+    explicit CFileInStream(const TString& rkFile);
+    explicit CFileInStream(const TString& rkFile, EEndian FileEndianness);
     CFileInStream(const CFileInStream& rkSrc);
     ~CFileInStream() override;
+
     void Open(const TString& rkFile, EEndian FileEndianness);
     void Close();
 

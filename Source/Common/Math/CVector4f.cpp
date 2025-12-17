@@ -1,6 +1,9 @@
 #include "CVector4f.h"
 #include "CTransform4f.h"
 
+#include "Common/FileIO/IInputStream.h"
+#include "Common/FileIO/IOutputStream.h"
+
 CVector4f::CVector4f(IInputStream& rInput)
 {
     X = rInput.ReadFloat();

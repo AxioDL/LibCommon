@@ -1,17 +1,20 @@
 #ifndef CVECTOR3F_H
 #define CVECTOR3F_H
 
-#include "Common/FileIO/IInputStream.h"
-#include "Common/FileIO/IOutputStream.h"
+#include "Common/TString.h"
 #include "Common/Math/CVector2f.h"
-#include "Common/Serialization/IArchive.h"
+
 #include <cmath>
 #include <cfloat>
+#include <cstdint>
 #include <ostream>
 
 class CMatrix4f;
 class CVector4f;
 class CTransform4f;
+class IArchive;
+class IInputStream;
+class IOutputStream;
 
 class CVector3f
 {
@@ -136,10 +139,10 @@ public:
     [[nodiscard]] constexpr CVector3f operator-() const {
         return {-X, -Y, -Z};
     }
-    [[nodiscard]] constexpr float& operator[](long Index) {
+    [[nodiscard]] constexpr float& operator[](int64_t Index) {
         return (&X)[Index];
     }
-    [[nodiscard]] constexpr const float& operator[](long Index) const {
+    [[nodiscard]] constexpr const float& operator[](int64_t Index) const {
         return (&X)[Index];
     }
 

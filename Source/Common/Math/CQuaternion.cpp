@@ -1,6 +1,9 @@
 #include "CQuaternion.h"
-#include "CMatrix4f.h"
-#include "MathUtil.h"
+
+#include "Common/FileIO/IInputStream.h"
+#include "Common/Math/CMatrix4f.h"
+#include "Common/Math/CTransform4f.h"
+#include "Common/Math/MathUtil.h"
 #include <cmath>
 
 CQuaternion::CQuaternion(IInputStream& rInput)
@@ -123,7 +126,7 @@ void CQuaternion::operator *= (const CTransform4f& rkMtx)
 }
 
 // ************ STATIC ************
-CQuaternion CQuaternion::FromEuler(CVector3f Euler)
+CQuaternion CQuaternion::FromEuler(const CVector3f& Euler)
 {
     /**
      * The commented-out code below might be faster but the conversion isn't completely correct
@@ -157,16 +160,16 @@ CQuaternion CQuaternion::FromEuler(CVector3f Euler)
     return Quat;
 }
 
-CQuaternion CQuaternion::FromAxisAngle(float Angle, CVector3f Axis)
+CQuaternion CQuaternion::FromAxisAngle(float Angle, const CVector3f& Axis)
 {
-    CQuaternion Quat;
-    Axis = Axis.Normalized();
+    const auto Norm = Axis.Normalized();
+    const float sa = sinf(Angle / 2);
 
-    float sa = sinf(Angle / 2);
+    CQuaternion Quat;
     Quat.W = cosf(Angle / 2);
-    Quat.X = Axis.X * sa;
-    Quat.Y = Axis.Y * sa;
-    Quat.Z = Axis.Z * sa;
+    Quat.X = Norm.X * sa;
+    Quat.Y = Norm.Y * sa;
+    Quat.Z = Norm.Z * sa;
     return Quat;
 
 }

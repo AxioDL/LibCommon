@@ -2,13 +2,7 @@
 #include <cmath>
 #include <ctime>
 
-CTimer::CTimer()
-    : mStartTime(0)
-    , mStopTime(0)
-    , mStarted(false)
-    , mPaused(false)
-{
-}
+CTimer::CTimer() = default;
 
 void CTimer::Start()
 {
@@ -57,7 +51,7 @@ double CTimer::Pause()
     return Time();
 }
 
-bool CTimer::IsPaused()
+bool CTimer::IsPaused() const
 {
     return mPaused;
 }
@@ -76,12 +70,13 @@ double CTimer::Time()
     if (mStarted)
     {
         double CurrentPauseTime = 0;
-        if (mPaused) CurrentPauseTime = GlobalTime() - mPauseStartTime;
+        if (mPaused)
+            CurrentPauseTime = GlobalTime() - mPauseStartTime;
+
         return GlobalTime() - mStartTime - mTotalPauseTime - CurrentPauseTime;
     }
 
-    else
-        return mStopTime;
+    return mStopTime;
 }
 
 // ************ STATIC ************
@@ -92,5 +87,5 @@ double CTimer::GlobalTime()
 
 float CTimer::SecondsMod900()
 {
-    return fmodf((float) GlobalTime(), 900.f);
+    return fmodf((float)GlobalTime(), 900.f);
 }

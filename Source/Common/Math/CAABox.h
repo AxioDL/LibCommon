@@ -2,13 +2,13 @@
 #define CAABOX_H
 
 #include "CVector3f.h"
-#include "Common/FileIO/IInputStream.h"
-#include "Common/FileIO/IOutputStream.h"
-#include "Common/Serialization/IArchive.h"
 #include <utility>
 
 class CRay;
 class CRayIntersection;
+class IArchive;
+class IInputStream;
+class IOutputStream;
 
 class CAABox
 {
@@ -29,10 +29,10 @@ public:
     [[nodiscard]] constexpr CVector3f Size() const {
         return mMax - mMin;
     }
-    [[nodiscard]] constexpr CVector3f Min() const {
+    [[nodiscard]] constexpr const CVector3f& Min() const {
         return mMin;
     }
-    [[nodiscard]] constexpr CVector3f Max() const {
+    [[nodiscard]] constexpr const CVector3f& Max() const {
         return mMax;
     }
     constexpr void SetMin(const CVector3f& min) {

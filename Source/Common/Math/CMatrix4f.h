@@ -1,6 +1,8 @@
 #ifndef CMATRIX4_H
 #define CMATRIX4_H
 
+#include <cstdint>
+
 class CQuaternion;
 class CVector3f;
 class CVector4f;
@@ -12,12 +14,12 @@ protected:
     union
     {
         float m[4][4];
-        float _m[16];
+        float _m[16]{};
     };
 
 public:
     CMatrix4f();
-    CMatrix4f(float Diagonal);
+    explicit CMatrix4f(float Diagonal);
     CMatrix4f(float m00, float m01, float m02, float m03,
               float m10, float m11, float m12, float m13,
               float m20, float m21, float m22, float m23,
@@ -29,11 +31,10 @@ public:
     float Determinant() const;
 
     // Operators
-    inline float* operator[](long Index);
-    inline const float* operator[](long Index) const;
+    inline float* operator[](int64_t Index);
+    inline const float* operator[](int64_t Index) const;
     CVector3f operator*(const CVector3f& rkVec) const;
     CVector4f operator*(const CVector4f& rkVec) const;
-    CQuaternion operator*(const CQuaternion& rkQuat) const;
     CMatrix4f operator*(const CTransform4f& rkMtx) const;
     CMatrix4f operator*(const CMatrix4f& rkMtx) const;
 
@@ -42,12 +43,12 @@ public:
     static const CMatrix4f skIdentity;
 };
 
-inline float* CMatrix4f::operator[](long Index)
+inline float* CMatrix4f::operator[](int64_t Index)
 {
     return m[Index];
 }
 
-inline const float* CMatrix4f::operator[](long Index) const
+inline const float* CMatrix4f::operator[](int64_t Index) const
 {
     return m[Index];
 }

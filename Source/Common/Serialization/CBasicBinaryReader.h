@@ -16,8 +16,7 @@ class CBasicBinaryReader : public IArchive
     bool mOwnsStream = true;
 
 public:
-    CBasicBinaryReader(const TString& rkFilename, uint32 Magic)
-        : IArchive()
+    explicit CBasicBinaryReader(const TString& rkFilename, uint32 Magic)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
         mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
@@ -29,9 +28,8 @@ public:
         }
     }
 
-    CBasicBinaryReader(IInputStream *pStream, const CSerialVersion& rkVersion)
-        : IArchive()
-        , mMagicValid(true)
+    explicit CBasicBinaryReader(IInputStream *pStream, const CSerialVersion& rkVersion)
+        : mMagicValid(true)
         , mOwnsStream(false)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
@@ -41,9 +39,8 @@ public:
         SetVersion(rkVersion);
     }
 
-    CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, EEndian Endian = EEndian::SystemEndian)
-        : IArchive()
-        , mMagicValid(true)
+    explicit CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, EEndian Endian = EEndian::SystemEndian)
+        : mMagicValid(true)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
         mpStream = new CMemoryInStream(pData, DataSize, Endian);

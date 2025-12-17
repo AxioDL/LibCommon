@@ -3,8 +3,10 @@
 
 #include "BasicTypes.h"
 #include "EGame.h"
-#include "FileIO.h"
 #include "TString.h"
+
+class IInputStream;
+class IOutputStream;
 
 enum class EIDLength
 {

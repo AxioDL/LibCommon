@@ -1,9 +1,10 @@
 #ifndef CBASICBINARYWRITER
 #define CBASICBINARYWRITER
 
-#include "IArchive.h"
 #include "Common/CFourCC.h"
 #include "Common/FileIO/IOutputStream.h"
+#include "Common/FileIO/CFileOutStream.h"
+#include "Common/Serialization/IArchive.h"
 
 // This is a basic binary reader that doesn't do any checks on parameter names.
 // This is the fastest serializer, but it relies entirely on parameter order so
@@ -15,9 +16,8 @@ class CBasicBinaryWriter : public IArchive
     bool mOwnsStream = true;
 
 public:
-    CBasicBinaryWriter(const TString& rkFilename, uint32 Magic, uint16 FileVersion, EGame Game)
-        : IArchive()
-        , mMagic(Magic)
+    explicit CBasicBinaryWriter(const TString& rkFilename, uint32 Magic, uint16 FileVersion, EGame Game)
+        : mMagic(Magic)
     {
         mArchiveFlags = AF_Binary | AF_Writer | AF_NoSkipping;
         mpStream = new CFileOutStream(rkFilename, EEndian::BigEndian);
@@ -30,9 +30,8 @@ public:
         }
     }
 
-    CBasicBinaryWriter(IOutputStream *pStream, uint16 FileVersion, EGame Game)
-        : IArchive()
-        , mOwnsStream(false)
+    explicit CBasicBinaryWriter(IOutputStream *pStream, uint16 FileVersion, EGame Game)
+        : mOwnsStream(false)
     {
         ASSERT(pStream->IsValid());
         mArchiveFlags = AF_Binary | AF_Writer | AF_NoSkipping;
@@ -40,9 +39,8 @@ public:
         SetVersion(skCurrentArchiveVersion, FileVersion, Game);
     }
 
-    CBasicBinaryWriter(IOutputStream *pStream, const CSerialVersion& rkVersion)
-        : IArchive()
-        , mOwnsStream(false)
+    explicit CBasicBinaryWriter(IOutputStream *pStream, const CSerialVersion& rkVersion)
+        : mOwnsStream(false)
     {
         ASSERT(pStream->IsValid());
         mArchiveFlags = AF_Binary | AF_Writer | AF_NoSkipping;

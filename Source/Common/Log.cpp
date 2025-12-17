@@ -3,8 +3,8 @@
 #include "Macros.h"
 #include "TString.h"
 
+#include <cstdio>
 #include <ctime>
-#include <iostream>
 
 #ifdef WIN32
 // Windows text color attributes
@@ -21,7 +21,7 @@
 #define WIN_BOLD            FOREGROUND_INTENSITY
 #define WIN_RESET           WIN_WHITE
 
-WORD GetColorCode(NLog::EMsgType Type)
+static WORD GetColorCode(NLog::EMsgType Type)
 {
     switch (Type)
     {
@@ -53,7 +53,7 @@ WORD GetColorCode(NLog::EMsgType Type)
 #define ANSI_BOLD_WHITE     "\x1b[1;37m"
 #define ANSI_RESET          "\x1b[0m"
 
-const char* GetColorCode(NLog::EMsgType Type)
+static const char* GetColorCode(NLog::EMsgType Type)
 {
     switch (Type)
     {
@@ -69,14 +69,14 @@ const char* GetColorCode(NLog::EMsgType Type)
 namespace NLog
 {
 
-TStringList gErrorLog;
-TString gLogFilename;
-FILE *gpLogFile;
+static TStringList gErrorLog;
+static TString gLogFilename;
+static FILE *gpLogFile;
 
-double gAppStartTime = CTimer::GlobalTime();
+static double gAppStartTime = CTimer::GlobalTime();
 
-bool gInitialized = false;
-TStringList gPreInitLogs;
+static bool gInitialized = false;
+static TStringList gPreInitLogs;
 
 #ifdef _WIN32
 static int log_fopen(FILE** pFile, const char *filename, const char *mode)
@@ -153,7 +153,7 @@ bool InitLog(const TString& rkFilename)
     return true;
 }
 
-void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
+static void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
 {
     // Format current time to a string
     char TimeBuffer[16];
@@ -181,7 +181,7 @@ void WriteInternal(EMsgType Type, const char* pkMsg, va_list VarArgs)
     SetConsoleTextAttribute(sStdOutHandle, WIN_BOLD | WIN_CYAN);
     printf("%s ", TimeBuffer);
     SetConsoleTextAttribute(sStdOutHandle, GetColorCode(Type));
-    printf(MsgBuffer);
+    printf("%s", MsgBuffer);
     SetConsoleTextAttribute(sStdOutHandle, WIN_RESET);
     printf("\n");
     // Also output using MS' debugger API

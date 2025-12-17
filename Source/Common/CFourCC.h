@@ -2,9 +2,11 @@
 #define CFOURCC_H
 
 #include "BasicTypes.h"
-#include "FileIO.h"
+#include "FileIO/IInputStream.h"
+#include "FileIO/IOutputStream.h"
 #include "Macros.h"
 #include "TString.h"
+
 
 #define FOURCC_FROM_TEXT(Text) (Text[0] << 24 | Text[1] << 16 | Text[2] << 8 | Text[3])
 
@@ -23,14 +25,14 @@ class CFourCC
 public:
     // Constructors
     constexpr CFourCC() = default;
-    constexpr CFourCC(const char* pkSrc) : mFourCC{static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc))} {}
-    CFourCC(const TString& rkSrc)
+    constexpr explicit CFourCC(const char* pkSrc) : mFourCC{static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc))} {}
+    explicit CFourCC(const TString& rkSrc)
     {
         ASSERT(rkSrc.Length() == 4);
         mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
     }
     constexpr CFourCC(uint32 Src) : mFourCC{Src} {}
-    CFourCC(IInputStream& rSrc)      { Read(rSrc); }
+    explicit CFourCC(IInputStream& rSrc) { Read(rSrc); }
 
     // Functionality
     void Read(IInputStream& rInput)
