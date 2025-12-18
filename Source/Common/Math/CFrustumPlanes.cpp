@@ -60,8 +60,8 @@ bool CFrustumPlanes::PointInFrustum(const CVector3f& point) const
 
 bool CFrustumPlanes::BoxInFrustum(const CAABox& rkBox) const
 {
-    const CVector3f Min = rkBox.Min();
-    const CVector3f Max = rkBox.Max();
+    const CVector3f& Min = rkBox.Min();
+    const CVector3f& Max = rkBox.Max();
 
     const std::array Points{
         Min,

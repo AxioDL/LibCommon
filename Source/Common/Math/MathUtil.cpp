@@ -42,11 +42,11 @@ std::pair<bool,float> RayBoxIntersection(const CRay& rkRay, const CAABox& rkBox)
     CVector3f HitPoint;
     const CVector3f& RayOrig = rkRay.Origin();
     const CVector3f& RayDir = rkRay.Direction();
-    const CVector3f Min = rkBox.Min();
-    const CVector3f Max = rkBox.Max();
+    const CVector3f& Min = rkBox.Min();
+    const CVector3f& Max = rkBox.Max();
 
     // Check origin inside first
-    if ( RayOrig > Min && RayOrig < Max )
+    if (RayOrig > Min && RayOrig < Max)
     {
         return {true, 0.f};
     }
@@ -163,7 +163,7 @@ std::pair<bool,float> RayLineIntersection(const CRay& rkRay, const CVector3f& rk
 {
     // http://geomalgorithms.com/a07-_distance.html
     // http://www.gamedev.net/topic/589705-rayline-intersection-in-3d/
-    CVector3f u = rkRay.Direction();
+    const CVector3f& u = rkRay.Direction();
     CVector3f v = rkPointB - rkPointA;
     CVector3f w = rkRay.Origin() - rkPointA;
     float a = u.Dot(u);
