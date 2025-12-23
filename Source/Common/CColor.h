@@ -34,8 +34,8 @@ public:
     void Write(IOutputStream& rOutput, bool Integral = false) const;
     void Serialize(IArchive& rArc);
 
-    [[nodiscard]] long ToLongRGBA() const;
-    [[nodiscard]] long ToLongARGB() const;
+    [[nodiscard]] uint32_t ToLongRGBA() const;
+    [[nodiscard]] uint32_t ToLongARGB() const;
 
     [[nodiscard]] constexpr bool operator==(const CColor& other) const {
         return R == other.R && G == other.G && B == other.B && A == other.A;
