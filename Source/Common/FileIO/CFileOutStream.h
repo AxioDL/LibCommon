@@ -13,12 +13,12 @@ private:
 public:
     CFileOutStream();
     explicit CFileOutStream(const TString& rkFile);
-    explicit CFileOutStream(const TString& rkFile, EEndian FileEndianness);
+    explicit CFileOutStream(const TString& rkFile, std::endian FileEndianness);
     CFileOutStream(const CFileOutStream& rkSrc);
 
     ~CFileOutStream() override;
-    void Open(const TString& rkFile, EEndian);
-    void Update(const TString& rkFile, EEndian FileEndianness);
+    void Open(const TString& rkFile, std::endian);
+    void Update(const TString& rkFile, std::endian FileEndianness);
     void Close();
 
     void WriteBytes(const void* pkSrc, uint32 Count) override;

@@ -2,14 +2,14 @@
 
 CMemoryOutStream::CMemoryOutStream() = default;
 
-CMemoryOutStream::CMemoryOutStream(void *pData, uint32 Size, EEndian DataEndianness)
+CMemoryOutStream::CMemoryOutStream(void *pData, uint32 Size, std::endian DataEndianness)
 {
     SetData(pData, Size, DataEndianness);
 }
 
 CMemoryOutStream::~CMemoryOutStream() = default;
 
-void CMemoryOutStream::SetData(void *pData, uint32 Size, EEndian DataEndianness)
+void CMemoryOutStream::SetData(void *pData, uint32 Size, std::endian DataEndianness)
 {
     mpDataStart = (char*) pData;
     mDataSize = Size;
@@ -24,7 +24,8 @@ void CMemoryOutStream::WriteBytes(const void *pkSrc, uint32 Count)
 
     memcpy(mpDataStart + mPos, pkSrc, Count);
     mPos += Count;
-    if (mPos > mUsed) mUsed = mPos;
+    if (mPos > mUsed)
+        mUsed = mPos;
 }
 
 bool CMemoryOutStream::Seek(int32 Offset, uint32 Origin)

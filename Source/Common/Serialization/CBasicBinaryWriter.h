@@ -20,7 +20,7 @@ public:
         : mMagic(Magic)
     {
         mArchiveFlags = AF_Binary | AF_Writer | AF_NoSkipping;
-        mpStream = new CFileOutStream(rkFilename, EEndian::BigEndian);
+        mpStream = new CFileOutStream(rkFilename, std::endian::big);
 
         if (mpStream->IsValid())
         {

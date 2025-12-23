@@ -2,7 +2,6 @@
 #define TSTRING_H
 
 #include "BasicTypes.h"
-#include "FileIO/IOUtil.h"
 #include "Hash/CCRC32.h"
 #include "Hash/CFNV1A.h"
 #include "Macros.h"
@@ -474,10 +473,10 @@ public:
             uint64 Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
             uint64 Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
 
-            if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
+            if constexpr (std::endian::native == std::endian::little)
             {
-                SwapBytes(Part1);
-                SwapBytes(Part2);
+                Part1 = std::byteswap(Part1);
+                Part2 = std::byteswap(Part2);
             }
 
             memcpy(static_cast<char*>(pOut) + 0, &Part1, 8);

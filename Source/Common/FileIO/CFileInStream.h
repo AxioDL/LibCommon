@@ -2,7 +2,6 @@
 #define CFILEINSTREAM_H
 
 #include "IInputStream.h"
-#include "IOUtil.h"
 
 class CFileInStream : public IInputStream
 {
@@ -14,11 +13,11 @@ private:
 public:
     CFileInStream();
     explicit CFileInStream(const TString& rkFile);
-    explicit CFileInStream(const TString& rkFile, EEndian FileEndianness);
+    explicit CFileInStream(const TString& rkFile, std::endian FileEndianness);
     CFileInStream(const CFileInStream& rkSrc);
     ~CFileInStream() override;
 
-    void Open(const TString& rkFile, EEndian FileEndianness);
+    void Open(const TString& rkFile, std::endian FileEndianness);
     void Close();
 
     void ReadBytes(void* pDst, uint32 Count) override;

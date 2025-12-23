@@ -2,24 +2,24 @@
 #include "Common/Common.h"
 
 CVectorOutStream::CVectorOutStream()
-    : mpVector(new std::vector<char>)
+    : mpVector(new std::vector<char>())
 {
-    mDataEndianness = EEndian::BigEndian;
+    mDataEndianness = std::endian::big;
 }
 
-CVectorOutStream::CVectorOutStream(EEndian DataEndianness)
-    : mpVector(new std::vector<char>)
+CVectorOutStream::CVectorOutStream(std::endian DataEndianness)
+    : mpVector(new std::vector<char>())
 {
     mDataEndianness = DataEndianness;
 }
 
-CVectorOutStream::CVectorOutStream(uint32 InitialSize, EEndian DataEndianness)
+CVectorOutStream::CVectorOutStream(uint32 InitialSize, std::endian DataEndianness)
     : mpVector(new std::vector<char>(InitialSize))
 {
     mDataEndianness = DataEndianness;
 }
 
-CVectorOutStream::CVectorOutStream(std::vector<char> *pVector, EEndian DataEndianness)
+CVectorOutStream::CVectorOutStream(std::vector<char> *pVector, std::endian DataEndianness)
     : mpVector(pVector)
     , mOwnsVector(false)
 {
@@ -28,12 +28,14 @@ CVectorOutStream::CVectorOutStream(std::vector<char> *pVector, EEndian DataEndia
 
 CVectorOutStream::~CVectorOutStream()
 {
-    if (mOwnsVector) delete mpVector;
+    if (mOwnsVector)
+        delete mpVector;
 }
 
 void CVectorOutStream::WriteBytes(const void *pkSrc, uint32 Count)
 {
-    if (!IsValid()) return;
+    if (!IsValid())
+        return;
 
     uint32 NewSize = mPos + Count;
 
@@ -51,7 +53,8 @@ void CVectorOutStream::WriteBytes(const void *pkSrc, uint32 Count)
 
 bool CVectorOutStream::Seek(int32 Offset, uint32 Origin)
 {
-    if (!IsValid()) return false;
+    if (!IsValid())
+        return false;
 
     switch (Origin)
     {

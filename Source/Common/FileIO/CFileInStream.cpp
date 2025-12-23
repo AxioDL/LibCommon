@@ -4,10 +4,10 @@ CFileInStream::CFileInStream() = default;
 
 CFileInStream::CFileInStream(const TString& rkFile)
 {
-    Open(rkFile, EEndian::BigEndian);
+    Open(rkFile, std::endian::big);
 }
 
-CFileInStream::CFileInStream(const TString& rkFile, EEndian FileEndianness)
+CFileInStream::CFileInStream(const TString& rkFile, std::endian FileEndianness)
 {
     Open(rkFile, FileEndianness);
 }
@@ -26,7 +26,7 @@ CFileInStream::~CFileInStream()
         Close();
 }
 
-void CFileInStream::Open(const TString& rkFile, EEndian FileEndianness)
+void CFileInStream::Open(const TString& rkFile, std::endian FileEndianness)
 {
     if (IsValid())
         Close();

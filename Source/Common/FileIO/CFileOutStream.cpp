@@ -4,10 +4,10 @@ CFileOutStream::CFileOutStream() = default;
 
 CFileOutStream::CFileOutStream(const TString& rkFile)
 {
-    Open(rkFile, EEndian::BigEndian);
+    Open(rkFile, std::endian::big);
 }
 
-CFileOutStream::CFileOutStream(const TString& rkFile, EEndian FileEndianness)
+CFileOutStream::CFileOutStream(const TString& rkFile, std::endian FileEndianness)
 {
     Open(rkFile, FileEndianness);
 }
@@ -26,7 +26,7 @@ CFileOutStream::~CFileOutStream()
         Close();
 }
 
-void CFileOutStream::Open(const TString& rkFile, EEndian FileEndianness)
+void CFileOutStream::Open(const TString& rkFile, std::endian FileEndianness)
 {
     if (IsValid())
         Close();
@@ -41,7 +41,7 @@ void CFileOutStream::Open(const TString& rkFile, EEndian FileEndianness)
     mSize = 0;
 }
 
-void CFileOutStream::Update(const TString& rkFile, EEndian FileEndianness)
+void CFileOutStream::Update(const TString& rkFile, std::endian FileEndianness)
 {
     if (IsValid())
         Close();

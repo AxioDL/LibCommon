@@ -1,14 +1,15 @@
 #ifndef IINPUTSTREAM_H
 #define IINPUTSTREAM_H
 
-#include "IOUtil.h"
 #include "Common/BasicTypes.h"
 #include "Common/TString.h"
+
+#include <bit>
 
 class IInputStream
 {
 protected:
-    EEndian mDataEndianness{};
+    std::endian mDataEndianness{};
     TString mDataSource;
     
 public:
@@ -47,9 +48,9 @@ public:
     bool Skip(int32 SkipAmount);
 
     void SeekToBoundary(uint32 Boundary);
-    void SetEndianness(EEndian Endianness);
+    void SetEndianness(std::endian Endianness);
     void SetSourceString(const TString& rkSource);
-    EEndian GetEndianness() const;
+    std::endian GetEndianness() const;
     TString GetSourceString() const;
 
     virtual ~IInputStream();

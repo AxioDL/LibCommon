@@ -21,7 +21,7 @@ public:
     explicit CBasicBinaryReader(const TString& rkFilename, uint32 Magic)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
-        mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
+        mpStream = new CFileInStream(rkFilename, std::endian::big);
 
         if (mpStream->IsValid())
         {
@@ -41,7 +41,7 @@ public:
         SetVersion(rkVersion);
     }
 
-    explicit CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, EEndian Endian = EEndian::SystemEndian)
+    explicit CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, std::endian Endian = std::endian::native)
         : mMagicValid(true)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;

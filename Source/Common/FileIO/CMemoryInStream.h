@@ -11,10 +11,10 @@ class CMemoryInStream : public IInputStream
 
 public:
     CMemoryInStream();
-    explicit CMemoryInStream(const void *pkData, uint32 Size, EEndian dataEndianness);
+    explicit CMemoryInStream(const void *pkData, uint32 Size, std::endian dataEndianness);
     ~CMemoryInStream() override;
 
-    void SetData(const void *pkData, uint32 Size, EEndian dataEndianness);
+    void SetData(const void *pkData, uint32 Size, std::endian dataEndianness);
 
     void ReadBytes(void* pDst, uint32 Count) override;
     bool Seek(int32 Offset, uint32 Origin) override;

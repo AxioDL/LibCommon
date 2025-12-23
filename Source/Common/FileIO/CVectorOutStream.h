@@ -14,9 +14,9 @@ class CVectorOutStream : public IOutputStream
 
 public:
     CVectorOutStream();
-    explicit CVectorOutStream(EEndian DataEndianness);
-    explicit CVectorOutStream(uint32 InitialSize, EEndian DataEndianness);
-    explicit CVectorOutStream(std::vector<char> *pVector, EEndian DataEndianness);
+    explicit CVectorOutStream(std::endian DataEndianness);
+    explicit CVectorOutStream(uint32 InitialSize, std::endian DataEndianness);
+    explicit CVectorOutStream(std::vector<char> *pVector, std::endian DataEndianness);
     ~CVectorOutStream() override;
 
     void WriteBytes(const void* pkSrc, uint32 Count) override;

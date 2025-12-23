@@ -12,10 +12,10 @@ class CMemoryOutStream : public IOutputStream
 
 public:
     CMemoryOutStream();
-    explicit CMemoryOutStream(void *pData, uint32 Size, EEndian mDataEndianness);
+    explicit CMemoryOutStream(void *pData, uint32 Size, std::endian mDataEndianness);
     ~CMemoryOutStream() override;
 
-    void SetData(void *pData, uint32 Size, EEndian mDataEndianness);
+    void SetData(void *pData, uint32 Size, std::endian mDataEndianness);
 
     void WriteBytes(const void* pkSrc, uint32 Count) override;
     bool Seek(int32 Offset, uint32 Origin) override;

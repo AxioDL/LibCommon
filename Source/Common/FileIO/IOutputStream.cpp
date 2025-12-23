@@ -20,8 +20,8 @@ void IOutputStream::WriteUByte(uint8 Val)
 
 void IOutputStream::WriteShort(int16 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
 
     WriteBytes(&Val, 2);
 }
@@ -33,8 +33,8 @@ void IOutputStream::WriteUShort(uint16 Val)
 
 void IOutputStream::WriteLong(int32 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
 
     WriteBytes(&Val, 4);
 }
@@ -46,8 +46,8 @@ void IOutputStream::WriteULong(uint32 Val)
 
 void IOutputStream::WriteLongLong(int64 Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
 
     WriteBytes(&Val, 8);
 }
@@ -59,24 +59,24 @@ void IOutputStream::WriteULongLong(uint64 Val)
 
 void IOutputStream::WriteFloat(float Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::bit_cast<float>(std::byteswap(std::bit_cast<uint32_t>(Val)));
 
     WriteBytes(&Val, 4);
 }
 
 void IOutputStream::WriteDouble(double Val)
 {
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::bit_cast<double>(std::byteswap(std::bit_cast<uint64_t>(Val)));
 
     WriteBytes(&Val, 8);
 }
 
 void IOutputStream::WriteFourCC(uint32 Val)
 {
-    if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
-        SwapBytes(Val);
+    if constexpr (std::endian::native == std::endian::little)
+        Val = std::byteswap(Val);
 
     WriteBytes(&Val, 4);
 }
@@ -139,7 +139,7 @@ void IOutputStream::WriteToBoundary(uint32 Boundary, uint8 Fill)
         WriteByte(Fill);
 }
 
-void IOutputStream::SetEndianness(EEndian Endianness)
+void IOutputStream::SetEndianness(std::endian Endianness)
 {
     mDataEndianness = Endianness;
 }
@@ -149,7 +149,7 @@ void IOutputStream::SetDestString(const TString& rkDest)
     mDataDest = rkDest;
 }
 
-EEndian IOutputStream::GetEndianness() const
+std::endian IOutputStream::GetEndianness() const
 {
     return mDataEndianness;
 }

@@ -27,7 +27,7 @@ public:
         : mOwnsStream(true)
     {
         mArchiveFlags = AF_Reader | AF_Binary;
-        mpStream = new CFileInStream(rkFilename, EEndian::BigEndian);
+        mpStream = new CFileInStream(rkFilename, std::endian::big);
 
         if (mpStream->IsValid())
         {

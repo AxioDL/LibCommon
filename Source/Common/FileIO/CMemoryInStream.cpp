@@ -2,14 +2,14 @@
 
 CMemoryInStream::CMemoryInStream() = default;
 
-CMemoryInStream::CMemoryInStream(const void *pkData, uint32 Size, EEndian DataEndianness)
+CMemoryInStream::CMemoryInStream(const void *pkData, uint32 Size, std::endian DataEndianness)
 {
     SetData(pkData, Size, DataEndianness);
 }
 
 CMemoryInStream::~CMemoryInStream() = default;
 
-void CMemoryInStream::SetData(const void *pkData, uint32 Size, EEndian DataEndianness)
+void CMemoryInStream::SetData(const void *pkData, uint32 Size, std::endian DataEndianness)
 {
     mpDataStart = (const char*) pkData;
     mDataSize = Size;
@@ -19,7 +19,9 @@ void CMemoryInStream::SetData(const void *pkData, uint32 Size, EEndian DataEndia
 
 void CMemoryInStream::ReadBytes(void *pDst, uint32 Count)
 {
-    if (!IsValid()) return;
+    if (!IsValid())
+        return;
+
     memcpy(pDst, mpDataStart + mPos, Count);
     mPos += Count;
 }

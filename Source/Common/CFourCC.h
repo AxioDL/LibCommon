@@ -37,15 +37,17 @@ public:
     // Functionality
     void Read(IInputStream& rInput)
     {
-        mFourCC = rInput.ReadLong();
-        if (rInput.GetEndianness() == EEndian::LittleEndian) Reverse();
+        mFourCC = rInput.ReadULong();
+        if (rInput.GetEndianness() == std::endian::little)
+            Reverse();
     }
 
     void Write(IOutputStream& rOutput) const
     {
         uint32 Val = mFourCC;
-        if (rOutput.GetEndianness() == EEndian::LittleEndian) SwapBytes(Val);
-        rOutput.WriteLong(Val);
+        if (rOutput.GetEndianness() == std::endian::little)
+            Val = std::byteswap(Val);
+        rOutput.WriteULong(Val);
     }
 
     [[nodiscard]] constexpr uint32 ToLong() const
@@ -75,28 +77,28 @@ public:
         return CFourCC(Out);
     }
 
-    void Reverse() const
+    void Reverse()
     {
-        SwapBytes((uint32&) mFourCC);
+        mFourCC = std::byteswap(mFourCC);
     }
 
     // Operators
     [[nodiscard]] char& operator[](int Index)
     {
         ASSERT(Index >= 0 && Index < 4);
-        if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
+        if constexpr (std::endian::native == std::endian::little)
             Index = 3 - Index;
 
-        return ((char*)(&mFourCC))[Index];
+        return reinterpret_cast<char*>(&mFourCC)[Index];
     }
 
     [[nodiscard]] const char& operator[](int Index) const
     {
         ASSERT(Index >= 0 && Index < 4);
-        if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
+        if constexpr (std::endian::native == std::endian::little)
             Index = 3 - Index;
 
-        return ((char*)(&mFourCC))[Index];
+        return reinterpret_cast<const char*>(&mFourCC)[Index];
     }
 
     [[nodiscard]] TString operator+(const char *pkText) const

@@ -1,6 +1,8 @@
 #include "IInputStream.h"
 #include "Common/Macros.h"
 
+#include <bit>
+
 IInputStream::~IInputStream() = default;
 
 bool IInputStream::ReadBool()
@@ -15,7 +17,7 @@ bool IInputStream::ReadBool()
     }
 #endif
 
-    return (Val != 0 ? true : false);
+    return Val != 0;
 }
 
 int8 IInputStream::ReadByte()
@@ -34,8 +36,8 @@ int16 IInputStream::ReadShort()
 {
     int16 Val;
     ReadBytes(&Val, 2);
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
     return Val;
 }
 
@@ -48,8 +50,8 @@ int32 IInputStream::ReadLong()
 {
     int32 Val;
     ReadBytes(&Val, 4);
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
     return Val;
 }
 
@@ -62,7 +64,8 @@ int64 IInputStream::ReadLongLong()
 {
     int64 Val;
     ReadBytes(&Val, 8);
-    if (mDataEndianness != EEndian::SystemEndian) SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::byteswap(Val);
     return Val;
 }
 
@@ -75,8 +78,8 @@ float IInputStream::ReadFloat()
 {
     float Val;
     ReadBytes(&Val, 4);
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::bit_cast<float>(std::byteswap(std::bit_cast<uint32_t>(Val)));
     return Val;
 }
 
@@ -84,8 +87,8 @@ double IInputStream::ReadDouble()
 {
     double Val;
     ReadBytes(&Val, 8);
-    if (mDataEndianness != EEndian::SystemEndian)
-        SwapBytes(Val);
+    if (mDataEndianness != std::endian::native)
+        Val = std::bit_cast<double>(std::byteswap(std::bit_cast<uint64_t>(Val)));
     return Val;
 }
 
@@ -93,8 +96,8 @@ uint32 IInputStream::ReadFourCC()
 {
     uint32 Val;
     ReadBytes(&Val, 4);
-    if constexpr (EEndian::SystemEndian == EEndian::LittleEndian)
-        SwapBytes(Val);
+    if constexpr (std::endian::native == std::endian::little)
+        Val = std::byteswap(Val);
     return Val;
 }
 
@@ -250,7 +253,7 @@ void IInputStream::SeekToBoundary(uint32 Boundary)
     Seek(Num, SEEK_CUR);
 }
 
-void IInputStream::SetEndianness(EEndian Endianness)
+void IInputStream::SetEndianness(std::endian Endianness)
 {
     mDataEndianness = Endianness;
 }
@@ -260,7 +263,7 @@ void IInputStream::SetSourceString(const TString& rkSource)
     mDataSource = rkSource;
 }
 
-EEndian IInputStream::GetEndianness() const
+std::endian IInputStream::GetEndianness() const
 {
     return mDataEndianness;
 }

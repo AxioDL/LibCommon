@@ -1,13 +1,14 @@
 #ifndef IOUTPUTSTREAM_H
 #define IOUTPUTSTREAM_H
 
-#include "IOUtil.h"
 #include "Common/TString.h"
+
+#include <bit>
 
 class IOutputStream
 {
 protected:
-    EEndian mDataEndianness{};
+    std::endian mDataEndianness{};
     TString mDataDest;
 
 public:
@@ -32,9 +33,9 @@ public:
     bool Skip(int32 SkipAmount);
 
     void WriteToBoundary(uint32 Boundary, uint8 Fill);
-    void SetEndianness(EEndian Endianness);
+    void SetEndianness(std::endian Endianness);
     void SetDestString(const TString& rkDest);
-    EEndian GetEndianness() const;
+    std::endian GetEndianness() const;
     TString GetDestString() const;
 
     virtual ~IOutputStream();
