@@ -33,11 +33,11 @@ using namespace std::filesystem;
 namespace FileUtil
 {
 
-#define ToPath(Path) u8path(Path)
+#define ToPath(Path) path(std::u8string((Path).cbegin(), (Path).cend()))
 
 bool Exists(const TString &rkFilePath)
 {
-    return exists(ToPath(*rkFilePath));
+    return exists(ToPath(rkFilePath));
 }
 
 bool IsRoot(const TString& rkPath)
@@ -50,12 +50,12 @@ bool IsRoot(const TString& rkPath)
 
 bool IsFile(const TString& rkFilePath)
 {
-    return is_regular_file(ToPath(*rkFilePath));
+    return is_regular_file(ToPath(rkFilePath));
 }
 
 bool IsDirectory(const TString& rkDirPath)
 {
-    return is_directory(ToPath(*rkDirPath));
+    return is_directory(ToPath(rkDirPath));
 }
 
 bool IsDirectoryWritable(const TString& rkDirPath)
@@ -65,12 +65,12 @@ bool IsDirectoryWritable(const TString& rkDirPath)
 
 bool IsAbsolute(const TString& rkDirPath)
 {
-    return ToPath(*rkDirPath).is_absolute();
+    return ToPath(rkDirPath).is_absolute();
 }
 
 bool IsRelative(const TString& rkDirPath)
 {
-    return ToPath(*rkDirPath).is_relative();
+    return ToPath(rkDirPath).is_relative();
 }
 
 bool IsEmpty(const TString& rkDirPath)
@@ -81,7 +81,7 @@ bool IsEmpty(const TString& rkDirPath)
         return false;
     }
 
-    return is_empty(ToPath(*rkDirPath));
+    return is_empty(ToPath(rkDirPath));
 }
 
 bool MakeDirectory(const TString& rkNewDir)
@@ -94,7 +94,7 @@ bool MakeDirectory(const TString& rkNewDir)
 
     // Sometimes the MS implementation returns false with a zero-error for some reason
     std::error_code err;
-    return create_directories(ToPath(*rkNewDir), err) || !err;
+    return create_directories(ToPath(rkNewDir), err) || !err;
 }
 
 bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
@@ -108,7 +108,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
     MakeDirectory(rkNewPath.GetFileDirectory());
     std::error_code Error;
     // call std::filesystem::copy, not std::copy
-    std::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
+    std::filesystem::copy(ToPath(rkOrigPath), ToPath(rkNewPath), Error);
     return (Error.value() == 0);
 }
 
@@ -123,7 +123,7 @@ bool CopyDirectory(const TString& rkOrigPath, const TString& rkNewPath)
     MakeDirectory(rkNewPath.GetFileDirectory());
     std::error_code Error;
     // call std::filesystem::copy, not std::copy
-    std::filesystem::copy(ToPath(*rkOrigPath), ToPath(*rkNewPath), Error);
+    std::filesystem::copy(ToPath(rkOrigPath), ToPath(rkNewPath), Error);
     return (Error.value() == 0);
 }
 
@@ -142,7 +142,7 @@ bool MoveFile(const TString& rkOldPath, const TString& rkNewPath)
     }
 
     std::error_code Error;
-    rename(ToPath(*rkOldPath), ToPath(*rkNewPath), Error);
+    rename(ToPath(rkOldPath), ToPath(rkNewPath), Error);
     return Error.value() == 0;
 }
 
@@ -161,20 +161,23 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath)
     }
 
     std::error_code Error;
-    rename(ToPath(*rkOldPath), ToPath(*rkNewPath), Error);
+    rename(ToPath(rkOldPath), ToPath(rkNewPath), Error);
     return Error.value() == 0;
 }
 
 bool DeleteFile(const TString& rkFilePath)
 {
-    if (!IsFile(rkFilePath)) return false;
-    return remove(ToPath(*rkFilePath)) == 1;
+    if (!IsFile(rkFilePath))
+        return false;
+
+    return remove(ToPath(rkFilePath)) == 1;
 }
 
 bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
 {
     // This is an extremely destructive function, be careful using it!
-    if (!IsDirectory(rkDirPath)) return false;
+    if (!IsDirectory(rkDirPath))
+        return false;
 
     // Sanity check - don't delete root
     bool Root = IsRoot(rkDirPath);
@@ -192,7 +195,7 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
 
     // Delete directory
     std::error_code Error;
-    remove_all(ToPath(*rkDirPath), Error);
+    remove_all(ToPath(rkDirPath), Error);
     return (Error.value() == 0);
 }
 
@@ -215,17 +218,17 @@ bool ClearDirectory(const TString& rkDirPath)
     TStringList DirContents;
     GetDirectoryContents(rkDirPath, DirContents, false);
 
-    for (auto It = DirContents.begin(); It != DirContents.end(); It++)
+    for (const auto& DirContent : DirContents)
     {
         bool Success = false;
 
-        if (IsFile(*It))
-            Success = DeleteFile(*It);
-        else if (IsDirectory(*It))
-            Success = DeleteDirectory(*It, false);
+        if (IsFile(DirContent))
+            Success = DeleteFile(DirContent);
+        else if (IsDirectory(DirContent))
+            Success = DeleteDirectory(DirContent, false);
 
         if (!Success)
-            errorf("Failed to delete filesystem object: %s", *TString(*It));
+            errorf("Failed to delete filesystem object: %s", *DirContent);
     }
 
     return true;
@@ -250,17 +253,17 @@ void MarkHidden(const TString& rkFilePath, bool Hidden)
 
 void UpdateLastModifiedTime(const TString& rkFilePath)
 {
-    last_write_time( ToPath(*rkFilePath), file_time_type::clock::now() );
+    last_write_time( ToPath(rkFilePath), file_time_type::clock::now() );
 }
 
 uint64 FileSize(const TString &rkFilePath)
 {
-    return (uint64) (Exists(rkFilePath) ? file_size(ToPath(*rkFilePath)) : -1);
+    return (uint64) (Exists(rkFilePath) ? file_size(ToPath(rkFilePath)) : -1);
 }
 
 uint64 LastModifiedTime(const TString& rkFilePath)
 {
-    return (uint64) last_write_time(ToPath(*rkFilePath)).time_since_epoch().count();
+    return (uint64) last_write_time(ToPath(rkFilePath)).time_since_epoch().count();
 }
 
 TString WorkingDirectory()
@@ -270,13 +273,13 @@ TString WorkingDirectory()
 
 TString MakeAbsolute(TString Path)
 {
-    if (!ToPath(*Path).has_root_path())
+    if (!ToPath(Path).has_root_path())
         Path = WorkingDirectory() + "/" + Path;
 
     TStringList Components = Path.Split("/\\");
     TStringList::iterator Prev;
 
-    for (TStringList::iterator Iter = Components.begin(); Iter != Components.end(); Iter++)
+    for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
     {
         if (*Iter == ".")
             Iter = Components.erase(Iter);
@@ -289,8 +292,8 @@ TString MakeAbsolute(TString Path)
     TString Out;
     for (auto I = Path.Begin(), E = Path.End(); I != E && (*I == '/' || *I == '\\'); ++I)
         Out += *I;
-    for (auto it = Components.begin(); it != Components.end(); it++)
-        Out += *it + "/";
+    for (const auto& Component : Components)
+        Out += Component + "/";
 
     return Out;
 }
@@ -303,10 +306,10 @@ TString MakeRelative(const TString& rkPath, const TString& rkRelativeTo /*= Work
     TStringList RelToComponents = AbsRelTo.Split("/\\");
 
     // Find furthest common parent
-    TStringList::iterator PathIter = PathComponents.begin();
-    TStringList::iterator RelToIter = RelToComponents.begin();
+    auto PathIter = PathComponents.begin();
+    auto RelToIter = RelToComponents.begin();
 
-    for (; PathIter != PathComponents.end() && RelToIter != RelToComponents.end(); PathIter++, RelToIter++)
+    for (; PathIter != PathComponents.end() && RelToIter != RelToComponents.end(); ++PathIter, ++RelToIter)
     {
         if (*PathIter != *RelToIter)
             break;
@@ -319,10 +322,10 @@ TString MakeRelative(const TString& rkPath, const TString& rkRelativeTo /*= Work
     // Construct output path
     TString Out;
 
-    for (; RelToIter != RelToComponents.end(); RelToIter++)
+    for (; RelToIter != RelToComponents.end(); ++RelToIter)
         Out += "../";
 
-    for (; PathIter != PathComponents.end(); PathIter++)
+    for (; PathIter != PathComponents.end(); ++PathIter)
         Out += *PathIter + "/";
 
     // Attempt to detect if this path is a file as opposed to a directory; if so, remove trailing backslash
@@ -335,25 +338,23 @@ TString MakeRelative(const TString& rkPath, const TString& rkRelativeTo /*= Work
 TString SimplifyRelativePath(const TString& rkPath)
 {
     TStringList PathComponents = rkPath.Split("/\\");
+    auto PrevIter = PathComponents.begin();
 
-    TStringList::iterator Iter = PathComponents.begin();
-    TStringList::iterator PrevIter = Iter;
-
-    for (auto Iter = PathComponents.begin(); Iter != PathComponents.end(); PrevIter = Iter, Iter++)
+    for (auto Iter = PathComponents.begin(); Iter != PathComponents.end(); PrevIter = Iter, ++Iter)
     {
         if (*Iter == ".." && *PrevIter != "..")
         {
             PrevIter = PathComponents.erase(PrevIter);
             PrevIter = PathComponents.erase(PrevIter);
             Iter = PrevIter;
-            Iter--;
+            --Iter;
         }
     }
 
     TString Out;
 
-    for (auto Iter = PathComponents.begin(); Iter != PathComponents.end(); Iter++)
-        Out += *Iter + '/';
+    for (const auto& PathComponent : PathComponents)
+        Out += PathComponent + '/';
 
     return Out;
 }
@@ -363,7 +364,7 @@ uint32 MaxFileNameLength()
     return 255;
 }
 
-static const char gskIllegalNameChars[] = {
+constexpr char gskIllegalNameChars[] = {
     '<', '>', '\"', '/', '\\', '|', '?', '*', ':'
 };
 
@@ -374,7 +375,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
         return Name;
 
     // Remove illegal characters from path
-    for (uint32 iChr = 0; iChr < Name.Size(); iChr++)
+    for (size_t iChr = 0; iChr < Name.Size(); iChr++)
     {
         char Chr = Name[iChr];
         bool Remove = false;
@@ -398,9 +399,9 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     // For directories, space and dot are not allowed at the end of the path
     if (Directory)
     {
-        int ChopNum = 0;
+        int64_t ChopNum = 0;
 
-        for (int iChr = (int) Name.Size() - 1; iChr >= 0; iChr--)
+        for (auto iChr = (int64_t) Name.Size() - 1; iChr >= 0; iChr--)
         {
             char Chr = Name[iChr];
 
@@ -410,11 +411,12 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
                 break;
         }
 
-        if (ChopNum > 0) Name = Name.ChopBack(ChopNum);
+        if (ChopNum > 0)
+            Name = Name.ChopBack(ChopNum);
     }
 
     // Remove spaces from beginning of path
-    uint NumLeadingSpaces = 0;
+    size_t NumLeadingSpaces = 0;
     while (NumLeadingSpaces < Name.Size() && Name[NumLeadingSpaces] == ' ')
         NumLeadingSpaces++;
 
@@ -424,7 +426,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     // Ensure the name is below the character limit
     if (Name.Size() > MaxFileNameLength())
     {
-        int ChopNum = Name.Size() - MaxFileNameLength();
+        const int64_t ChopNum = Name.Size() - MaxFileNameLength();
         Name = Name.ChopBack(ChopNum);
     }
 
@@ -434,10 +436,10 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
 TString SanitizePath(TString Path, bool Directory)
 {
     TStringList Components = Path.Split("\\/");
-    uint32 CompIdx = 0;
+    size_t CompIdx = 0;
     Path = "";
 
-    for (auto It = Components.begin(); It != Components.end(); It++)
+    for (auto It = Components.begin(); It != Components.end(); ++It)
     {
         TString Comp = *It;
         bool IsDir = Directory || CompIdx < Components.size() - 1;
@@ -445,7 +447,8 @@ TString SanitizePath(TString Path, bool Directory)
         Comp = SanitizeName(Comp, IsDir, IsRoot);
 
         Path += Comp;
-        if (IsDir) Path += '/';
+        if (IsDir)
+            Path += '/';
         CompIdx++;
     }
 
@@ -454,14 +457,12 @@ TString SanitizePath(TString Path, bool Directory)
 
 bool IsValidFileNameCharacter(char Chr)
 {
-    static const uint32 skNumIllegalChars = sizeof(gskIllegalNameChars) / sizeof(char);
-
     if (Chr >= 0 && Chr <= 31)
         return false;
 
-    for (uint32 BanIdx = 0; BanIdx < skNumIllegalChars; BanIdx++)
+    for (char gskIllegalNameChar : gskIllegalNameChars)
     {
-        if (Chr == gskIllegalNameChars[BanIdx])
+        if (Chr == gskIllegalNameChar)
             return false;
     }
 
@@ -482,7 +483,7 @@ bool IsValidName(const TString& rkName, bool Directory, bool RootDir /*= false*/
         return true;
 
     // Check for banned characters
-    for (uint32 iChr = 0; iChr < rkName.Size(); iChr++)
+    for (size_t iChr = 0; iChr < rkName.Size(); iChr++)
     {
         char Chr = rkName[iChr];
 
@@ -506,9 +507,9 @@ bool IsValidPath(const TString& rkPath, bool Directory)
     TStringList Components = rkPath.Split("\\/");
 
     // Validate other components
-    uint32 CompIdx = 0;
+    size_t CompIdx = 0;
 
-    for (auto It = Components.begin(); It != Components.end(); It++)
+    for (auto It = Components.begin(); It != Components.end(); ++It)
     {
         bool IsRoot = CompIdx == 0;
         bool IsDir = Directory || CompIdx < (Components.size() - 1);
@@ -538,15 +539,14 @@ void GetDirectoryContents(TString DirPath, TStringList& rOut, bool Recursive /*=
 
         if (Recursive)
         {
-            for (recursive_directory_iterator It(ToPath(*DirPath)); It != recursive_directory_iterator(); ++It)
+            for (recursive_directory_iterator It(ToPath(DirPath)); It != recursive_directory_iterator(); ++It)
             {
                 AddFileLambda(It->path().string());
             }
         }
-
         else
         {
-            for (directory_iterator It(ToPath(*DirPath)); It != directory_iterator(); ++It)
+            for (directory_iterator It(ToPath(DirPath)); It != directory_iterator(); ++It)
             {
                 AddFileLambda(It->path().string());
             }
@@ -556,10 +556,11 @@ void GetDirectoryContents(TString DirPath, TStringList& rOut, bool Recursive /*=
 
 TString FindFileExtension(const TString& rkDir, const TString& rkName)
 {
-    for (directory_iterator It(ToPath(*rkDir)); It != directory_iterator(); ++It)
+    for (directory_iterator It(ToPath(rkDir)); It != directory_iterator(); ++It)
     {
         TString Name = It->path().filename().string();
-        if (Name.GetFileName(false) == rkName) return Name.GetFileExtension();
+        if (Name.GetFileName(false) == rkName)
+            return Name.GetFileExtension();
     }
 
     return "";
@@ -575,8 +576,8 @@ bool LoadFileToString(const TString& rkFilePath, TString& rOut)
         File.ReadBytes(&rOut[0], rOut.Size());
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out)
@@ -589,8 +590,8 @@ bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out)
         File.ReadBytes(Out.data(), Out.size());
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
@@ -602,8 +603,8 @@ bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
         File.WriteBytes(&kString[0], kString.Size());
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuffer)
@@ -615,8 +616,8 @@ bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuff
         File.WriteBytes(kBuffer.data(), kBuffer.size());
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 }

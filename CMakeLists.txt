@@ -48,7 +48,7 @@ file(GLOB_RECURSE source_files
 
 add_library(libcommon ${source_files})
 
-target_compile_features(libcommon PRIVATE cxx_std_17 c_std_11)
+target_compile_features(libcommon PRIVATE cxx_std_23 c_std_11)
 
 # Make MSVC act like a real C/C++ compiler
 if (MSVC)
