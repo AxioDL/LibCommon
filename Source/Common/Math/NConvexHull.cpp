@@ -2,7 +2,7 @@
 #include "MathUtil.h"
 
 #include "Common/CScopedTimer.h"
-#include "Common/Macros.h"
+#include "Common/Log.h"
 #include "Common/NBasics.h"
 #include "Common/Math/CPlane.h"
 #include "Common/Math/CVector3f.h"
@@ -471,7 +471,7 @@ class CQuickhullImpl
 
             if (V0 == V1 || V1 == V2 || V2 == V0)
             {
-                errorf("Quickhull: Degenerate face being constructed: %d/%d/%d", V0, V1, V2);
+                NLog::Error("Quickhull: Degenerate face being constructed: {}/{}/{}", V0, V1, V2);
             }
 
             // Disassociate the edge's twin from the edge, since it is being deleted soon

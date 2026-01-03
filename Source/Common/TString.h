@@ -1,11 +1,12 @@
 #ifndef TSTRING_H
 #define TSTRING_H
 
-#include "BasicTypes.h"
-#include "Hash/CCRC32.h"
-#include "Hash/CFNV1A.h"
-#include "Macros.h"
+#include "Common/BasicTypes.h"
+#include "Common/Hash/CCRC32.h"
+#include "Common/Hash/CFNV1A.h"
+#include "Common/Macros.h"
 
+#include <cassert>
 #include <cstdarg>
 #include <cstdlib>
 #include <iomanip>
@@ -119,12 +120,7 @@ public:
 
     CharType At(size_t Pos) const
     {
-        if (Size() <= Pos)
-        {
-            errorf("Invalid position passed to TBasicString::At()");
-            return 0;
-        }
-
+        assert(Size() > Pos);
         return mInternalString.at(Pos);
     }
 
@@ -260,23 +256,13 @@ public:
 
     void Insert(size_t Pos, CharType Chr)
     {
-        if (Size() < Pos)
-        {
-            errorf("Invalid position passed to TBasicString::Insert()");
-            return;
-        }
-
+        assert(Size() >= Pos);
         mInternalString.insert(Pos, 1, Chr);
     }
 
     void Insert(size_t Pos, const CharType* pkStr)
     {
-        if (Size() < Pos)
-        {
-            errorf("Invalid position passed to TBasicString::Insert()");
-            return;
-        }
-
+        assert(Size() >= Pos);
         mInternalString.insert(Pos, pkStr);
     }
 
@@ -288,11 +274,7 @@ public:
     void Remove(size_t Pos, size_t Len)
     {
 #ifdef _DEBUG
-        if (Size() <= Pos)
-        {
-            errorf("Invalid position passed to TBasicString::Remove()");
-            return;
-        }
+        assert(Size() > Pos);
 #endif
         mInternalString.erase(Pos, Len);
     }
@@ -450,7 +432,7 @@ public:
             return (int32) std::stoul(mInternalString, nullptr, Base);
         }
         catch(...) {
-            errorf("ToInt32 failed (input: %s)", **this);
+            assert(false);
             return 0;
         }
     }
@@ -461,7 +443,7 @@ public:
             return (int64) std::stoull(mInternalString, nullptr, Base);
         }
         catch(...) {
-            errorf("ToInt64 failed (input: %s)", **this);
+            assert(false);
             return 0;
         }
     }
@@ -483,8 +465,7 @@ public:
             memcpy(static_cast<char*>(pOut) + 8, &Part2, 8);
         }
         catch(...) {
-            errorf("ToUint128 failed (input: %s)", **this);
-            return;
+            assert(false);
         }
     }
 

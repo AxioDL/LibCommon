@@ -1,9 +1,9 @@
 #ifndef CSCOPEDTIMER
 #define CSCOPEDTIMER
 
-#include "CTimer.h"
-#include "Macros.h"
-#include "TString.h"
+#include "Common/CTimer.h"
+#include "Common/Log.h"
+#include "Common/TString.h"
 
 // Runs a timer and automatically stops + prints the time to the log when it goes out of scope.
 class CScopedTimer
@@ -28,7 +28,7 @@ public:
     {
         if (!mStopped)
         {
-            debugf("%s finished in %fs", *mTimerName, (float) mTimer.Stop());
+            NLog::Debug("{} finished in {}s", mTimerName.ToStdString(), mTimer.Stop());
             mStopped = true;
         }
     }

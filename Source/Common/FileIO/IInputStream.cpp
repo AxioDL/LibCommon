@@ -1,7 +1,8 @@
 #include "IInputStream.h"
-#include "Common/Macros.h"
+#include "Common/Log.h"
 
 #include <bit>
+#include <cstdio>
 
 IInputStream::~IInputStream() = default;
 
@@ -13,7 +14,7 @@ bool IInputStream::ReadBool()
 #if _DEBUG
     if (Val != 0 && Val != 1)
     {
-        errorf("ReadBool() got invalid value: %d", Val);
+        NLog::Error("ReadBool() got invalid value: {}", Val);
     }
 #endif
 

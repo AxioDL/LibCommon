@@ -1,7 +1,7 @@
 #include "FileUtil.h"
 
 #include "Common/Flags.h"
-#include "Common/Macros.h"
+#include "Common/Log.h"
 #include "Common/FileIO/CFileInStream.h"
 #include "Common/FileIO/CFileOutStream.h"
 
@@ -77,7 +77,7 @@ bool IsEmpty(const TString& rkDirPath)
 {
     if (!IsDirectory(rkDirPath))
     {
-        errorf("Non-directory path passed to IsEmpty(): %s", *rkDirPath);
+        NLog::Error("Non-directory path passed to IsEmpty(): {}", rkDirPath.ToStdString());
         return false;
     }
 
@@ -88,7 +88,7 @@ bool MakeDirectory(const TString& rkNewDir)
 {
     if (!IsValidPath(rkNewDir, true))
     {
-        errorf("Unable to create directory because name contains illegal characters: %s", *rkNewDir);
+        NLog::Error("Unable to create directory because name contains illegal characters: {}", rkNewDir.ToStdString());
         return false;
     }
 
@@ -101,7 +101,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        errorf("Unable to copy file because destination name contains illegal characters: %s", *rkNewPath);
+        NLog::Error("Unable to copy file because destination name contains illegal characters: {}", rkNewPath.ToStdString());
         return false;
     }
 
@@ -116,7 +116,7 @@ bool CopyDirectory(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        errorf("Unable to copy directory because destination name contains illegal characters: %s", *rkNewPath);
+        NLog::Error("Unable to copy directory because destination name contains illegal characters: {}", rkNewPath.ToStdString());
         return false;
     }
 
@@ -131,13 +131,13 @@ bool MoveFile(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        errorf("Unable to move file because destination name contains illegal characters: %s", *rkNewPath);
+        NLog::Error("Unable to move file because destination name contains illegal characters: {}", rkNewPath.ToStdString());
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        errorf("Unable to move file because there is an existing file at the destination path: %s", *rkNewPath);
+        NLog::Error("Unable to move file because there is an existing file at the destination path: {}", rkNewPath.ToStdString());
         return false;
     }
 
@@ -150,13 +150,13 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        errorf("Unable to move directory because destination name contains illegal characters: %s", *rkNewPath);
+        NLog::Error("Unable to move directory because destination name contains illegal characters: {}", rkNewPath.ToStdString());
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        errorf("Unable to move directory because there is an existing directory at the destination path: %s", *rkNewPath);
+        NLog::Error("Unable to move directory because there is an existing directory at the destination path: {}", rkNewPath.ToStdString());
         return false;
     }
 
@@ -185,7 +185,7 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
     if (Root)
     {
         ASSERT(false);
-        fatalf("Attempted to delete root directory!");
+        NLog::Fatal("Attempted to delete root directory!");
         return false;
     }
 
@@ -210,7 +210,7 @@ bool ClearDirectory(const TString& rkDirPath)
     if (Root)
     {
         ASSERT(false);
-        fatalf("Attempted to clear root directory!");
+        NLog::Fatal("Attempted to clear root directory!");
         return false;
     }
 
@@ -228,7 +228,7 @@ bool ClearDirectory(const TString& rkDirPath)
             Success = DeleteDirectory(DirContent, false);
 
         if (!Success)
-            errorf("Failed to delete filesystem object: %s", *DirContent);
+            NLog::Error("Failed to delete filesystem object: {}", DirContent.ToStdString());
     }
 
     return true;
@@ -247,7 +247,7 @@ void MarkHidden(const TString& rkFilePath, bool Hidden)
 
     SetFileAttributesW( ToWChar(FilePath16), Attrs );
 #else
-    errorf("MarkHidden unimplemented: %s", *rkFilePath);
+    NLog::Error("MarkHidden unimplemented: {}", rkFilePath.ToStdString());
 #endif
 }
 

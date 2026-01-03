@@ -1,8 +1,9 @@
 #ifndef CXMLWRITER
 #define CXMLWRITER
 
-#include "IArchive.h"
 #include "Common/CFourCC.h"
+#include "Common/Log.h"
+#include "Common/Serialization/IArchive.h"
 #include <tinyxml2.h>
 
 class CXMLWriter : public IArchive
@@ -44,7 +45,7 @@ public:
     {
         if (mSaved)
         {
-            errorf("Attempted to save XML twice!");
+            NLog::Error("Attempted to save XML twice!");
             return false;
         }
 
@@ -53,7 +54,7 @@ public:
 
         if (Error != tinyxml2::XML_SUCCESS)
         {
-            errorf("Failed to save XML file: %s", *mOutFilename);
+            NLog::Error("Failed to save XML file: {}", mOutFilename.ToStdString());
             return false;
         }
 

@@ -1,5 +1,7 @@
 #include "TString.h"
 
+#include "Common/Log.h"
+
 /** Decode functions */
 static bool IsValidCodePoint(uint32 CodePoint)
 {
@@ -7,7 +9,7 @@ static bool IsValidCodePoint(uint32 CodePoint)
     // 0x10FFFF is the largest defined code point
     if ( (CodePoint >= 0xD800 && CodePoint <= 0xDFFF) || (CodePoint > 0x10FFFF) )
     {
-        errorf("Invalid code point: 0x%X", CodePoint);
+        NLog::Error("Invalid code point: 0x{:X}", CodePoint);
         return false;
     }
     else
@@ -26,7 +28,6 @@ static uint32 DecodeCodePoint(const char*& pkInString)
         CodePoint = (uint32) pkInString[0];
         pkInString++;
     }
-
     // Two bytes
     else if ((pkInString[0] & 0xE0) == 0xC0)
     {
@@ -34,7 +35,6 @@ static uint32 DecodeCodePoint(const char*& pkInString)
                       ((pkInString[1] & 0x3F) << 0) );
         pkInString += 2;
     }
-
     // Three bytes
     else if ((pkInString[0] & 0xF0) == 0xE0)
     {
@@ -43,7 +43,6 @@ static uint32 DecodeCodePoint(const char*& pkInString)
                       ((pkInString[2] & 0x3F) <<  0) );
         pkInString += 3;
     }
-
     // Four bytes
     else if ((pkInString[0] & 0xF8) == 0xF0)
     {
@@ -67,7 +66,6 @@ static uint32 DecodeCodePoint(const char*& pkInString)
                       ((pkInString[4] & 0x3F) <<  0) );
         pkInString += 5;
     }
-
     // Six bytes
     else if ((pkInString[0] & 0xFE) == 0xFC)
     {
@@ -79,11 +77,10 @@ static uint32 DecodeCodePoint(const char*& pkInString)
                       ((pkInString[5] & 0x3F) <<  0) );
         pkInString += 6;
     }
-
     // Invalid?
     else
     {
-        errorf("DecodeCodePoint() encountered invalid UTF-8 data: 0x%02X", pkInString[0]);
+        NLog::Error("DecodeCodePoint() encountered invalid UTF-8 data: 0x{:02X}", pkInString[0]);
         return 0xFFFFFFFF;
     }
 

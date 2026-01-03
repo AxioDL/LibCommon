@@ -4,27 +4,6 @@
 #include <cstdlib>
 #include <string.h>
 
-/** Forward decls for log functions */
-namespace NLog
-{
-void Writef(const char* pkMsg, ...);
-void Warnf(const char* pkMsg, ...);
-void Errorf(const char* pkMsg, ...);
-void Fatalf(const char* pkMsg, ...);
-}
-
-/**
- * Log convenience macros.
- * debugf: standard log message
- * warnf: non-critical warning message
- * errorf: triggers a debug break in debug mode
- * fatalf: triggers the application to abort
- */
-#define debugf  NLog::Writef
-#define warnf   NLog::Warnf
-#define errorf  NLog::Errorf
-#define fatalf  NLog::Fatalf
-
 /** Returns the size of a static array */
 #define ARRAY_SIZE(Array) ( sizeof(Array) / sizeof(Array[0]) )
 
@@ -77,7 +56,7 @@ void Fatalf(const char* pkMsg, ...);
     }
 
 #define WRITE_FAILURE_TO_LOG(Expression) \
-    fatalf("%s(%d): ASSERT FAILED: %s", __FILE_SHORT__, __LINE__, #Expression);
+    NLog::Fatal("{}({}): ASSERT FAILED: {}", __FILE_SHORT__, __LINE__, #Expression);
 
 // ENSURE macro always executes, never gets compiled out
 #define ENSURE(Expression) \

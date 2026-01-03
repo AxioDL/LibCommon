@@ -40,6 +40,22 @@ if (NOT APPLE AND NOT MSVC)
     endif()
 endif()
 
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
+  GIT_TAG        v1.16.0
+  OVERRIDE_FIND_PACKAGE
+  EXCLUDE_FROM_ALL
+)
+FetchContent_Declare(
+  tinyxml2
+  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+  GIT_TAG        11.0.0
+  OVERRIDE_FIND_PACKAGE
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(spdlog tinyxml2)
+
 file(GLOB_RECURSE source_files
     "Source/*.cpp"
     "Source/*.h"
@@ -61,19 +77,20 @@ target_include_directories(libcommon
         ${PLAT_INCLUDE_DIRS}
 )
 
-target_link_libraries(
-    libcommon
-    PUBLIC tinyxml2::tinyxml2 "${FS_LIBRARY}" codegen
+target_link_libraries(libcommon
+    PUBLIC
+        spdlog::spdlog
+        tinyxml2::tinyxml2
+        "${FS_LIBRARY}"
+        codegen
 )
-
-gather_include_directories(libcommon_include_directories libcommon)
 
 add_codegen_targets(
     "${source_files}"
     codegen_generated_files
     "${PROJECT_SOURCE_DIR}"
     "${PROJECT_BINARY_DIR}"
-    "${libcommon_include_directories}"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 add_custom_target(libcommon_codegen DEPENDS ${codegen_generated_files} SOURCES ${source_files})
 

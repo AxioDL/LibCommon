@@ -1,8 +1,9 @@
 #ifndef CXMLREADER
 #define CXMLREADER
 
-#include "IArchive.h"
-#include "XMLCommon.h"
+#include "Common/Log.h"
+#include "Common/Serialization/IArchive.h"
+#include "Common/Serialization/XMLCommon.h"
 #include <tinyxml2.h>
 
 class CXMLReader : public IArchive
@@ -22,7 +23,7 @@ public:
 
         if (Error != tinyxml2::XML_SUCCESS)
         {
-            errorf("%s: Failed to open XML for read: %s", *rkFileName, XMLErrorString(Error));
+            NLog::Error("{}: Failed to open XML for read: {}", rkFileName.ToStdString(), XMLErrorString(Error));
         }
         else
         {
