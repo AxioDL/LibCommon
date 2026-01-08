@@ -9,15 +9,14 @@
 #include "Common/EGame.h"
 #include "Common/TString.h"
 
-#include <type_traits>
-
+#include <concepts>
 #include <list>
 #include <map>
 #include <memory>
 #include <set>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 
 /* This is a custom serialization implementation intended for saving game assets out to editor-
  * friendly formats, such as XML. The main goals of the serialization system is to simplify the
@@ -72,12 +71,6 @@ enum EArchiveFlags
     AF_NoSkipping           = 0x10,     // Properties are never skipped.
 };
 
-/** Check for whether the equality operator has been implemented for a given type */
-template<typename ValType, class = decltype(std::declval<ValType>() == std::declval<ValType>())>
-std::true_type  THasEqualToOperator(const ValType&);
-std::false_type THasEqualToOperator(...);
-template<typename ValType> using THasEqualTo = decltype(THasEqualToOperator(std::declval<ValType>()));
-
 /** Class that determines if the type is a container */
 template<typename>
 struct TIsContainer : std::false_type {};
@@ -93,12 +86,12 @@ template<typename T, typename V, typename Hash, typename Comp>
 struct TIsContainer<std::unordered_map<T, V, Hash, Comp>> : std::true_type {};
 
 /** Class that determines if the type is a smart pointer */
-template<typename>      struct TIsSmartPointer : std::false_type {};
-template<typename T>    struct TIsSmartPointer<std::shared_ptr<T>> : std::true_type {};
-template<typename T>    struct TIsSmartPointer<std::unique_ptr<T>> : std::true_type {};
+template<typename>   struct TIsSmartPointer : std::false_type {};
+template<typename T> struct TIsSmartPointer<std::shared_ptr<T>> : std::true_type {};
+template<typename T> struct TIsSmartPointer<std::unique_ptr<T>> : std::true_type {};
 
 /** Helper macro that tells us whether the parameter supports default property values */
-#define SUPPORTS_DEFAULT_VALUES (!std::is_pointer_v<ValType> && std::is_copy_assignable_v<ValType> && THasEqualTo<ValType>::value && !TIsContainer<ValType>::value && !TIsSmartPointer<ValType>::value)
+#define SUPPORTS_DEFAULT_VALUES (!std::is_pointer_v<ValType> && std::is_copy_assignable_v<ValType> && std::equality_comparable<ValType> && !TIsContainer<ValType>::value && !TIsSmartPointer<ValType>::value)
 
 /** TSerialParameter - name/value pair for generic serial parameters */
 template<typename ValType>
