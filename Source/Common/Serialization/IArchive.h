@@ -46,7 +46,7 @@
  */
 
 /** ESerialHint - Parameter hint flags */
-enum ESerialHint
+enum ESerialHint : uint32_t
 {
     SH_HexDisplay           = 0x1,      // The parameter should be written in hex in text formats.
     SH_Optional             = 0x2,      // The parameter should not be written to the file if its value matches the default value.
@@ -59,10 +59,10 @@ enum ESerialHint
 };
 
 // Hints that can be inherited by SH_InheritHints and SH_Proxy
-const int gkInheritableSerialHints = (SH_HexDisplay | SH_NeverSave | SH_AlwaysSave);
+constexpr uint32_t gkInheritableSerialHints = (SH_HexDisplay | SH_NeverSave | SH_AlwaysSave);
 
 /** EArchiveFlags */
-enum EArchiveFlags
+enum EArchiveFlags : uint32_t
 {
     AF_Reader               = 0x1,      // Archive reads data.
     AF_Writer               = 0x2,      // Archive writes data.
