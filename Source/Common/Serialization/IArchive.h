@@ -72,9 +72,6 @@ enum EArchiveFlags
     AF_NoSkipping           = 0x10,     // Properties are never skipped.
 };
 
-/** Shortcut macro for enable_if */
-#define ENABLE_IF(Conditions, ReturnType) typename std::enable_if< Conditions, ReturnType >::type
-
 /** Check for whether the equality operator has been implemented for a given type */
 template<typename ValType, class = decltype(std::declval<ValType>() == std::declval<ValType>())>
 std::true_type  THasEqualToOperator(const ValType&);
@@ -115,13 +112,13 @@ struct TSerialParameter
 
 /** Function that creates a SerialParameter */
 template<typename ValType>
-ENABLE_IF( SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType> )
+std::enable_if_t<SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType>>
 inline SerialParameter(const char* pkName, ValType& rValue, uint32 HintFlags = 0, const ValType& rkDefaultValue = ValType())
 {
     return TSerialParameter<ValType> { pkName, rValue, HintFlags, &rkDefaultValue };
 }
 template<typename ValType>
-ENABLE_IF( !SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType> )
+std::enable_if_t<!SUPPORTS_DEFAULT_VALUES, TSerialParameter<ValType>>
 inline SerialParameter(const char* pkName, ValType& rValue, uint32 HintFlags = 0)
 {
     return TSerialParameter<ValType> { pkName, rValue, HintFlags, nullptr };
@@ -129,51 +126,51 @@ inline SerialParameter(const char* pkName, ValType& rValue, uint32 HintFlags = 0
 
 /** Returns whether the parameter value matches its default value */
 template<typename ValType>
-ENABLE_IF( SUPPORTS_DEFAULT_VALUES, bool )
-inline ParameterMatchesDefault( const TSerialParameter<ValType>& kParameter )
+std::enable_if_t<SUPPORTS_DEFAULT_VALUES, bool>
+inline ParameterMatchesDefault(const TSerialParameter<ValType>& kParameter)
 {
     return kParameter.pDefaultValue != nullptr && kParameter.rValue == *kParameter.pDefaultValue;
 }
 
 template<typename ValType>
-ENABLE_IF( !SUPPORTS_DEFAULT_VALUES && TIsContainer<ValType>::value, bool )
-inline ParameterMatchesDefault( const TSerialParameter<ValType>& kParameter )
+std::enable_if_t<!SUPPORTS_DEFAULT_VALUES && TIsContainer<ValType>::value, bool>
+inline ParameterMatchesDefault(const TSerialParameter<ValType>& kParameter)
 {
     return kParameter.rValue.size() == 0;
 }
 
 template<typename ValType>
-ENABLE_IF( !SUPPORTS_DEFAULT_VALUES && !TIsContainer<ValType>::value, bool )
-inline ParameterMatchesDefault( const TSerialParameter<ValType>& )
+std::enable_if_t<!SUPPORTS_DEFAULT_VALUES && !TIsContainer<ValType>::value, bool>
+inline ParameterMatchesDefault(const TSerialParameter<ValType>&)
 {
     return false;
 }
 
 /** Initializes the parameter to its default value */
 template<typename ValType>
-ENABLE_IF( SUPPORTS_DEFAULT_VALUES, bool )
-inline InitParameterToDefault( TSerialParameter<ValType>& Param )
+std::enable_if_t<SUPPORTS_DEFAULT_VALUES, bool>
+inline InitParameterToDefault(TSerialParameter<ValType>& Param)
 {
     if (Param.pDefaultValue != nullptr)
     {
         Param.rValue = *Param.pDefaultValue;
         return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 template<typename ValType>
-ENABLE_IF( !SUPPORTS_DEFAULT_VALUES && TIsContainer<ValType>::value, bool )
-inline InitParameterToDefault( TSerialParameter<ValType>& Param )
+std::enable_if_t<!SUPPORTS_DEFAULT_VALUES && TIsContainer<ValType>::value, bool>
+inline InitParameterToDefault(TSerialParameter<ValType>& Param)
 {
     Param.rValue.clear();
     return true;
 }
 
 template<typename ValType>
-ENABLE_IF( !SUPPORTS_DEFAULT_VALUES && !TIsContainer<ValType>::value, bool )
-inline InitParameterToDefault( TSerialParameter<ValType>& )
+std::enable_if_t<!SUPPORTS_DEFAULT_VALUES && !TIsContainer<ValType>::value, bool>
+inline InitParameterToDefault(TSerialParameter<ValType>&)
 {
     return false;
 }
@@ -398,20 +395,22 @@ private:
 
     // Return whether this parameter should be serialized
     template<typename ValType>
-    bool ShouldSerializeParameter(const TSerialParameter<ValType>& Param)
+    bool ShouldSerializeParameter(const TSerialParameter<ValType>& Param) const
     {
         if (mArchiveFlags & AF_NoSkipping)
             return true;
 
-        if ( IsWriter() )
+        if (IsWriter())
         {
             if (Param.HintFlags & SH_NeverSave)
                 return false;
 
-            if ( ( Param.HintFlags & SH_Optional ) &&
-                 ( Param.HintFlags & SH_AlwaysSave ) == 0 &&
-                 ( ParameterMatchesDefault(Param) ) )
+            if ((Param.HintFlags & SH_Optional) &&
+                (Param.HintFlags & SH_AlwaysSave) == 0 &&
+                (ParameterMatchesDefault(Param)))
+            {
                 return false;
+            }
         }
 
         return true;
@@ -420,25 +419,25 @@ private:
     // Instantiate an abstract object from the file
     // Only readers are allowed to instantiate objects
     template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
-    ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(Basic), ValType* )
+    std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(Basic), ValType*>
     inline InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
         // Variant for basic static constructor
-        ASSERT( IsReader() );
+        ASSERT(IsReader());
         return (ValType*) ValType::ArchiveConstructor(Type);
     }
 
     template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
-    ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(Advanced), ValType* )
+    std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(Advanced), ValType*>
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
         // Variant for advanced static constructor
-        ASSERT( IsReader() );
+        ASSERT(IsReader());
         return (ValType*) ValType::ArchiveConstructor(Type, *this);
     }
 
     template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
-    ENABLE_IF( IS_ARCHIVE_CONSTRUCTOR_TYPE(None), ValType* )
+    std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(None), ValType*>
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
         // If you fail here, you are missing an ArchiveConstructor() function, or you do have one but it is malformed.
@@ -489,7 +488,7 @@ private:
 public:
     // Serialize primitives
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Primitive), IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Primitive), IArchive&>
     operator<<(TSerialParameter<ValType> rParam)
     {
         PushParameter(rParam);
@@ -500,17 +499,19 @@ public:
             InternalEndParam(rParam);
         }
         else if (IsReader())
+        {
             InitParameterToDefault(rParam);
+        }
 
         PopParameter(rParam);
         return *this;
     }
 
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Primitive) && !IS_ABSTRACT, IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Primitive) && !IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*> rParam)
     {
-        ASSERT( !(mArchiveFlags & AF_Writer) || rParam.rValue != nullptr );
+        ASSERT(!(mArchiveFlags & AF_Writer) || rParam.rValue != nullptr);
         PushParameter(rParam);
 
         if (InternalStartParam(rParam))
@@ -531,7 +532,9 @@ public:
                     SerializePrimitive(*rParam.rValue, rParam.HintFlags);
             }
             else if (IsReader())
+            {
                 rParam.rValue = nullptr;
+            }
 
             InternalEndParam(rParam);
         }
@@ -542,7 +545,7 @@ public:
 
     // Serialize objects with global Serialize functions
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Global), IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Global), IArchive&>
     inline operator<<(TSerialParameter<ValType> rParam)
     {
         PushParameter(rParam);
@@ -553,17 +556,19 @@ public:
             InternalEndParam(rParam);
         }
         else if (IsReader())
+        {
             InitParameterToDefault(rParam);
+        }
 
         PopParameter(rParam);
         return *this;
     }
 
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Global) && !IS_ABSTRACT, IArchive&)
+    std::enable_if_t<IS_SERIAL_TYPE(Global) && !IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*> rParam)
     {
-        ASSERT( !IsWriter() || rParam.rValue != nullptr );
+        ASSERT(!IsWriter() || rParam.rValue != nullptr);
         PushParameter(rParam);
 
         if (InternalStartParam(rParam))
@@ -584,7 +589,9 @@ public:
                     Serialize(*this, *rParam.rValue);
             }
             else if (IsReader())
+            {
                 rParam.rValue = nullptr;
+            }
 
             InternalEndParam(rParam);
         }
@@ -595,7 +602,7 @@ public:
 
     // Serialize objects with Serialize methods
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Member), IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Member), IArchive&>
     operator<<(TSerialParameter<ValType> rParam)
     {
         PushParameter(rParam);
@@ -606,14 +613,16 @@ public:
             InternalEndParam(rParam);
         }
         else if (IsReader())
+        {
             InitParameterToDefault(rParam);
+        }
 
         PopParameter(rParam);
         return *this;
     }
 
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Member) && !IS_ABSTRACT, IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Member) && !IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*> rParam)
     {
         PushParameter(rParam);
@@ -636,7 +645,9 @@ public:
                     rParam.rValue->Serialize(*this);
             }
             else if (IsReader())
+            {
                 rParam.rValue = nullptr;
+            }
 
             InternalEndParam(rParam);
         }
@@ -646,8 +657,8 @@ public:
     }
 
     // Serialize polymorphic objects
-    template<typename ValType, typename ObjectType = decltype( std::declval<ValType>().Type() )>
-    ENABLE_IF( IS_SERIAL_TYPE(Member) && IS_ABSTRACT, IArchive&)
+    template<typename ValType, typename ObjectType = decltype(std::declval<ValType>().Type())>
+    std::enable_if_t<IS_SERIAL_TYPE(Member) && IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*> rParam)
     {
         PushParameter(rParam);
@@ -688,7 +699,9 @@ public:
                 }
             }
             else if (IsReader())
+            {
                 rParam.rValue = nullptr;
+            }
 
             InternalEndParam(rParam);
         }
@@ -703,7 +716,7 @@ public:
 
     // Error
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(Global) && IS_ABSTRACT, IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(Global) && IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*>)
     {
         static_assert(!(IS_SERIAL_TYPE(Global) && IS_ABSTRACT),
@@ -712,7 +725,7 @@ public:
 
     // Generate compiler errors for classes with no valid Serialize function defined
     template<typename ValType>
-    ENABLE_IF( IS_SERIAL_TYPE(None), IArchive& )
+    std::enable_if_t<IS_SERIAL_TYPE(None), IArchive&>
     operator<<(TSerialParameter<ValType>)
     {
         static_assert(!IS_SERIAL_TYPE(None),
@@ -1007,7 +1020,6 @@ void Serialize(IArchive& Arc, std::shared_ptr<T>& Pointer)
 }
 
 // Remove header-only macros
-#undef ENABLE_IF
 #undef SUPPORTS_DEFAULT_VALUES
 #undef IS_ABSTRACT
 #undef IS_SERIAL_TYPE
