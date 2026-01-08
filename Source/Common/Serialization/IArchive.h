@@ -176,63 +176,39 @@ void BulkSerialize();
 /** Helper struct to verify that function Func exists and matches the given function signature (FuncType) */
 template<typename FuncType, FuncType Func> struct FunctionExists;
 
-/** Determine what kind of Serialize function the type has */
-template<typename ValueType, class ArchiveType>
-struct SerialType
+// Concepts and types used to determine the existence of serializing functions.
+enum class SerialType
 {
-    enum { Primitive, Member, Global, None };
-
-    /** Check for ArcType::SerializePrimitive(ValType&) method */
-    template<typename V, typename A>
-    static constexpr auto HasPrimitiveSerialize(int) -> decltype(
-            std::declval<A>().SerializePrimitive( std::declval<V&>(), uint32() ), bool()
-        )
-    {
-        return true;
-    }
-
-    template<typename V, typename A>
-    static constexpr bool HasPrimitiveSerialize(...)
-    {
-        return false;
-    }
-
-    /** Check for ValType::Serialize(ArcType&) */
-    template<typename V, typename A>
-    static constexpr auto HasMemberSerialize(int) -> decltype(
-            std::declval<V>().Serialize( std::declval<A&>() ), bool()
-        )
-    {
-        return true;
-    }
-
-    template<typename V, typename A>
-    static constexpr bool HasMemberSerialize(...)
-    {
-        return false;
-    }
-
-    // Check for global Serialize(ArcType&,ValType&) function
-    template<typename V, typename A>
-    static constexpr auto HasGlobalSerialize(int) -> decltype(
-            Serialize( std::declval<A&>(), std::declval<V&>() ), bool()
-        )
-    {
-        return true;
-    }
-
-    template<typename V, typename A>
-    static constexpr bool HasGlobalSerialize(...)
-    {
-        return false;
-    }
-
-    // Set Type enum to correspond to whichever function exists
-    static const int Type = (HasPrimitiveSerialize<ValueType, ArchiveType>(0) ? Primitive :
-                             HasMemberSerialize<ValueType, ArchiveType>(0) ? Member :
-                             HasGlobalSerialize<ValueType, ArchiveType>(0) ? Global :
-                             None);
+    Primitive,
+    Member,
+    Global,
+    None,
 };
+
+/** Check for ArcType::SerializePrimitive(ValType&) method */
+template <class Value, typename ArcType>
+concept HasPrimitiveSerialize = requires(Value& obj, ArcType arc) {
+    { arc.SerializePrimitive(obj, uint32_t{}) } -> std::same_as<void>;
+};
+/** Check for ValType::Serialize(ArcType&) */
+template <typename Value, class ArcType>
+concept HasMemberSerialize = requires(Value obj, ArcType& arc) {
+    { obj.Serialize(arc) } -> std::same_as<void>;
+};
+/** Check for global Serialize(ArcType&,ValType&) function */
+template <typename Value, class ArcType>
+concept HasGlobalSerialize = requires(Value& obj, ArcType& arc) {
+    { Serialize(arc, obj) } -> std::same_as<void>;
+};
+
+template <typename Value, class ArcType>
+constexpr SerialType MakeSerializableType() {
+    return HasPrimitiveSerialize<Value, ArcType> ? SerialType::Primitive :
+           HasMemberSerialize<Value, ArcType>    ? SerialType::Member    :
+           HasGlobalSerialize<Value, ArcType>    ? SerialType::Global    : SerialType::None;
+}
+template <typename Value, class ArcType>
+constexpr inline SerialType SerializeType = MakeSerializableType<Value, ArcType>();
 
 /** For abstract types, determine what kind of ArchiveConstructor the type has */
 template<typename ValType, class ArchiveType>
@@ -294,7 +270,7 @@ struct ArchiveConstructorType
 };
 
 /** Helper that turns functions on or off depending on their serialize type */
-#define IS_SERIAL_TYPE(SType) (SerialType<ValType, IArchive>::Type == SerialType<ValType, IArchive>:: SType )
+#define IS_SERIAL_TYPE(SType) (SerializeType<ValType, IArchive> == SerialType::SType)
 
 /** Helper that turns functions on or off depending on their StaticConstructor type */
 #define IS_ARCHIVE_CONSTRUCTOR_TYPE(CType) (ArchiveConstructorType<ValType, IArchive>::Type == ArchiveConstructorType<ValType, IArchive>:: CType )
@@ -806,10 +782,9 @@ public:
     }
 };
 
-/** Class that determines if the type is a primitive */
-template<typename T>
-class TIsPrimitive : public std::conditional< SerialType<T,IArchive>::Type == SerialType<T,IArchive>::Primitive, std::true_type, std::false_type >::type
-{};
+/** Variable template that determines if the type is a primitive */
+template <typename Value>
+constexpr inline bool TIsPrimitive = SerializeType<Value, IArchive> == SerialType::Primitive;
 
 #if WITH_CODEGEN
 // Default enum serializer; can be overridden
@@ -934,7 +909,7 @@ inline void SerializeMap_Internal(IArchive& Arc, MapType& Map)
     uint32 Hints = SH_IgnoreName | SH_InheritHints;
 
     // Serialize the key/value as attributes if they are both primitive types.
-    if (Arc.ArchiveVersion() >= IArchive::eArVer_MapAttributes && TIsPrimitive<KeyType>::value && TIsPrimitive<ValType>::value)
+    if (Arc.ArchiveVersion() >= IArchive::eArVer_MapAttributes && TIsPrimitive<KeyType> && TIsPrimitive<ValType>)
     {
         Hints |= SH_Attribute;
     }
