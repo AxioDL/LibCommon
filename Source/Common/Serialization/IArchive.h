@@ -911,10 +911,9 @@ inline void Serialize(IArchive& Arc, std::set<T>& Set)
         {
             T Val;
             Arc << SerialParameter("Element", Val, SH_IgnoreName | SH_InheritHints);
-            Set.insert(Val);
+            Set.insert(std::move(Val));
         }
     }
-
     else
     {
         for (auto Iter = Set.begin(); Iter != Set.end(); Iter++)
@@ -952,13 +951,12 @@ inline void SerializeMap_Internal(IArchive& Arc, MapType& Map)
                 Arc << SerialParameter("Key", Key, Hints)
                     << SerialParameter("Value", Val, Hints);
 
-                ASSERT(Map.find(Key) == Map.end());
-                Map[Key] = Val;
+                ASSERT(!Map.contains(Key));
+                Map.insert_or_assign(std::move(Key), std::move(Val));
                 Arc.ParamEnd();
             }
         }
     }
-
     else
     {
         for (auto Iter = Map.begin(); Iter != Map.end(); Iter++)
