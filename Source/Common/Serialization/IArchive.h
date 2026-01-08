@@ -345,15 +345,15 @@ private:
     template<typename ValType>
     bool ShouldSerializeParameter(const TSerialParameter<ValType>& Param) const
     {
-        if (mArchiveFlags & AF_NoSkipping)
+        if ((mArchiveFlags & AF_NoSkipping) != 0)
             return true;
 
         if (IsWriter())
         {
-            if (Param.HintFlags & SH_NeverSave)
+            if ((Param.HintFlags & SH_NeverSave) != 0)
                 return false;
 
-            if ((Param.HintFlags & SH_Optional) &&
+            if ((Param.HintFlags & SH_Optional) != 0 &&
                 (Param.HintFlags & SH_AlwaysSave) == 0 &&
                 (ParameterMatchesDefault(Param)))
             {
@@ -402,12 +402,12 @@ private:
         if (mParmStack.size() > 0)
         {
             // Attribute properties cannot have children!
-            ASSERT( (mParmStack.back().HintFlags & SH_Attribute) == 0 );
+            ASSERT((mParmStack.back().HintFlags & SH_Attribute) == 0);
         }
 #endif
 
         // For InheritHints parameters, and for proxy parameters, copy the hint flags from the parent parameter.
-        if (Param.HintFlags & (SH_InheritHints | SH_Proxy))
+        if ((Param.HintFlags & (SH_InheritHints | SH_Proxy)) != 0)
         {
             Param.HintFlags |= (mParmStack.back().HintFlags & gkInheritableSerialHints);
         }
@@ -459,7 +459,7 @@ public:
     std::enable_if_t<IS_SERIAL_TYPE(Primitive) && !IS_ABSTRACT, IArchive&>
     operator<<(TSerialParameter<ValType*> rParam)
     {
-        ASSERT(!(mArchiveFlags & AF_Writer) || rParam.rValue != nullptr);
+        ASSERT((mArchiveFlags & AF_Writer) == 0 || rParam.rValue != nullptr);
         PushParameter(rParam);
 
         if (InternalStartParam(rParam))
@@ -473,7 +473,7 @@ public:
 
             if (PreSerializePointer(rParam.rValue, rParam.HintFlags))
             {
-                if (rParam.rValue == nullptr && (mArchiveFlags & AF_Reader))
+                if (rParam.rValue == nullptr && (mArchiveFlags & AF_Reader) != 0)
                     rParam.rValue = new ValType;
 
                 if (rParam.rValue != nullptr)
