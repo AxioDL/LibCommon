@@ -168,14 +168,6 @@ inline InitParameterToDefault(TSerialParameter<ValType>&)
     return false;
 }
 
-/** SFINAE serialize function type check */
-// https://jguegant.github.io/blogs/tech/sfinae-introduction.html
-void Serialize(); // This needs to be here or else the global Serialize method handling causes a compiler error. Not sure of a better fix
-void BulkSerialize();
-
-/** Helper struct to verify that function Func exists and matches the given function signature (FuncType) */
-template<typename FuncType, FuncType Func> struct FunctionExists;
-
 // Concepts and types used to determine the existence of serializing functions.
 enum class SerialType
 {
