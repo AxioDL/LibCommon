@@ -769,7 +769,7 @@ constexpr inline bool TIsPrimitive = SerializeType<Value, IArchive> == SerialTyp
 // Default enum serializer; can be overridden
 #include <codegen/EnumReflection.h>
 
-template<typename T, typename = typename std::enable_if< std::is_enum<T>::value >::type>
+template<typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
 inline void DefaultEnumSerialize(IArchive& Arc, T& Val)
 {
     if (Arc.IsTextFormat())
@@ -792,7 +792,7 @@ inline void DefaultEnumSerialize(IArchive& Arc, T& Val)
     }
 }
 
-template<typename T, typename = typename std::enable_if< std::is_enum<T>::value >::type>
+template<typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
 inline void Serialize(IArchive& Arc, T& Val)
 {
     DefaultEnumSerialize(Arc, Val);
