@@ -82,17 +82,23 @@ std::false_type THasEqualToOperator(...);
 template<typename ValType> using THasEqualTo = decltype(THasEqualToOperator(std::declval<ValType>()));
 
 /** Class that determines if the type is a container */
-template<typename>      struct TIsContainer : public std::false_type {};
-template<typename T>    struct TIsContainer< std::vector<T> > : public std::true_type {};
-template<typename T>    struct TIsContainer< std::list<T> > : public std::true_type {};
-template<typename T>    struct TIsContainer< std::set<T> > : public std::true_type {};
-template<typename T, typename V>    struct TIsContainer< std::map<T,V> > : public std::true_type {};
-template<typename T, typename V>    struct TIsContainer< std::unordered_map<T,V> > : public std::true_type {};
+template<typename>
+struct TIsContainer : std::false_type {};
+template<typename T>
+struct TIsContainer<std::vector<T>> : std::true_type {};
+template<typename T>
+struct TIsContainer<std::list<T>> : std::true_type {};
+template<typename T>
+struct TIsContainer<std::set<T>> : std::true_type {};
+template<typename T, typename V, typename Comp>
+struct TIsContainer<std::map<T, V, Comp>> : std::true_type {};
+template<typename T, typename V, typename Hash, typename Comp>
+struct TIsContainer<std::unordered_map<T, V, Hash, Comp>> : std::true_type {};
 
 /** Class that determines if the type is a smart pointer */
-template<typename>      struct TIsSmartPointer : public std::false_type {};
-template<typename T>    struct TIsSmartPointer< std::shared_ptr<T> > : public std::true_type {};
-template<typename T>    struct TIsSmartPointer< std::unique_ptr<T> > : public std::true_type {};
+template<typename>      struct TIsSmartPointer : std::false_type {};
+template<typename T>    struct TIsSmartPointer<std::shared_ptr<T>> : std::true_type {};
+template<typename T>    struct TIsSmartPointer<std::unique_ptr<T>> : std::true_type {};
 
 /** Helper macro that tells us whether the parameter supports default property values */
 #define SUPPORTS_DEFAULT_VALUES (!std::is_pointer_v<ValType> && std::is_copy_assignable_v<ValType> && THasEqualTo<ValType>::value && !TIsContainer<ValType>::value && !TIsSmartPointer<ValType>::value)
@@ -973,10 +979,10 @@ inline void Serialize(IArchive& Arc, std::map<KeyType, ValType, HashFunc>& Map)
     SerializeMap_Internal<KeyType, ValType, std::map<KeyType, ValType, HashFunc> >(Arc, Map);
 }
 
-template<typename KeyType, typename ValType, typename HashFunc>
-inline void Serialize(IArchive& Arc, std::unordered_map<KeyType, ValType, HashFunc>& Map)
+template<typename KeyType, typename ValType, typename HashFunc, typename CompFunc>
+inline void Serialize(IArchive& Arc, std::unordered_map<KeyType, ValType, HashFunc, CompFunc>& Map)
 {
-    SerializeMap_Internal<KeyType, ValType, std::unordered_map<KeyType, ValType, HashFunc> >(Arc, Map);
+    SerializeMap_Internal<KeyType, ValType, std::unordered_map<KeyType, ValType, HashFunc, CompFunc>>(Arc, Map);
 }
 
 // Smart pointer serialize methods
