@@ -264,12 +264,12 @@ constexpr inline ArcConstructorType ArchiveConstructorType = MakeArcConstructorT
 class IArchive
 {
 protected:
-    uint16 mArchiveVersion;
-    uint16 mFileVersion;
-    EGame mGame;
+    uint16_t mArchiveVersion{};
+    uint16_t mFileVersion{};
+    EGame mGame = EGame::Invalid;
 
     // Subclasses must fill in flags in their constructors!!!
-    uint32 mArchiveFlags;
+    uint32_t mArchiveFlags{};
 
     // Info about the stack of parameters being serialized
     struct SParmStackEntry
@@ -277,7 +277,7 @@ protected:
         size_t TypeID;
         size_t TypeSize;
         void* pDataPointer;
-        uint32 HintFlags;
+        uint32_t HintFlags;
     };
     std::vector<SParmStackEntry> mParmStack;
 
@@ -292,13 +292,9 @@ public:
         // Insert new versions before this line
         eArVer_Max
     };
-    static const uint32 skCurrentArchiveVersion = (eArVer_Max - 1);
+    static constexpr uint32_t skCurrentArchiveVersion = (eArVer_Max - 1);
 
-    IArchive()
-        : mFileVersion(0)
-        , mArchiveVersion(skCurrentArchiveVersion)
-        , mGame(EGame::Invalid)
-        , mArchiveFlags(0)
+    IArchive() : mArchiveVersion(skCurrentArchiveVersion)
     {
         // hack to reduce allocations
         mParmStack.reserve(16);
