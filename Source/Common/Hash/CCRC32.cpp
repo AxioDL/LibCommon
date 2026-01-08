@@ -1,6 +1,6 @@
 #include "CCRC32.h"
 
-const uint32 gkCrcTable[] = {
+constexpr uint32_t gkCrcTable[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
     0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
     0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
@@ -50,15 +50,15 @@ const uint32 gkCrcTable[] = {
 CCRC32::CCRC32() = default;
 
 /** Allows the hash to be initialized to an arbitrary value */
-CCRC32::CCRC32(uint32 InitialValue)
-    : mHash( InitialValue )
+CCRC32::CCRC32(uint32_t InitialValue)
+    : mHash(InitialValue)
 {
 }
 
 /** Hash arbitrary data */
-void CCRC32::Hash(const void* pkData, int Size)
+void CCRC32::Hash(const void* pkData, size_t Size)
 {
-    const uint8* pkCastData = static_cast<const uint8*>(pkData);
+    const auto* pkCastData = static_cast<const uint8_t*>(pkData);
 
     while (Size--)
     {
@@ -66,65 +66,15 @@ void CCRC32::Hash(const void* pkData, int Size)
     }
 }
 
-/** Retrieve the final output hash. (You can keep adding data to the hash after calling this.) */
-uint32 CCRC32::Digest() const
-{
-    return mHash;
-}
-
-/** Convenience hash methods */
-void CCRC32::Hash(uint8 v)
-{
-    Hash(&v, 1);
-}
-
-void CCRC32::Hash(uint16 v)
-{
-    Hash(&v, 2);
-}
-
-void CCRC32::Hash(uint32 v)
-{
-    Hash(&v, 4);
-}
-
-void CCRC32::Hash(uint64 v)
-{
-    Hash(&v, 8);
-}
-
-void CCRC32::Hash(float v)
-{
-    Hash(&v, 4);
-}
-
-void CCRC32::Hash(double v)
-{
-    Hash(&v, 8);
-}
-
-void CCRC32::Hash(char v)
-{
-    Hash(&v, 1);
-}
-
-void CCRC32::Hash(const char* pkString)
-{
-    while (*pkString)
-    {
-        Hash(pkString++, 1);
-    }
-}
-
 /** Static */
-uint32 CCRC32::StaticHashString(const char* pkString)
+uint32_t CCRC32::StaticHashString(std::string_view str)
 {
     CCRC32 Hasher;
-    Hasher.Hash(pkString);
+    Hasher.Hash(str);
     return Hasher.Digest();
 }
 
-uint32 CCRC32::StaticHashData(const void* pkData, uint Size)
+uint32_t CCRC32::StaticHashData(const void* pkData, size_t Size)
 {
     CCRC32 Hasher;
     Hasher.Hash(pkData, Size);
