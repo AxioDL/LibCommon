@@ -210,76 +210,55 @@ constexpr SerialType MakeSerializableType() {
 template <typename Value, class ArcType>
 constexpr inline SerialType SerializeType = MakeSerializableType<Value, ArcType>();
 
-/** For abstract types, determine what kind of ArchiveConstructor the type has */
-template<typename ValType, class ArchiveType>
-struct ArchiveConstructorType
+// Archive constructor handling for abstract types
+enum class ArcConstructorType
 {
-    /** Figure out the type being used to represent the object type.
-     *  If there isn't a type function, then it doesn't matter; just substitute int.
-     */
-    template<typename T>
-    static constexpr auto HasTypeMethod(int) -> decltype( std::declval<T>().Type() )
-    {
-        return std::declval<T>().Type();
-    }
-
-    template<typename T>
-    static constexpr int HasTypeMethod(...)
-    {
-        return 0;
-    }
-
-    using ObjType = decltype(HasTypeMethod<ValType>(0));
-
-    enum { Basic, Advanced, None };
-
-    /** Check for ValType::ArchiveConstructor(ObjectType) */
-    template<typename V, typename O>
-    static constexpr auto HasBasicArchiveConstructor(int) -> decltype(
-            std::declval<V>().ArchiveConstructor( std::declval<O>()), bool()
-        )
-    {
-        return true;
-    }
-
-    template<typename V, typename O>
-    static constexpr bool HasBasicArchiveConstructor(...)
-    {
-        return false;
-    }
-
-    /** Check for ValType::ArchiveConstructor(ObjectType, IArchive&) */
-    template<typename V, typename A, typename O>
-    static constexpr auto HasAdvancedArchiveConstructor(int) -> decltype(
-            std::declval<V>().ArchiveConstructor( std::declval<O>(), std::declval<A&>() ), bool()
-        )
-    {
-        return true;
-    }
-
-    template<typename V, typename A, typename O>
-    static constexpr bool HasAdvancedArchiveConstructor(...)
-    {
-        return false;
-    }
-
-    // Set Type enum to correspond to whichever function exists
-    static const int Type = (HasAdvancedArchiveConstructor<ValType, ArchiveType, ObjType>(0) ? Advanced :
-                             HasBasicArchiveConstructor<ValType, ObjType>(0) ? Basic :
-                             None);
+    Basic,
+    Advanced,
+    None,
 };
+
+template <typename T>
+concept HasTypeMethod = requires(T obj) {
+    { obj.Type() };
+};
+
+/**
+ * Figure out the type being used to represent the object type.
+ * If there isn't a type function, then it doesn't matter; just substitute int.
+ */
+template<typename T>
+using TypeMethodReturn = std::conditional_t<HasTypeMethod<T>, decltype(std::declval<T>().Type()), int>;
+
+/** Check for ValType::ArchiveConstructor(ObjectType) */
+template <typename Value>
+concept HasBasicArchiveConstructor = requires(Value obj) {
+    { obj.ArchiveConstructor(TypeMethodReturn<Value>{}) };
+};
+/** Check for ValType::ArchiveConstructor(ObjectType, IArchive&) */
+template <typename Value>
+concept HasAdvancedArchiveConstructor = requires(Value obj) {
+    { obj.ArchiveConstructor(TypeMethodReturn<Value>{}, std::declval<IArchive&>()) };
+};
+template <typename Value>
+constexpr ArcConstructorType MakeArcConstructorType() {
+    return HasAdvancedArchiveConstructor<Value> ? ArcConstructorType::Advanced :
+           HasBasicArchiveConstructor<Value>    ? ArcConstructorType::Basic    : ArcConstructorType::None;
+}
+template <typename Value>
+constexpr inline ArcConstructorType ArchiveConstructorType = MakeArcConstructorType<Value>();
 
 /** Helper that turns functions on or off depending on their serialize type */
 #define IS_SERIAL_TYPE(SType) (SerializeType<ValType, IArchive> == SerialType::SType)
 
 /** Helper that turns functions on or off depending on their StaticConstructor type */
-#define IS_ARCHIVE_CONSTRUCTOR_TYPE(CType) (ArchiveConstructorType<ValType, IArchive>::Type == ArchiveConstructorType<ValType, IArchive>:: CType )
+#define IS_ARCHIVE_CONSTRUCTOR_TYPE(CType) (ArchiveConstructorType<ValType> == ArcConstructorType::CType)
 
 /** Helper that turns functions on or off depending on if the parameter type is abstract */
-#define IS_ABSTRACT ( std::is_abstract_v<ValType> || (std::is_polymorphic_v<ValType> && ArchiveConstructorType<ValType, IArchive>::Type != ArchiveConstructorType<ValType, IArchive>::None) )
+#define IS_ABSTRACT (std::is_abstract_v<ValType> || (std::is_polymorphic_v<ValType> && ArchiveConstructorType<ValType> != ArcConstructorType::None))
 
 /** Helper that fetches the type used to represent an abstract object type */
-#define ABSTRACT_TYPE ArchiveConstructorType<ValType, IArchive>::ObjType
+#define ABSTRACT_TYPE TypeMethodReturn<ValType>
 
 /** IArchive - Main serializer archive interface */
 class IArchive
