@@ -19,7 +19,7 @@ public:
     double Pause();
     bool IsPaused() const;
     void Resume();
-    double Time();
+    double Time() const;
 
     // Static
     static double GlobalTime();

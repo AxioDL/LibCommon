@@ -65,7 +65,7 @@ void CTimer::Resume()
     }
 }
 
-double CTimer::Time()
+double CTimer::Time() const
 {
     if (mStarted)
     {
