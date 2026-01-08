@@ -35,8 +35,7 @@ public:
 };
 
 #define SCOPED_TIMER(TimerName) \
-    CScopedTimer TimerName(#TimerName); \
-    (void) TimerName; // This avoids "unused local variable" compiler warnings
+    [[maybe_unused]] CScopedTimer TimerName(#TimerName)
 
 #endif // CSCOPEDTIMER
 
