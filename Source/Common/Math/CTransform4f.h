@@ -55,8 +55,8 @@ public:
     static CTransform4f ScaleMatrix(const CVector3f& Scale);
 
     // Operators
-    float* operator[](int64_t Index);
-    const float* operator[](int64_t Index) const;
+    std::array<float, 4>& operator[](int64_t index) { return m[index]; }
+    const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
     CVector3f operator*(const CVector3f& rkVec) const;
     CVector4f operator*(const CVector4f& rkVec) const;
     CQuaternion operator*(const CQuaternion& rkQuat) const;

@@ -16,17 +16,16 @@ CTransform4f::CTransform4f()
 
 CTransform4f::CTransform4f(const CMatrix4f& rkMtx)
 {
-    for (int iRow = 0; iRow < 3; iRow++)
-        for (int iCol = 0; iCol < 4; iCol++)
-            m[iRow][iCol] = rkMtx[iRow][iCol];
+    for (size_t row = 0; row < 3; row++)
+        m[row] = rkMtx[row];
 
     SetupRow4();
 }
 
 CTransform4f::CTransform4f(IInputStream& rInput)
 {
-    for (int iVal = 0; iVal < 12; iVal++)
-        _m[iVal] = rInput.ReadFloat();
+    for (size_t val = 0; val < 12; val++)
+        _m[val] = rInput.ReadFloat();
 
     SetupRow4();
 }
@@ -227,15 +226,6 @@ CQuaternion CTransform4f::ExtractRotation() const
 }
 
 // ************ OPERATORS ************
-float* CTransform4f::operator[](int64_t Index)
-{
-    return m[Index];
-}
-
-const float* CTransform4f::operator[](int64_t Index) const
-{
-    return m[Index];
-}
 
 CVector3f CTransform4f::operator*(const CVector3f& rkVec) const
 {

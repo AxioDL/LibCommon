@@ -1,6 +1,7 @@
 #ifndef CMATRIX4_H
 #define CMATRIX4_H
 
+#include <array>
 #include <cstdint>
 
 class CQuaternion;
@@ -13,8 +14,8 @@ class CMatrix4f
 protected:
     union
     {
-        float m[4][4];
-        float _m[16]{};
+        std::array<std::array<float, 4>, 4> m;
+        std::array<float, 16> _m{};
     };
 
 public:
@@ -31,8 +32,8 @@ public:
     float Determinant() const;
 
     // Operators
-    inline float* operator[](int64_t Index);
-    inline const float* operator[](int64_t Index) const;
+    std::array<float, 4>& operator[](int64_t index) { return m[index]; }
+    const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
     CVector3f operator*(const CVector3f& rkVec) const;
     CVector4f operator*(const CVector4f& rkVec) const;
     CMatrix4f operator*(const CTransform4f& rkMtx) const;
@@ -42,15 +43,5 @@ public:
     static const CMatrix4f skZero;
     static const CMatrix4f skIdentity;
 };
-
-inline float* CMatrix4f::operator[](int64_t Index)
-{
-    return m[Index];
-}
-
-inline const float* CMatrix4f::operator[](int64_t Index) const
-{
-    return m[Index];
-}
 
 #endif // CMATRIX4_H
