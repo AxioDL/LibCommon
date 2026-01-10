@@ -3,6 +3,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string_view>
+#include <type_traits>
 
 class CFNV1A
 {
@@ -58,11 +60,16 @@ public:
     }
 
     // Convenience functions
-    void HashByte(const uint8_t& rkVal)        { HashData(&rkVal, 1); }
-    void HashShort(const uint16_t& rkVal)      { HashData(&rkVal, 2); }
-    void HashLong(const uint32_t& rkVal)       { HashData(&rkVal, 4); }
-    void HashFloat(const float& rkVal)       { HashData(&rkVal, 4); }
-    void HashString(const char* pkVal)       { HashData(pkVal, strlen(pkVal)); }
+    void HashData(std::string_view str)
+    {
+        HashData(str.data(), str.size());
+    }
+    template <typename T>
+    requires(std::is_trivially_copyable_v<T>)
+    void HashData(T data)
+    {
+        HashData(&data, sizeof(data));
+    }
 
     // Static
     static uint32_t StaticHashData32(const void* pkData, size_t Size)
