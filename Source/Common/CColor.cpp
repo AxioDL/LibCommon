@@ -11,10 +11,10 @@ CColor::CColor(IInputStream& rInput, bool Integral /*= false*/)
 {
     if (Integral)
     {
-        R = (uint8) rInput.ReadByte() / 255.f;
-        G = (uint8) rInput.ReadByte() / 255.f;
-        B = (uint8) rInput.ReadByte() / 255.f;
-        A = (uint8) rInput.ReadByte() / 255.f;
+        R = (uint8_t) rInput.ReadByte() / 255.f;
+        G = (uint8_t) rInput.ReadByte() / 255.f;
+        B = (uint8_t) rInput.ReadByte() / 255.f;
+        A = (uint8_t) rInput.ReadByte() / 255.f;
     }
     else
     {
@@ -50,28 +50,28 @@ void CColor::Serialize(IArchive& rArc)
 
 uint32_t CColor::ToLongRGBA() const
 {
-    uint8 _R = (uint8) (R * 255);
-    uint8 _G = (uint8) (G * 255);
-    uint8 _B = (uint8) (B * 255);
-    uint8 _A = (uint8) (A * 255);
-    return (_R << 24) | (_G << 16) | (_B << 8) | _A;
+    const uint32_t r = uint8_t(R * 255);
+    const uint32_t g = uint8_t(G * 255);
+    const uint32_t b = uint8_t(B * 255);
+    const uint32_t a = uint8_t(A * 255);
+    return (r << 24) | (g << 16) | (b << 8) | a;
 }
 
 uint32_t CColor::ToLongARGB() const
 {
-    uint8 _R = (uint8) (R * 255);
-    uint8 _G = (uint8) (G * 255);
-    uint8 _B = (uint8) (B * 255);
-    uint8 _A = (uint8) (A * 255);
-    return (_A << 24) | (_R << 16) | (_G << 8) | _B;
+    const uint32_t r = uint8_t(R * 255);
+    const uint32_t g = uint8_t(G * 255);
+    const uint32_t b = uint8_t(B * 255);
+    const uint32_t a = uint8_t(A * 255);
+    return (a << 24) | (r << 16) | (g << 8) | b;
 }
 
 CColor CColor::operator+(const CColor& rkOther) const
 {
-    float NewR = std::min(R + rkOther.R, 1.f);
-    float NewG = std::min(G + rkOther.G, 1.f);
-    float NewB = std::min(B + rkOther.B, 1.f);
-    float NewA = std::min(A + rkOther.A, 1.f);
+    const auto NewR = std::min(R + rkOther.R, 1.f);
+    const auto NewG = std::min(G + rkOther.G, 1.f);
+    const auto NewB = std::min(B + rkOther.B, 1.f);
+    const auto NewA = std::min(A + rkOther.A, 1.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -82,10 +82,10 @@ void CColor::operator+=(const CColor& rkOther)
 
 CColor CColor::operator-(const CColor& rkOther) const
 {
-    float NewR = std::max(R - rkOther.R, 0.f);
-    float NewG = std::max(G - rkOther.G, 0.f);
-    float NewB = std::max(B - rkOther.B, 0.f);
-    float NewA = std::max(A - rkOther.A, 0.f);
+    const auto NewR = std::max(R - rkOther.R, 0.f);
+    const auto NewG = std::max(G - rkOther.G, 0.f);
+    const auto NewB = std::max(B - rkOther.B, 0.f);
+    const auto NewA = std::max(A - rkOther.A, 0.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -96,10 +96,10 @@ void CColor::operator-=(const CColor& other)
 
 CColor CColor::operator*(const CColor& rkOther) const
 {
-    float NewR = R * rkOther.R;
-    float NewG = G * rkOther.G;
-    float NewB = B * rkOther.B;
-    float NewA = A * rkOther.A;
+    const auto NewR = R * rkOther.R;
+    const auto NewG = G * rkOther.G;
+    const auto NewB = B * rkOther.B;
+    const auto NewA = A * rkOther.A;
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -124,10 +124,10 @@ void CColor::operator*=(float Other)
 
 CColor CColor::operator/(const CColor& rkOther) const
 {
-    float NewR = (rkOther.R == 0.f) ? 0.f : R / rkOther.R;
-    float NewG = (rkOther.G == 0.f) ? 0.f : G / rkOther.G;
-    float NewB = (rkOther.B == 0.f) ? 0.f : B / rkOther.B;
-    float NewA = (rkOther.A == 0.f) ? 0.f : A / rkOther.A;
+    const auto NewR = (rkOther.R == 0.f) ? 0.f : R / rkOther.R;
+    const auto NewG = (rkOther.G == 0.f) ? 0.f : G / rkOther.G;
+    const auto NewB = (rkOther.B == 0.f) ? 0.f : B / rkOther.B;
+    const auto NewA = (rkOther.A == 0.f) ? 0.f : A / rkOther.A;
     return CColor(NewR, NewG, NewB, NewA);
 }
 
@@ -140,11 +140,11 @@ void CColor::operator/=(const CColor& rkOther)
 
 CColor CColor::RandomColor(bool Transparent)
 {
-    float _R = CRandom::GlobalRandom()->Float();
-    float _G = CRandom::GlobalRandom()->Float();
-    float _B = CRandom::GlobalRandom()->Float();
-    float _A = (Transparent ? CRandom::GlobalRandom()->Float() : 1.0f);
-    return CColor(_R, _G, _B, _A);
+    const auto r = CRandom::GlobalRandom()->Float();
+    const auto g = CRandom::GlobalRandom()->Float();
+    const auto b = CRandom::GlobalRandom()->Float();
+    const auto a = (Transparent ? CRandom::GlobalRandom()->Float() : 1.0f);
+    return CColor(r, g, b, a);
 }
 
 CColor CColor::RandomLightColor(bool Transparent)
