@@ -28,10 +28,10 @@ public:
     uint32_t Digest() const { return mHash; }
 
     /** Convenience hash methods */
-    template <typename T>
-    requires(std::is_arithmetic_v<T>)
-    void Hash(T value) { Hash(&value, sizeof(value)); }
     void Hash(std::string_view str) { Hash(str.data(), str.size()); }
+    template <typename T>
+    requires(std::is_trivially_copyable_v<T>)
+    void Hash(const T& value) { Hash(&value, sizeof(value)); }
 
     static uint32_t StaticHashString(std::string_view str);
     static uint32_t StaticHashData(const void* pkData, size_t Size);
