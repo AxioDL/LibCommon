@@ -37,12 +37,8 @@ public:
     [[nodiscard]] uint32_t ToRGBA() const;
     [[nodiscard]] uint32_t ToARGB() const;
 
-    [[nodiscard]] constexpr bool operator==(const CColor& other) const {
-        return R == other.R && G == other.G && B == other.B && A == other.A;
-    }
-    [[nodiscard]] constexpr bool operator!=(const CColor& other) const {
-        return !operator==(other);
-    }
+    [[nodiscard]] constexpr bool operator==(const CColor&) const = default;
+
     [[nodiscard]] CColor operator+(const CColor& rkOther) const;
     void operator+=(const CColor& rkOther);
     [[nodiscard]] CColor operator-(const CColor& rkOther) const;
