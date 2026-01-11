@@ -3,18 +3,18 @@
 
 #include "Common/CTimer.h"
 #include "Common/Log.h"
-#include "Common/TString.h"
+#include <string>
 
 // Runs a timer and automatically stops + prints the time to the log when it goes out of scope.
 class CScopedTimer
 {
     CTimer mTimer;
-    TString mTimerName;
+    std::string mTimerName;
     bool mStopped = false;
 
 public:
-    explicit CScopedTimer(TString rkTimeoutMessage)
-        : mTimerName(std::move(rkTimeoutMessage))
+    explicit CScopedTimer(std::string timerName)
+        : mTimerName(std::move(timerName))
     {
         mTimer.Start();
     }
@@ -28,7 +28,7 @@ public:
     {
         if (!mStopped)
         {
-            NLog::Debug("{} finished in {}s", mTimerName.ToStdString(), mTimer.Stop());
+            NLog::Debug("{} finished in {}s", mTimerName, mTimer.Stop());
             mStopped = true;
         }
     }
