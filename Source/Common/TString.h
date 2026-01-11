@@ -5,6 +5,7 @@
 #include "Common/Hash/CFNV1A.h"
 #include "Common/Macros.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cstdarg>
 #include <cstddef>
@@ -41,7 +42,7 @@
     (std::is_same_v<CharType, char32_t> ? (const CharType*) U##Text : \
      Text ))
 
-#define CHAR_LITERAL(Text) (CharType) Text
+#define CHAR_LITERAL(Text) ((CharType) Text)
 
 // ************ TBasicString ************
 template<class _CharType, class _ListType>
@@ -270,7 +271,8 @@ public:
 
     void Insert(size_t Pos, const _TString& rkStr)
     {
-        Insert(Pos, rkStr.CString());
+        assert(Size() >= Pos);
+        mInternalString.insert(Pos, rkStr.mInternalString);
     }
 
     void Remove(size_t Pos, size_t Len)
@@ -291,20 +293,12 @@ public:
 
     void Remove(CharType Chr)
     {
-        for (auto Idx = IndexOf(Chr); Idx != -1; Idx = IndexOf(Chr, Idx))
-            Remove(Idx, 1);
+        std::erase_if(mInternalString, [Chr](auto c) { return c == Chr; });
     }
 
     void RemoveWhitespace()
     {
-        for (size_t Idx = 0; Idx < Size(); Idx++)
-        {
-            if (IsWhitespace(mInternalString[Idx]))
-            {
-                Remove(Idx, 1);
-                Idx--;
-            }
-        }
+        std::erase_if(mInternalString, &IsWhitespace);
     }
 
     void Replace(const CharType* pkStr, const CharType *pkReplacement, bool CaseSensitive = false)
@@ -358,11 +352,9 @@ public:
 
     _TString ToUpper() const
     {
+        // todo: doesn't handle accented characters
         _TString Out(Size());
-
-        for (size_t iChar = 0; iChar < Size(); iChar++)
-            Out[iChar] = CharToUpper(At(iChar));
-
+        std::transform(begin(), end(), Out.begin(), &CharToUpper);
         return Out;
     }
 
@@ -370,10 +362,7 @@ public:
     {
         // todo: doesn't handle accented characters
         _TString Out(Size());
-
-        for (size_t iChar = 0; iChar < Size(); iChar++)
-            Out[iChar] = CharToLower(At(iChar));
-
+        std::transform(begin(), end(), Out.begin(), &CharToLower);
         return Out;
     }
 
@@ -548,8 +537,11 @@ public:
         if (Size() < rkStr.size())
             return false;
 
-        _TString SubStr = SubString(0, rkStr.size());
-        return CaseSensitive ? SubStr == rkStr : SubStr.CaseInsensitiveCompare(rkStr);
+        if (CaseSensitive)
+            return mInternalString.starts_with(rkStr);
+
+        const auto tmp = _TStdStringView(mInternalString.data(), rkStr.size());
+        return CaseInsensitiveCompare(tmp, rkStr);
     }
 
     bool EndsWith(CharType Chr, bool CaseSensitive = true) const
@@ -565,8 +557,12 @@ public:
         if (Size() < rkStr.size())
             return false;
 
-        _TString SubStr = SubString(Size() - rkStr.size(), rkStr.size());
-        return CaseSensitive ? SubStr == rkStr : SubStr.CaseInsensitiveCompare(rkStr);
+        if (CaseSensitive)
+            return mInternalString.ends_with(rkStr);
+
+        const auto start = Size() - rkStr.size();
+        const auto tmp = _TStdStringView(mInternalString.begin() + start, mInternalString.end());
+        return CaseInsensitiveCompare(tmp, rkStr);
     }
 
     bool Contains(_TStdStringView Str, bool CaseSensitive = true) const
@@ -581,40 +577,39 @@ public:
 
     bool IsHexString(bool RequirePrefix = false, size_t Width = _TStdString::npos) const
     {
-        _TString Str(*this);
-        bool HasPrefix = Str.StartsWith(LITERAL("0x"));
+        const bool HasPrefix = StartsWith(LITERAL("0x"));
 
         // If we're required to match the prefix and prefix is missing, return false
         if (RequirePrefix && !HasPrefix)
             return false;
 
+        _TStdStringView View = mInternalString;
         if (Width == _TStdString::npos)
         {
             // If the string has the 0x prefix, remove it
             if (HasPrefix)
-                Str = Str.ChopFront(2);
+                View.remove_prefix(2);
 
             // If the string is empty other than the prefix, then this is not a valid hex string
-            if (Str.IsEmpty())
+            if (View.empty())
                 return false;
 
             // If we have a variable width then assign the width value to the string size
-            Width = Str.Size();
+            Width = View.size();
         }
         // If the string starts with the prefix and the length matches the string, remove the prefix
-        else if (Str.Size() == Width + 2 && HasPrefix)
+        else if (View.size() == Width + 2 && HasPrefix)
         {
-            Str = Str.ChopFront(2);
+            View.remove_prefix(2);
         }
 
         // By this point, the string size and the width should match. If they don't, return false.
-        if (Str.Size() != Width)
+        if (View.size() != Width)
             return false;
 
         // Now we can finally check the actual string and make sure all the characters are valid hex characters.
-        for (size_t iChr = 0; iChr < Width; iChr++)
+        for (const auto Chr : View)
         {
-            const CharType Chr = Str[iChr];
             if (!((Chr >= CHAR_LITERAL('0')) && (Chr <= CHAR_LITERAL('9'))) &&
                 !((Chr >= CHAR_LITERAL('a')) && (Chr <= CHAR_LITERAL('f'))) &&
                 !((Chr >= CHAR_LITERAL('A')) && (Chr <= CHAR_LITERAL('F'))))
@@ -624,18 +619,14 @@ public:
         return true;
     }
 
-    bool CaseInsensitiveCompare(_TStdStringView rkOther) const
+    bool CaseInsensitiveCompare(_TStdStringView other) const
     {
-        if (Size() != rkOther.size())
-            return false;
-
-        for (size_t iChr = 0; iChr < Size(); iChr++)
-        {
-            if (CharToUpper(At(iChr)) != CharToUpper(rkOther[iChr]))
-                return false;
-        }
-
-        return true;
+        return CaseInsensitiveCompare(*this, other);
+    }
+    static bool CaseInsensitiveCompare(_TStdStringView lhs, _TStdStringView rhs)
+    {
+        return std::ranges::equal(lhs, rhs,
+                                  [](auto l, auto r) { return CharToUpper(l) == CharToUpper(r); });
     }
 
     // Hashing
@@ -653,7 +644,7 @@ public:
     _TString GetFileDirectory() const
     {
         size_t EndPath = mInternalString.find_last_of(LITERAL("\\/"));
-        return EndPath == _TStdString::npos ? LITERAL("") : SubString(0, EndPath + 1);
+        return EndPath == _TStdString::npos ? _TString() : SubString(0, EndPath + 1);
     }
 
     _TString GetFileName(bool WithExtension = true) const
@@ -666,20 +657,20 @@ public:
         }
         else
         {
-            size_t EndName = mInternalString.find_last_of(LITERAL("."));
+            size_t EndName = mInternalString.find_last_of(CHAR_LITERAL('.'));
             return SubString(EndPath, EndName - EndPath);
         }
     }
 
     _TString GetFileExtension() const
     {
-        size_t EndName = mInternalString.find_last_of(LITERAL("."));
-        return EndName == _TStdString::npos ? LITERAL("") : SubString(EndName + 1, Size() - EndName);
+        size_t EndName = mInternalString.find_last_of(CHAR_LITERAL('.'));
+        return EndName == _TStdString::npos ? _TString() : SubString(EndName + 1, Size() - EndName);
     }
 
     _TString GetFilePathWithoutExtension() const
     {
-        size_t EndName = mInternalString.find_last_of(LITERAL("."));
+        size_t EndName = mInternalString.find_last_of(CHAR_LITERAL('.'));
         return EndName == _TStdString::npos ? *this : SubString(0, EndName);
     }
 
@@ -1178,7 +1169,7 @@ public:
         std::basic_ostringstream<CharType> SStream;
         SStream << std::hex << std::setw(Width) << std::setfill('0') << Num;
 
-        _TString Str = SStream.str();
+        _TString Str = std::move(SStream).str();
         if (Uppercase)
             Str = Str.ToUpper();
         if (AddPrefix)
