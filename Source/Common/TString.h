@@ -126,12 +126,12 @@ public:
 
     CharType Front() const
     {
-        return (Size() > 0 ? mInternalString[0] : 0);
+        return (Size() > 0 ? mInternalString.front() : 0);
     }
 
     CharType Back() const
     {
-        return (Size() > 0 ? mInternalString[Size() - 1] : 0);
+        return (Size() > 0 ? mInternalString.back() : 0);
     }
 
     const CharType* Begin() const
@@ -746,45 +746,41 @@ public:
 
     _TString operator+(CharType Other) const
     {
-        _TString Out(Size() + 1);
-        memcpy(&Out[0], mInternalString.data(), Size() * sizeof(CharType));
-        memcpy(&Out[Size()], &Other, sizeof(CharType));
-        return Out;
+        return _TString(mInternalString + Other);
     }
 
     _TString operator+(const CharType* pkOther) const
     {
-        const auto Len = CStringLength(pkOther);
-
-        _TString Out(Len + Size());
-        memcpy(&Out[0], mInternalString.data(), Size() * sizeof(CharType));
-        memcpy(&Out[Size()], pkOther, Len * sizeof(CharType));
-        return Out;
+        return _TString(mInternalString + pkOther);
     }
 
     _TString operator+(const _TString& rkOther) const
     {
-        return (*this + rkOther.CString());
+        return _TString(mInternalString + rkOther.mInternalString);
     }
 
-    void operator+=(CharType Other)
+    _TString& operator+=(CharType Other)
     {
-        *this = *this + Other;
+        mInternalString += Other;
+        return *this;
     }
 
-    void operator+=(const CharType* pkOther)
+    _TString& operator+=(const CharType* pkOther)
     {
-        *this = *this + pkOther;
+        mInternalString += pkOther;
+        return *this;
     }
 
-    void operator+=(const _TString& rkOther)
+    _TString& operator+=(const _TString& rkOther)
     {
-        *this = *this + rkOther;
+        mInternalString += rkOther.mInternalString;
+        return *this;
     }
 
-    void operator+=(_TStdStringView view)
+    _TString& operator+=(_TStdStringView view)
     {
         mInternalString += view;
+        return *this;
     }
 
     _TString operator/(const CharType* pkOther) const
@@ -813,28 +809,17 @@ public:
 
     friend _TString operator+(CharType Left, const _TString& rkRight)
     {
-        _TString Out(rkRight.Size() + 1);
-        memcpy(&Out[0], &Left, sizeof(CharType));
-        memcpy(&Out[sizeof(CharType)], rkRight.CString(), rkRight.Size() * sizeof(CharType));
-        return Out;
+        return _TString(Left + rkRight.mInternalString);
     }
 
     friend _TString operator+(const CharType* pkLeft, const _TString& rkRight)
     {
-        const auto Len = CStringLength(pkLeft);
-
-        _TString Out(Len + rkRight.Size());
-        memcpy(&Out[0], pkLeft, Len * sizeof(CharType));
-        memcpy(&Out[Len], rkRight.CString(), rkRight.Size() * sizeof(CharType));
-        return Out;
+        return _TString(pkLeft + rkRight.mInternalString);
     }
 
     friend _TString operator+(const _TStdString& rkLeft, const _TString& rkRight)
     {
-        _TString Out(rkLeft.size() + rkRight.Size());
-        memcpy(&Out[0], rkLeft.data(), rkLeft.size() * sizeof(CharType));
-        memcpy(&Out[rkLeft.size()], rkRight.Data(), rkRight.Size() * sizeof(CharType));
-        return Out;
+        return _TString(rkLeft + rkRight.mInternalString);
     }
 
     bool operator==(CharType Other) const
@@ -1089,14 +1074,14 @@ public:
 
     static _TString FromInt32(int32 Value, int Width = 0, int Base = 16)
     {
-        std::basic_stringstream<CharType> SStream;
+        std::basic_ostringstream<CharType> SStream;
         SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
         return SStream.str();
     }
 
     static _TString FromInt64(int64 Value, int Width = 0, int Base = 16)
     {
-        std::basic_stringstream<CharType> SStream;
+        std::basic_ostringstream<CharType> SStream;
         SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
         return SStream.str();
     }
@@ -1188,7 +1173,7 @@ public:
 
     static _TString HexString(uint64 Num, int Width = 16, bool AddPrefix = true, bool Uppercase = true)
     {
-        std::basic_stringstream<CharType> SStream;
+        std::basic_ostringstream<CharType> SStream;
         SStream << std::hex << std::setw(Width) << std::setfill('0') << Num;
 
         _TString Str = SStream.str();
