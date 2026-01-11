@@ -1,7 +1,7 @@
 #ifndef CCOLOR_H
 #define CCOLOR_H
 
-#include "BasicTypes.h"
+#include <cstdint>
 
 class IArchive;
 class IInputStream;
@@ -20,11 +20,11 @@ public:
     constexpr CColor(float RGBA) : R{RGBA}, G{RGBA}, B{RGBA}, A{RGBA} {}
     constexpr CColor(float R_, float G_, float B_, float A_ = 1.f) : R{R_}, G{G_}, B{B_}, A{A_} {}
 
-    constexpr void SetIntegral(uint8 RGBA) {
+    constexpr void SetIntegral(uint8_t RGBA) {
         const float f = RGBA / 255.f;
         R = G = B = A = f;
     }
-    constexpr void SetIntegral(uint8 R_, uint8 G_, uint8 B_, uint8 A_ = 255) {
+    constexpr void SetIntegral(uint8_t R_, uint8_t G_, uint8_t B_, uint8_t A_ = 255) {
         R = R_ / 255.f;
         G = G_ / 255.f;
         B = B_ / 255.f;
@@ -51,12 +51,12 @@ public:
     void operator/=(const CColor& rkOther);
 
     // Static
-    [[nodiscard]] static constexpr CColor Integral(uint8 RGBA) {
+    [[nodiscard]] static constexpr CColor Integral(uint8_t RGBA) {
         CColor out;
         out.SetIntegral(RGBA);
         return out;
     }
-    [[nodiscard]] static constexpr CColor Integral(uint8 R_, uint8 G_, uint8 B_, uint8 A_ = 255) {
+    [[nodiscard]] static constexpr CColor Integral(uint8_t R_, uint8_t G_, uint8_t B_, uint8_t A_ = 255) {
         CColor out;
         out.SetIntegral(R_, G_, B_, A_);
         return out;
