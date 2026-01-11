@@ -1,5 +1,6 @@
-#include "CRandom.h"
+#include "Common/CRandom.h"
 #include <ctime>
+#include <utility>
 
 /** Advance the generator and retrieve a new random number */
 int32_t CRandom::Int32()
@@ -45,21 +46,20 @@ float CRandom::Range(float Min, float Max)
 }
 
 /** Default global random seeded with the current time */
-CRandom* gpGlobalRandom = new CRandom;
+static CRandom gpGlobalRandom;
 
 /** Get/set global random */
-CRandom* CRandom::GlobalRandom()
+CRandom& CRandom::GlobalRandom()
 {
     return gpGlobalRandom;
 }
 
-CGlobalRandomContext::CGlobalRandomContext(CRandom& InRandom)
+CGlobalRandomContext::CGlobalRandomContext(const CRandom& InRandom)
+    : mPrevRandom{std::exchange(gpGlobalRandom, InRandom)}
 {
-    mpPrevRandom = gpGlobalRandom;
-    gpGlobalRandom = &InRandom;
 }
 
 CGlobalRandomContext::~CGlobalRandomContext()
 {
-    gpGlobalRandom = mpPrevRandom;
+    gpGlobalRandom = mPrevRandom;
 }

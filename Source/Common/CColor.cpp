@@ -140,10 +140,10 @@ void CColor::operator/=(const CColor& rkOther)
 
 CColor CColor::RandomColor(bool Transparent)
 {
-    const auto r = CRandom::GlobalRandom()->Float();
-    const auto g = CRandom::GlobalRandom()->Float();
-    const auto b = CRandom::GlobalRandom()->Float();
-    const auto a = (Transparent ? CRandom::GlobalRandom()->Float() : 1.0f);
+    const auto r = CRandom::GlobalRandom().Float();
+    const auto g = CRandom::GlobalRandom().Float();
+    const auto b = CRandom::GlobalRandom().Float();
+    const auto a = (Transparent ? CRandom::GlobalRandom().Float() : 1.0f);
     return CColor(r, g, b, a);
 }
 

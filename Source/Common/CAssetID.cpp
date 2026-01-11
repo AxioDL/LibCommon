@@ -61,14 +61,14 @@ CAssetID CAssetID::RandomID(EIDLength Length)
     {
         CAssetID Out;
         Out.mLength = EIDLength::k32Bit;
-        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom()->Int32()) & 0xFFFFFFFF;
+        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom().Int32()) & 0xFFFFFFFF;
         return Out;
     }
     else
     {
         CAssetID Out;
         Out.mLength = EIDLength::k64Bit;
-        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom()->Int64());
+        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom().Int64());
         return Out;
     }
 }

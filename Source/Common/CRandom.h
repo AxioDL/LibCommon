@@ -16,6 +16,12 @@ public:
         : mSeed(InSeed)
     {}
 
+    CRandom(const CRandom&) noexcept = default;
+    CRandom(CRandom&&) noexcept = default;
+
+    CRandom& operator=(const CRandom&) noexcept = default;
+    CRandom& operator=(CRandom&&) noexcept = default;
+
     /** Advance the generator and retrieve a new random number */
     int32_t Int32();
 
@@ -40,17 +46,17 @@ public:
      *  a drop-in replacement for rand() but with the option of being able to
      *  use a deterministic RNG for certain scenarios by changing the global random.
      */
-    static CRandom* GlobalRandom();
+    static CRandom& GlobalRandom();
 };
 
 /** CGlobalRandomContext - Push a CRandom instance as the global random */
 class CGlobalRandomContext
 {
     /** The previous global CRandom instance */
-    CRandom* mpPrevRandom;
+    CRandom mPrevRandom;
 
 public:
-    explicit CGlobalRandomContext(CRandom& InRandom);
+    explicit CGlobalRandomContext(const CRandom& InRandom);
     ~CGlobalRandomContext();
 };
 
