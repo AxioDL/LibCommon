@@ -110,10 +110,10 @@ void CColor::operator*=(const CColor& rkOther)
 
 CColor CColor::operator*(float Other) const
 {
-    float NewR = std::min( std::max(R * Other, 0.f), 1.f);
-    float NewG = std::min( std::max(G * Other, 0.f), 1.f);
-    float NewB = std::min( std::max(B * Other, 0.f), 1.f);
-    float NewA = std::min( std::max(A * Other, 0.f), 1.f);
+    const auto NewR = std::clamp(R * Other, 0.f, 1.f);
+    const auto NewG = std::clamp(G * Other, 0.f, 1.f);
+    const auto NewB = std::clamp(B * Other, 0.f, 1.f);
+    const auto NewA = std::clamp(A * Other, 0.f, 1.f);
     return CColor(NewR, NewG, NewB, NewA);
 }
 
