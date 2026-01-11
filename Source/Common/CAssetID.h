@@ -1,9 +1,10 @@
 #ifndef CASSETID_H
 #define CASSETID_H
 
-#include "BasicTypes.h"
 #include "EGame.h"
 #include "TString.h"
+
+#include <cstdint>
 
 class IInputStream;
 class IOutputStream;
@@ -18,11 +19,11 @@ enum class EIDLength
 class CAssetID
 {
     EIDLength mLength = EIDLength::kInvalidIDLength;
-    uint64 mID = UINT64_MAX;
+    uint64_t mID = UINT64_MAX;
 
 public:
     constexpr CAssetID() = default;
-    constexpr CAssetID(uint64 ID) : mID{ID} {
+    constexpr CAssetID(uint64_t ID) : mID{ID} {
         // This constructor is intended to be used with both 32-bit and 64-bit input values
         // 64-bit - check for valid content in upper 32 bits (at least one bit set + one bit unset)
         if ((ID & 0xFFFFFFFF00000000) && (~ID & 0xFFFFFFFF00000000)) {
@@ -32,7 +33,7 @@ public:
             mID &= 0xFFFFFFFF;
         }
     }
-    constexpr CAssetID(uint64 ID, EIDLength Length) : mLength{Length}, mID{ID} {
+    constexpr CAssetID(uint64_t ID, EIDLength Length) : mLength{Length}, mID{ID} {
         if (Length == EIDLength::k32Bit) {
             mID &= 0xFFFFFFFF;
         }
@@ -48,19 +49,23 @@ public:
     }
 
     // Operators
-    constexpr void operator= (const uint64& rkInput)           { *this = CAssetID(rkInput); }
+    constexpr CAssetID& operator=(const uint64_t& rkInput)
+    {
+        *this = CAssetID(rkInput);
+        return *this;
+    }
     [[nodiscard]] constexpr bool operator==(const CAssetID& rkOther) const   { return mLength == rkOther.mLength && mID == rkOther.mID; }
     [[nodiscard]] constexpr bool operator!=(const CAssetID& rkOther) const   { return mLength != rkOther.mLength || mID != rkOther.mID; }
     [[nodiscard]] constexpr bool operator> (const CAssetID& rkOther) const   { return mLength >= rkOther.mLength && mID > rkOther.mID; }
     [[nodiscard]] constexpr bool operator>=(const CAssetID& rkOther) const   { return mLength >= rkOther.mLength && mID >= rkOther.mID; }
     [[nodiscard]] constexpr bool operator< (const CAssetID& rkOther) const   { return mLength <  rkOther.mLength || mID < rkOther.mID; }
     [[nodiscard]] constexpr bool operator<=(const CAssetID& rkOther) const   { return mLength <  rkOther.mLength || mID <= rkOther.mID; }
-    [[nodiscard]] constexpr bool operator==(uint64 Other) const              { return mID == Other; }
-    [[nodiscard]] constexpr bool operator!=(uint64 Other) const              { return mID != Other; }
+    [[nodiscard]] constexpr bool operator==(uint64_t Other) const            { return mID == Other; }
+    [[nodiscard]] constexpr bool operator!=(uint64_t Other) const            { return mID != Other; }
 
     // Accessors
-    [[nodiscard]] constexpr uint32 ToLong() const            { return uint32(mID); }
-    [[nodiscard]] constexpr uint64 ToLongLong() const        { return mID; }
+    [[nodiscard]] constexpr uint32_t ToLong() const          { return uint32_t(mID); }
+    [[nodiscard]] constexpr uint64_t ToLongLong() const      { return mID; }
     [[nodiscard]] constexpr EIDLength Length() const         { return mLength; }
     constexpr void SetLength(EIDLength Length) { mLength = Length; }
 

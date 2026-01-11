@@ -19,7 +19,7 @@ CAssetID::CAssetID(IInputStream& rInput, EIDLength Length)
     : mLength(Length)
 {
     if (Length == EIDLength::k32Bit)
-        mID = static_cast<uint64>(rInput.ReadLong()) & 0xFFFFFFFF;
+        mID = static_cast<uint64_t>(rInput.ReadLong()) & 0xFFFFFFFF;
     else
         mID = rInput.ReadLongLong();
 }
@@ -43,8 +43,8 @@ TString CAssetID::ToString(EIDLength ForcedLength /*= eInvalidIDLength*/) const
 CAssetID CAssetID::FromString(const TString& rkString)
 {
     // If the input is a hex ID in string form, then preserve it... otherwise, generate an ID by hashing the string
-    TString Name = rkString.GetFileName(false);
-    uint32 NameLength = Name.Length();
+    const auto Name = rkString.GetFileName(false);
+    const auto NameLength = Name.Length();
 
     if (Name.IsHexString())
     {
@@ -61,14 +61,14 @@ CAssetID CAssetID::RandomID(EIDLength Length)
     {
         CAssetID Out;
         Out.mLength = EIDLength::k32Bit;
-        Out.mID = static_cast<uint64>(CRandom::GlobalRandom()->Int32()) & 0xFFFFFFFF;
+        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom()->Int32()) & 0xFFFFFFFF;
         return Out;
     }
     else
     {
         CAssetID Out;
         Out.mLength = EIDLength::k64Bit;
-        Out.mID = static_cast<uint64>(CRandom::GlobalRandom()->Int64());
+        Out.mID = static_cast<uint64_t>(CRandom::GlobalRandom()->Int64());
         return Out;
     }
 }
