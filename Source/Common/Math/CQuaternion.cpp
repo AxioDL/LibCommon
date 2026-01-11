@@ -16,7 +16,7 @@ CQuaternion::CQuaternion(IInputStream& rInput)
 
 CQuaternion CQuaternion::Normalized() const
 {
-    float Norm = Math::Sqrt( (W * W) + (X * X) + (Y * Y) + (Z * Z) );
+    float Norm = std::sqrt((W * W) + (X * X) + (Y * Y) + (Z * Z));
     return CQuaternion(W/Norm, X/Norm, Y/Norm, Z/Norm);
 }
 
@@ -27,16 +27,16 @@ CQuaternion CQuaternion::Inverse() const
     if (Norm > 0.f)
     {
         float InvNorm = 1.f / Norm;
-        return CQuaternion( W * InvNorm, -X * InvNorm, -Y * InvNorm, -Z * InvNorm);
+        return CQuaternion(W * InvNorm, -X * InvNorm, -Y * InvNorm, -Z * InvNorm);
     }
-    else
-        return CQuaternion::skZero;
+
+    return CQuaternion::skZero;
 }
 
 CQuaternion CQuaternion::Lerp(const CQuaternion& rkRight, float t) const
 {
-    CQuaternion Out( Math::Lerp<float>(W, rkRight.W, t), Math::Lerp<float>(X, rkRight.X, t),
-                     Math::Lerp<float>(Y, rkRight.Y, t), Math::Lerp<float>(Z, rkRight.Z, t) );
+    CQuaternion Out(std::lerp(W, rkRight.W, t), std::lerp(X, rkRight.X, t),
+                    std::lerp(Y, rkRight.Y, t), std::lerp(Z, rkRight.Z, t));
 
     return Out.Normalized();
 }
@@ -46,32 +46,31 @@ CQuaternion CQuaternion::Slerp(const CQuaternion& rkRight, float t) const
     // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
     float CosHalfTheta = (W * rkRight.W) + (X * rkRight.X) + (Y * rkRight.Y) + (Z * rkRight.Z);
 
-    if (Math::Abs(CosHalfTheta) >= 1.f)
+    if (std::abs(CosHalfTheta) >= 1.f)
     {
         // Fall back on lerp in this situation.
         return Lerp(rkRight, t);
     }
 
     float ScalarA, ScalarB;
-    float SinHalfTheta = Math::Sqrt(1.f - (CosHalfTheta * CosHalfTheta));
+    float SinHalfTheta = std::sqrt(1.f - (CosHalfTheta * CosHalfTheta));
 
-    if (Math::Abs(SinHalfTheta) < 0.001f)
+    if (std::abs(SinHalfTheta) < 0.001f)
     {
         ScalarA = 0.5f;
         ScalarB = 0.5f;
     }
-
     else
     {
-        float HalfTheta = acosf(CosHalfTheta);
-        ScalarA = sinf((1.f - t) * HalfTheta) / SinHalfTheta;
-        ScalarB = sinf(t * HalfTheta) / SinHalfTheta;
+        float HalfTheta = std::acosf(CosHalfTheta);
+        ScalarA = std::sinf((1.f - t) * HalfTheta) / SinHalfTheta;
+        ScalarB = std::sinf(t * HalfTheta) / SinHalfTheta;
     }
 
-    return CQuaternion( (W * ScalarA) + (rkRight.W * ScalarB),
-                        (X * ScalarA) + (rkRight.X * ScalarB),
-                        (Y * ScalarA) + (rkRight.Y * ScalarB),
-                        (Z * ScalarA) + (rkRight.Z * ScalarB) );
+    return CQuaternion((W * ScalarA) + (rkRight.W * ScalarB),
+                       (X * ScalarA) + (rkRight.X * ScalarB),
+                       (Y * ScalarA) + (rkRight.Y * ScalarB),
+                       (Z * ScalarA) + (rkRight.Z * ScalarB));
 }
 
 CVector3f CQuaternion::ToEuler() const
@@ -81,9 +80,9 @@ CVector3f CQuaternion::ToEuler() const
     // we can just have a single conversion function. Handy!
     // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
-    float EulerX = atan2f(2 * (W*X + Y*Z), 1 - (2 * (Math::Square(X) + Math::Square(Y))));
-    float EulerY = asinf(2 * (W*Y - Z*X));
-    float EulerZ = atan2f(2 * (W*Z + X*Y), 1 - (2 * (Math::Square(Y) + Math::Square(Z))));
+    float EulerX = std::atan2f(2 * (W*X + Y*Z), 1 - (2 * (Math::Square(X) + Math::Square(Y))));
+    float EulerY = std::asinf(2 * (W*Y - Z*X));
+    float EulerZ = std::atan2f(2 * (W*Z + X*Y), 1 - (2 * (Math::Square(Y) + Math::Square(Z))));
     return CVector3f(Math::RadiansToDegrees(EulerX), Math::RadiansToDegrees(EulerY), Math::RadiansToDegrees(EulerZ));
 }
 
@@ -163,10 +162,10 @@ CQuaternion CQuaternion::FromEuler(const CVector3f& Euler)
 CQuaternion CQuaternion::FromAxisAngle(float Angle, const CVector3f& Axis)
 {
     const auto Norm = Axis.Normalized();
-    const float sa = sinf(Angle / 2);
+    const float sa = std::sinf(Angle / 2);
 
     CQuaternion Quat;
-    Quat.W = cosf(Angle / 2);
+    Quat.W = std::cosf(Angle / 2);
     Quat.X = Norm.X * sa;
     Quat.Y = Norm.Y * sa;
     Quat.Z = Norm.Z * sa;
@@ -182,32 +181,29 @@ CQuaternion CQuaternion::FromRotationMatrix(const CMatrix4f& rkRotMtx)
 
     if (Trace > 0.f)
     {
-      float s = Math::Sqrt(Trace + 1.f) * 2; // s = 4*w
+      float s = std::sqrt(Trace + 1.f) * 2; // s = 4*w
       Out.W = 0.25f * s;
       Out.X = (rkRotMtx[2][1] - rkRotMtx[1][2]) / s;
       Out.Y = (rkRotMtx[0][2] - rkRotMtx[2][0]) / s;
       Out.Z = (rkRotMtx[1][0] - rkRotMtx[0][1]) / s;
     }
-
     else if ((rkRotMtx[0][0] > rkRotMtx[1][1]) && (rkRotMtx[0][0] > rkRotMtx[2][2]))
     {
-      float s = Math::Sqrt(1.f + rkRotMtx[0][0] - rkRotMtx[1][1] - rkRotMtx[2][2]) * 2; // s = 4*x
+      float s = std::sqrt(1.f + rkRotMtx[0][0] - rkRotMtx[1][1] - rkRotMtx[2][2]) * 2; // s = 4*x
       Out.W = (rkRotMtx[2][1] - rkRotMtx[1][2]) / s;
       Out.X = 0.25f * s;
       Out.Y = (rkRotMtx[0][1] + rkRotMtx[1][0]) / s;
       Out.Z = (rkRotMtx[0][2] + rkRotMtx[2][0]) / s;
     }
-
     else if (rkRotMtx[1][1] > rkRotMtx[2][2]) {
-      float s = Math::Sqrt(1.f + rkRotMtx[1][1] - rkRotMtx[0][0] - rkRotMtx[2][2]) * 2; // s = 4*y
+      float s = std::sqrt(1.f + rkRotMtx[1][1] - rkRotMtx[0][0] - rkRotMtx[2][2]) * 2; // s = 4*y
       Out.W = (rkRotMtx[0][2] - rkRotMtx[2][0]) / s;
       Out.X = (rkRotMtx[0][1] + rkRotMtx[1][0]) / s;
       Out.Y = 0.25f * s;
       Out.Z = (rkRotMtx[1][2] + rkRotMtx[2][1]) / s;
     }
-
     else {
-      float s = Math::Sqrt(1.f + rkRotMtx[2][2] - rkRotMtx[0][0] - rkRotMtx[1][1]) * 2; // S=4*qz
+      float s = std::sqrt(1.f + rkRotMtx[2][2] - rkRotMtx[0][0] - rkRotMtx[1][1]) * 2; // S=4*qz
       Out.W = (rkRotMtx[1][0] - rkRotMtx[0][1]) / s;
       Out.X = (rkRotMtx[0][2] + rkRotMtx[2][0]) / s;
       Out.Y = (rkRotMtx[1][2] + rkRotMtx[2][1]) / s;

@@ -7,7 +7,9 @@
 #include "Common/Math/CPlane.h"
 #include "Common/Math/CVector3f.h"
 
+#include <algorithm>
 #include <cfloat>
+#include <cmath>
 #include <vector>
 
 namespace NConvexHull
@@ -180,7 +182,7 @@ class CQuickhullImpl
     /** Initialize face conflict data on all vertices. */
     void FillFaceConflicts()
     {
-        for (uint i=0; i<mVertices.size(); i++)
+        for (size_t i = 0; i < mVertices.size(); i++)
         {
             SVertex& V = mVertices[i];
             V.pConflictFace = nullptr;
@@ -190,9 +192,9 @@ class CQuickhullImpl
             {
                 float Dist = pFace->Plane.DistanceFromPoint(V.Position);
 
-                if (Dist < -mEpsilon && Math::Abs(Dist) < V.ConflictDistance)
+                if (Dist < -mEpsilon && std::abs(Dist) < V.ConflictDistance)
                 {
-                    V.ConflictDistance = Math::Abs(Dist);
+                    V.ConflictDistance = std::abs(Dist);
                     V.pConflictFace = pFace;
                 }
             }
@@ -211,7 +213,7 @@ class CQuickhullImpl
         // Generate vertices
         mVertices.resize(kInPoints.size());
 
-        for (uint i=0; i<kInPoints.size(); i++)
+        for (size_t i = 0; i < kInPoints.size(); i++)
         {
             mVertices[i].Position = kInPoints[i];
             mVertices[i].pConflictFace = nullptr;
@@ -224,7 +226,7 @@ class CQuickhullImpl
         int MinXIdx = 0, MinYIdx = 0, MinZIdx = 0, MaxXIdx = 0, MaxYIdx = 0, MaxZIdx = 0;
         float MinX = V0.X, MinY = V0.Y, MinZ = V0.Z, MaxX = V0.X, MaxY = V0.Y, MaxZ = V0.Z;
 
-        for (int i=1; i<kInPoints.size(); i++)
+        for (int i = 1; i < kInPoints.size(); i++)
         {
             const CVector3f& V = kInPoints[i];
             if (V.X < MinX)
@@ -282,9 +284,9 @@ class CQuickhullImpl
         }
 
         // Also, calculate our epsilon threshold we will use for various distance comparisons
-        float AbsX = Math::Max( Math::Abs(MinX), Math::Abs(MaxX) );
-        float AbsY = Math::Max( Math::Abs(MinY), Math::Abs(MaxY) );
-        float AbsZ = Math::Max( Math::Abs(MinZ), Math::Abs(MaxZ) );
+        float AbsX = std::max(std::abs(MinX), std::abs(MaxX));
+        float AbsY = std::max(std::abs(MinY), std::abs(MaxY));
+        float AbsZ = std::max(std::abs(MinZ), std::abs(MaxZ));
         mEpsilon = (AbsX + AbsY + AbsZ) * FLT_EPSILON * 2.f;
 
         // We now have a line segment defined by Point0 and Point1.
@@ -295,7 +297,7 @@ class CQuickhullImpl
         float MaxSqDist = 0.f;
         int MaxIdx = -1;
 
-        for (int i=0; i<kInPoints.size(); i++)
+        for (int i = 0; i < kInPoints.size(); i++)
         {
             if (i != Point0 && i != Point1)
             {
@@ -322,12 +324,12 @@ class CQuickhullImpl
         float MaxDist = 0.f;
         MaxIdx = -1;
 
-        for (int i=0; i<kInPoints.size(); i++)
+        for (int i = 0; i < kInPoints.size(); i++)
         {
             if (i != Point0 && i != Point1 && i != Point2)
             {
                 const CVector3f& V = kInPoints[i];
-                float Dist = Math::Abs( kBasePlane.DistanceFromPoint(V) );
+                float Dist = std::abs(kBasePlane.DistanceFromPoint(V));
 
                 if (Dist > MaxDist)
                 {
@@ -462,7 +464,7 @@ class CQuickhullImpl
         SHalfEdge* pFirstNewSide = nullptr;
         SHalfEdge* pLastNewSide = nullptr;
 
-        for (uint EdgeIdx = 0; EdgeIdx < Horizon.size(); EdgeIdx++)
+        for (size_t EdgeIdx = 0; EdgeIdx < Horizon.size(); EdgeIdx++)
         {
             SHalfEdge* pEdge = Horizon[EdgeIdx];
             uint V0 = pEdge->Tail;
@@ -502,27 +504,24 @@ class CQuickhullImpl
         Vertex.ConflictDistance = FLT_MAX;
 
         // Assign old conflicts to one of the new faces, then delete old faces/edges
-        for (uint FaceIdx = 0; FaceIdx < VisibleFaces.size(); FaceIdx++)
+        for (auto* pOldFace : VisibleFaces)
         {
-            SFace* pOldFace = VisibleFaces[FaceIdx];
-
-            for (uint VertexIdx = 0; VertexIdx < mVertices.size(); VertexIdx++)
+            for (auto& V : mVertices)
             {
-                if (mVertices[VertexIdx].pConflictFace  == pOldFace)
+                if (V.pConflictFace  == pOldFace)
                 {
                     // Found a conflict. Remap to one of the new faces.
-                    SVertex& V = mVertices[VertexIdx];
                     V.pConflictFace = nullptr;
                     V.ConflictDistance = FLT_MAX;
 
-                    for (uint NewFaceIdx = 0; NewFaceIdx < NewFaces.size(); NewFaceIdx++)
+                    for (auto* Face : NewFaces)
                     {
-                        float Dist = NewFaces[NewFaceIdx]->Plane.DistanceFromPoint(V.Position);
+                        float Dist = Face->Plane.DistanceFromPoint(V.Position);
 
-                        if (Dist < -mEpsilon && Math::Abs(Dist) < V.ConflictDistance)
+                        if (Dist < -mEpsilon && std::abs(Dist) < V.ConflictDistance)
                         {
-                            V.ConflictDistance = Math::Abs(Dist);
-                            V.pConflictFace = NewFaces[NewFaceIdx];
+                            V.ConflictDistance = std::abs(Dist);
+                            V.pConflictFace = Face;
                         }
                     }
                 }
