@@ -29,7 +29,7 @@ void CColor::Write(IOutputStream &rOutput, bool Integral /*= false*/) const
 {
     if (Integral)
     {
-        rOutput.WriteULong(ToLongRGBA());
+        rOutput.WriteULong(ToRGBA());
     }
     else
     {
@@ -48,7 +48,7 @@ void CColor::Serialize(IArchive& rArc)
          << SerialParameter("A", A, SH_Optional, 1.0f);
 }
 
-uint32_t CColor::ToLongRGBA() const
+uint32_t CColor::ToRGBA() const
 {
     const uint32_t r = uint8_t(R * 255);
     const uint32_t g = uint8_t(G * 255);
@@ -57,7 +57,7 @@ uint32_t CColor::ToLongRGBA() const
     return (r << 24) | (g << 16) | (b << 8) | a;
 }
 
-uint32_t CColor::ToLongARGB() const
+uint32_t CColor::ToARGB() const
 {
     const uint32_t r = uint8_t(R * 255);
     const uint32_t g = uint8_t(G * 255);
