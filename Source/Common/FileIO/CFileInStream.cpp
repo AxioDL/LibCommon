@@ -46,7 +46,9 @@ void CFileInStream::Open(const TString& rkFile, std::endian FileEndianness)
         Seek(0x0, SEEK_SET);
     }
     else
+    {
         mFileSize = 0;
+    }
 
     SetSourceString(rkFile.GetFileName());
 }
@@ -58,21 +60,27 @@ void CFileInStream::Close()
     mpFStream = nullptr;
 }
 
-void CFileInStream::ReadBytes(void *pDst, uint32 Count)
+void CFileInStream::ReadBytes(void *pDst, uint32_t Count)
 {
-    if (!IsValid()) return;
+    if (!IsValid())
+        return;
+
     fread(pDst, 1, Count, mpFStream);
 }
 
-bool CFileInStream::Seek(int32 Offset, uint32 Origin)
+bool CFileInStream::Seek(int32_t Offset, uint32_t Origin)
 {
-    if (!IsValid()) return false;
+    if (!IsValid())
+        return false;
+
     return (fseek(mpFStream, Offset, Origin) != 0);
 }
 
-bool CFileInStream::Seek64(int64 Offset, uint32 Origin)
+bool CFileInStream::Seek64(int64_t Offset, uint32_t Origin)
 {
-    if (!IsValid()) return false;
+    if (!IsValid())
+        return false;
+
 #ifdef _WIN32
     return (_fseeki64(mpFStream, Offset, Origin) != 0);
 #else
@@ -80,15 +88,19 @@ bool CFileInStream::Seek64(int64 Offset, uint32 Origin)
 #endif
 }
 
-uint32 CFileInStream::Tell() const
+uint32_t CFileInStream::Tell() const
 {
-    if (!IsValid()) return 0;
+    if (!IsValid())
+        return 0;
+
     return ftell(mpFStream);
 }
 
-uint64 CFileInStream::Tell64() const
+uint64_t CFileInStream::Tell64() const
 {
-    if (!IsValid()) return 0;
+    if (!IsValid())
+        return 0;
+
 #ifdef _WIN32
     return _ftelli64(mpFStream);
 #else
@@ -106,7 +118,7 @@ bool CFileInStream::IsValid() const
     return (mpFStream != 0);
 }
 
-uint32 CFileInStream::Size() const
+uint32_t CFileInStream::Size() const
 {
     return mFileSize;
 }

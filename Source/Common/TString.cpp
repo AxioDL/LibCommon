@@ -3,7 +3,7 @@
 #include "Common/Log.h"
 
 /** Decode functions */
-static bool IsValidCodePoint(uint32 CodePoint)
+static bool IsValidCodePoint(uint32_t CodePoint)
 {
     // 0xD800 to 0xDFFF are invalid code points; they are reserved for UTF-16 surrogate encoding
     // 0x10FFFF is the largest defined code point
@@ -18,14 +18,14 @@ static bool IsValidCodePoint(uint32 CodePoint)
     }
 }
 
-static uint32 DecodeCodePoint(const char*& pkInString)
+static uint32_t DecodeCodePoint(const char*& pkInString)
 {
-    uint32 CodePoint;
+    uint32_t CodePoint;
 
     // One byte
     if ((pkInString[0] & 0x80) == 0)
     {
-        CodePoint = (uint32) pkInString[0];
+        CodePoint = (uint32_t) pkInString[0];
         pkInString++;
     }
     // Two bytes
@@ -87,14 +87,14 @@ static uint32 DecodeCodePoint(const char*& pkInString)
     return CodePoint;
 }
 
-static uint32 DecodeCodePoint(const char16_t*& pkInString)
+static uint32_t DecodeCodePoint(const char16_t*& pkInString)
 {
-    uint32 CodePoint;
+    uint32_t CodePoint;
 
     // Two bytes
     if (pkInString[0] <= 0xD7FF || pkInString[0] >= 0xE000)
     {
-        CodePoint = (uint32) pkInString[0];
+        CodePoint = (uint32_t) pkInString[0];
         pkInString++;
     }
     // Four bytes
@@ -109,13 +109,13 @@ static uint32 DecodeCodePoint(const char16_t*& pkInString)
     return CodePoint;
 }
 
-static uint32 DecodeCodePoint(const char32_t*& pkInString)
+static uint32_t DecodeCodePoint(const char32_t*& pkInString)
 {
     return *pkInString++;
 }
 
 /** Encode functions */
-void TString::AppendCodePoint(uint32 CodePoint)
+void TString::AppendCodePoint(uint32_t CodePoint)
 {
     ASSERT( IsValidCodePoint(CodePoint) );
 
@@ -147,7 +147,7 @@ void TString::AppendCodePoint(uint32 CodePoint)
     }
 }
 
-void T16String::AppendCodePoint(uint32 CodePoint)
+void T16String::AppendCodePoint(uint32_t CodePoint)
 {
     ASSERT( IsValidCodePoint(CodePoint) );
 
@@ -165,7 +165,7 @@ void T16String::AppendCodePoint(uint32 CodePoint)
     }
 }
 
-void T32String::AppendCodePoint(uint32 CodePoint)
+void T32String::AppendCodePoint(uint32_t CodePoint)
 {
     ASSERT( IsValidCodePoint(CodePoint) );
     Append( (char32_t) CodePoint );
@@ -182,7 +182,7 @@ static OutStringType ConvertString(const InStringType& kInString)
 
     while (*pkString != 0)
     {
-        uint32 CodePoint = DecodeCodePoint(pkString);
+        uint32_t CodePoint = DecodeCodePoint(pkString);
         Out.AppendCodePoint(CodePoint);
     }
 

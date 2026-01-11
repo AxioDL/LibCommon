@@ -13,7 +13,7 @@ CVectorOutStream::CVectorOutStream(std::endian DataEndianness)
     mDataEndianness = DataEndianness;
 }
 
-CVectorOutStream::CVectorOutStream(uint32 InitialSize, std::endian DataEndianness)
+CVectorOutStream::CVectorOutStream(uint32_t InitialSize, std::endian DataEndianness)
     : mpVector(new std::vector<char>(InitialSize))
 {
     mDataEndianness = DataEndianness;
@@ -32,12 +32,12 @@ CVectorOutStream::~CVectorOutStream()
         delete mpVector;
 }
 
-void CVectorOutStream::WriteBytes(const void *pkSrc, uint32 Count)
+void CVectorOutStream::WriteBytes(const void *pkSrc, uint32_t Count)
 {
     if (!IsValid())
         return;
 
-    uint32 NewSize = mPos + Count;
+    uint32_t NewSize = mPos + Count;
 
     if (NewSize > mpVector->size())
     {
@@ -51,7 +51,7 @@ void CVectorOutStream::WriteBytes(const void *pkSrc, uint32 Count)
     mPos += Count;
 }
 
-bool CVectorOutStream::Seek(int32 Offset, uint32 Origin)
+bool CVectorOutStream::Seek(int32_t Offset, uint32_t Origin)
 {
     if (!IsValid())
         return false;
@@ -86,7 +86,7 @@ bool CVectorOutStream::Seek(int32 Offset, uint32 Origin)
     return true;
 }
 
-uint32 CVectorOutStream::Tell() const
+uint32_t CVectorOutStream::Tell() const
 {
     return mPos;
 }
@@ -101,7 +101,7 @@ bool CVectorOutStream::IsValid() const
     return true;
 }
 
-uint32 CVectorOutStream::Size() const
+uint32_t CVectorOutStream::Size() const
 {
     return mPos;
 }

@@ -21,58 +21,58 @@ bool IInputStream::ReadBool()
     return Val != 0;
 }
 
-int8 IInputStream::ReadByte()
+int8_t IInputStream::ReadByte()
 {
-    int8 Val;
+    int8_t Val;
     ReadBytes(&Val, 1);
     return Val;
 }
 
-uint8 IInputStream::ReadUByte()
+uint8_t IInputStream::ReadUByte()
 {
-    return static_cast<uint8>(ReadByte());
+    return static_cast<uint8_t>(ReadByte());
 }
 
-int16 IInputStream::ReadShort()
+int16_t IInputStream::ReadShort()
 {
-    int16 Val;
+    int16_t Val;
     ReadBytes(&Val, 2);
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint16 IInputStream::ReadUShort()
+uint16_t IInputStream::ReadUShort()
 {
-    return static_cast<uint16>(ReadShort());
+    return static_cast<uint16_t>(ReadShort());
 }
 
-int32 IInputStream::ReadLong()
+int32_t IInputStream::ReadLong()
 {
-    int32 Val;
+    int32_t Val;
     ReadBytes(&Val, 4);
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint32 IInputStream::ReadULong()
+uint32_t IInputStream::ReadULong()
 {
-    return static_cast<uint32>(ReadLong());
+    return static_cast<uint32_t>(ReadLong());
 }
 
-int64 IInputStream::ReadLongLong()
+int64_t IInputStream::ReadLongLong()
 {
-    int64 Val;
+    int64_t Val;
     ReadBytes(&Val, 8);
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint64 IInputStream::ReadULongLong()
+uint64_t IInputStream::ReadULongLong()
 {
-    return static_cast<uint64>(ReadLongLong());
+    return static_cast<uint64_t>(ReadLongLong());
 }
 
 float IInputStream::ReadFloat()
@@ -93,9 +93,9 @@ double IInputStream::ReadDouble()
     return Val;
 }
 
-uint32 IInputStream::ReadFourCC()
+uint32_t IInputStream::ReadFourCC()
 {
-    uint32 Val;
+    uint32_t Val;
     ReadBytes(&Val, 4);
     if constexpr (std::endian::native == std::endian::little)
         Val = std::byteswap(Val);
@@ -161,56 +161,56 @@ T16String IInputStream::Read16String(size_t Count)
 
 T16String IInputStream::ReadSized16String()
 {
-    const uint32 StringSize = ReadULong();
+    const uint32_t StringSize = ReadULong();
     return Read16String(StringSize);
 }
 
-int8 IInputStream::PeekByte()
+int8_t IInputStream::PeekByte()
 {
-    const int8 Val = ReadByte();
+    const int8_t Val = ReadByte();
     Seek(-1, SEEK_CUR);
     return Val;
 }
 
-uint8 IInputStream::PeekUByte()
+uint8_t IInputStream::PeekUByte()
 {
-    return static_cast<uint8>(PeekByte());
+    return static_cast<uint8_t>(PeekByte());
 }
 
-int16 IInputStream::PeekShort()
+int16_t IInputStream::PeekShort()
 {
-    const int16 Val = ReadShort();
+    const int16_t Val = ReadShort();
     Seek(-2, SEEK_CUR);
     return Val;
 }
 
-uint16 IInputStream::PeekUShort()
+uint16_t IInputStream::PeekUShort()
 {
-    return static_cast<uint16>(PeekShort());
+    return static_cast<uint16_t>(PeekShort());
 }
 
-int32 IInputStream::PeekLong()
+int32_t IInputStream::PeekLong()
 {
-    const int32 Val = ReadLong();
+    const int32_t Val = ReadLong();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-uint32 IInputStream::PeekULong()
+uint32_t IInputStream::PeekULong()
 {
-    return static_cast<uint32>(PeekLong());
+    return static_cast<uint32_t>(PeekLong());
 }
 
-int64 IInputStream::PeekLongLong()
+int64_t IInputStream::PeekLongLong()
 {
-    const int64 Val = ReadLongLong();
+    const int64_t Val = ReadLongLong();
     Seek(-8, SEEK_CUR);
     return Val;
 }
 
-uint64 IInputStream::PeekULongLong()
+uint64_t IInputStream::PeekULongLong()
 {
-    return static_cast<uint64>(PeekLongLong());
+    return static_cast<uint64_t>(PeekLongLong());
 }
 
 float IInputStream::PeekFloat()
@@ -227,26 +227,26 @@ double IInputStream::PeekDouble()
     return Val;
 }
 
-uint32 IInputStream::PeekFourCC()
+uint32_t IInputStream::PeekFourCC()
 {
-    const long Val = ReadFourCC();
+    const uint32_t Val = ReadFourCC();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-bool IInputStream::GoTo(uint32 Address)
+bool IInputStream::GoTo(uint32_t Address)
 {
     return Seek(Address, SEEK_SET);
 }
 
-bool IInputStream::Skip(int32 SkipAmount)
+bool IInputStream::Skip(int32_t SkipAmount)
 {
     return Seek(SkipAmount, SEEK_CUR);
 }
 
-void IInputStream::SeekToBoundary(uint32 Boundary)
+void IInputStream::SeekToBoundary(uint32_t Boundary)
 {
-    const uint32 Num = Boundary - (Tell() % Boundary);
+    const uint32_t Num = Boundary - (Tell() % Boundary);
 
     if (Num == Boundary)
         return;
@@ -274,12 +274,12 @@ TString IInputStream::GetSourceString() const
     return mDataSource;
 }
 
-bool IInputStream::Seek64(int64 Offset, uint32 Origin)
+bool IInputStream::Seek64(int64_t Offset, uint32_t Origin)
 {
-    return Seek(static_cast<int32>(Offset), Origin);
+    return Seek(static_cast<int32_t>(Offset), Origin);
 }
 
-uint64 IInputStream::Tell64() const
+uint64_t IInputStream::Tell64() const
 {
-    return static_cast<uint64>(Tell());
+    return static_cast<uint64_t>(Tell());
 }

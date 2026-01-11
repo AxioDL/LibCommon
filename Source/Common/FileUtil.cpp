@@ -256,14 +256,14 @@ void UpdateLastModifiedTime(const TString& rkFilePath)
     last_write_time( ToPath(rkFilePath), file_time_type::clock::now() );
 }
 
-uint64 FileSize(const TString &rkFilePath)
+uint64_t FileSize(const TString &rkFilePath)
 {
-    return (uint64) (Exists(rkFilePath) ? file_size(ToPath(rkFilePath)) : -1);
+    return (uint64_t) (Exists(rkFilePath) ? file_size(ToPath(rkFilePath)) : -1);
 }
 
-uint64 LastModifiedTime(const TString& rkFilePath)
+uint64_t LastModifiedTime(const TString& rkFilePath)
 {
-    return (uint64) last_write_time(ToPath(rkFilePath)).time_since_epoch().count();
+    return (uint64_t) last_write_time(ToPath(rkFilePath)).time_since_epoch().count();
 }
 
 TString WorkingDirectory()
@@ -359,7 +359,7 @@ TString SimplifyRelativePath(const TString& rkPath)
     return Out;
 }
 
-uint32 MaxFileNameLength()
+uint32_t MaxFileNameLength()
 {
     return 255;
 }
@@ -580,7 +580,7 @@ bool LoadFileToString(const TString& rkFilePath, TString& rOut)
     return false;
 }
 
-bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out)
+bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8_t>& Out)
 {
     CFileInStream File(rkFilePath);
 
@@ -607,7 +607,7 @@ bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
     return false;
 }
 
-bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuffer)
+bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8_t>& kBuffer)
 {
     CFileOutStream File(rkFilePath);
 

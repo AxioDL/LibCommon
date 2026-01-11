@@ -8,7 +8,7 @@ class CFileInStream : public IInputStream
 private:
     FILE *mpFStream = nullptr;
     TString mName;
-    uint32 mFileSize = 0;
+    uint32_t mFileSize = 0;
 
 public:
     CFileInStream();
@@ -20,14 +20,14 @@ public:
     void Open(const TString& rkFile, std::endian FileEndianness);
     void Close();
 
-    void ReadBytes(void* pDst, uint32 Count) override;
-    bool Seek(int32 Offset, uint32 Origin) override;
-    bool Seek64(int64 Offset, uint32 Origin) override;
-    uint32 Tell() const override;
-    uint64 Tell64() const override;
+    void ReadBytes(void* pDst, uint32_t Count) override;
+    bool Seek(int32_t Offset, uint32_t Origin) override;
+    bool Seek64(int64_t Offset, uint32_t Origin) override;
+    uint32_t Tell() const override;
+    uint64_t Tell64() const override;
     bool EoF() const override;
     bool IsValid() const override;
-    uint32 Size() const override;
+    uint32_t Size() const override;
     TString FileName() const;
 };
 

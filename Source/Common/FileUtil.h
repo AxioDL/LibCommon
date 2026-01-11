@@ -25,13 +25,13 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty); // This is 
 bool ClearDirectory(const TString& rkDirPath);  // This is an extremely destructive function, be careful using it!
 void MarkHidden(const TString& rkFilePath, bool Hidden);
 void UpdateLastModifiedTime(const TString& rkFilePath);
-uint64 FileSize(const TString& rkFilePath);
-uint64 LastModifiedTime(const TString& rkFilePath);
+uint64_t FileSize(const TString& rkFilePath);
+uint64_t LastModifiedTime(const TString& rkFilePath);
 TString WorkingDirectory();
 TString MakeAbsolute(TString Path);
 TString MakeRelative(const TString& rkPath, const TString& rkRelativeTo = WorkingDirectory());
 TString SimplifyRelativePath(const TString& rkPath);
-uint32 MaxFileNameLength();
+uint32_t MaxFileNameLength();
 TString SanitizeName(TString Name, bool Directory, bool RootDir = false);
 TString SanitizePath(TString Path, bool Directory);
 bool IsValidFileNameCharacter(char Chr);
@@ -40,9 +40,9 @@ bool IsValidPath(const TString& rkPath, bool Directory);
 void GetDirectoryContents(TString DirPath, TStringList& rOut, bool Recursive = true, bool IncludeFiles = true, bool IncludeDirs = true);
 TString FindFileExtension(const TString& rkDir, const TString& rkName);
 bool LoadFileToString(const TString& rkFilePath, TString& rOut);
-bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8>& Out);
+bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8_t>& Out);
 bool SaveStringToFile(const TString& rkFilePath, const TString& kString);
-bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8>& kBuffer);
+bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8_t>& kBuffer);
 
 }
 

@@ -37,7 +37,7 @@ class CQuickhullImpl
     struct SHalfEdge
     {
         // The first vertex in the edge
-        uint Tail;
+        uint32_t Tail;
         // Circularly linked list of edges in the face
         SHalfEdge* pPrev;
         SHalfEdge* pNext;
@@ -69,7 +69,7 @@ class CQuickhullImpl
     SFace* mpFaceTail = nullptr;
 
     /** The number of faces in the hull */
-    uint mNumFaces = 0;
+    uint32_t mNumFaces = 0;
     
     /** Threshold for distance comparisons (epsilon) */
     float mEpsilon = FLT_EPSILON;
@@ -120,7 +120,7 @@ class CQuickhullImpl
     }
     
     /** Creates and initializes a half edge. */
-    static SHalfEdge* CreateHalfEdge(SFace* pFace, uint TailVertexIdx, SHalfEdge* pPrev, SHalfEdge* pNext, SHalfEdge* pTwin)
+    static SHalfEdge* CreateHalfEdge(SFace* pFace, uint32_t TailVertexIdx, SHalfEdge* pPrev, SHalfEdge* pNext, SHalfEdge* pTwin)
     {
         SHalfEdge* pEdge = new SHalfEdge;
         pEdge->Tail = TailVertexIdx;
@@ -148,9 +148,9 @@ class CQuickhullImpl
         ASSERT(pFace->pFirstEdge->pNext != nullptr);
         ASSERT(pFace->pFirstEdge->pNext->pNext != nullptr);
         
-        uint Idx0 = pFace->pFirstEdge->Tail;
-        uint Idx1 = pFace->pFirstEdge->pNext->Tail;
-        uint Idx2 = pFace->pFirstEdge->pNext->pNext->Tail;
+        uint32_t Idx0 = pFace->pFirstEdge->Tail;
+        uint32_t Idx1 = pFace->pFirstEdge->pNext->Tail;
+        uint32_t Idx2 = pFace->pFirstEdge->pNext->pNext->Tail;
         const CVector3f& V0 = mVertices[Idx0].Position;
         const CVector3f& V1 = mVertices[Idx1].Position;
         const CVector3f& V2 = mVertices[Idx2].Position;
@@ -165,7 +165,7 @@ class CQuickhullImpl
     CVector3f CalcFaceCentroid(const SFace* pFace) const
     {
         CVector3f Out;
-        uint NumVertices = 0;
+        uint32_t NumVertices = 0;
 
         const SHalfEdge* pEdge = pFace->pFirstEdge;
         do
@@ -397,10 +397,10 @@ class CQuickhullImpl
     {
         // Look for the conflict vertex with the largest distance from the hull.
         // This is the next vertex that will be added to the hull.
-        uint VertexIndex = 0xFFFFFFFF;
+        uint32_t VertexIndex = 0xFFFFFFFF;
         float MaxDist = 0.f;
 
-        for (uint i=0; i<mVertices.size(); i++)
+        for (uint32_t i = 0; i < mVertices.size(); i++)
         {
             if (mVertices[i].pConflictFace != nullptr &&
                 mVertices[i].ConflictDistance > MaxDist)
@@ -450,7 +450,7 @@ class CQuickhullImpl
     }
 
     /** Adds a new vertex to the convex hull */
-    void AddToHull(uint VertexIndex)
+    void AddToHull(uint32_t VertexIndex)
     {
         SVertex& Vertex = mVertices[VertexIndex];
 
@@ -467,9 +467,9 @@ class CQuickhullImpl
         for (size_t EdgeIdx = 0; EdgeIdx < Horizon.size(); EdgeIdx++)
         {
             SHalfEdge* pEdge = Horizon[EdgeIdx];
-            uint V0 = pEdge->Tail;
-            uint V1 = pEdge->pTwin->Tail;
-            uint V2 = VertexIndex;
+            uint32_t V0 = pEdge->Tail;
+            uint32_t V1 = pEdge->pTwin->Tail;
+            uint32_t V2 = VertexIndex;
 
             if (V0 == V1 || V1 == V2 || V2 == V0)
             {
@@ -595,7 +595,7 @@ public:
     }
 
     void GetHullTriangles(std::vector<CVector3f>& OutVertices,
-                          std::vector<uint16>& OutTriangleIndices) const
+                          std::vector<uint16_t>& OutTriangleIndices) const
     {
         // Note that our internal vertex array matches the input vertices, not the output vertices.
         // Iterate all faces to get a list of used vertices and generate triangle data.
@@ -607,13 +607,13 @@ public:
         while (pFace)
         {
             SHalfEdge* pEdge = pFace->pFirstEdge;
-            uint16 FirstVert = 0xFFFF;
-            uint16 LastVert = 0xFFFF;
+            uint16_t FirstVert = 0xFFFF;
+            uint16_t LastVert = 0xFFFF;
 
             do
             {
                 const SVertex& Vertex = mVertices[pEdge->Tail];
-                uint16 VertexIndex = (uint16) NBasics::VectorAddUnique(OutVertices, Vertex.Position);
+                auto VertexIndex = (uint16_t) NBasics::VectorAddUnique(OutVertices, Vertex.Position);
 
                 if (FirstVert == 0xFFFF)
                 {

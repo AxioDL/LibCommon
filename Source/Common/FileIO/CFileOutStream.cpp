@@ -66,22 +66,30 @@ void CFileOutStream::Close()
     mSize = 0;
 }
 
-void CFileOutStream::WriteBytes(const void *pkSrc, uint32 Count)
+void CFileOutStream::WriteBytes(const void *pkSrc, uint32_t Count)
 {
-    if (!IsValid()) return;
+    if (!IsValid())
+        return;
+
     fwrite(pkSrc, 1, Count, mpFStream);
-    if (Tell() > mSize) mSize = Tell();
+
+    if (Tell() > mSize)
+        mSize = Tell();
 }
 
-bool CFileOutStream::Seek(int32 Offset, uint32 Origin)
+bool CFileOutStream::Seek(int32_t Offset, uint32_t Origin)
 {
-    if (!IsValid()) return false;
+    if (!IsValid())
+        return false;
+
     return (fseek(mpFStream, Offset, Origin) != 0);
 }
 
-bool CFileOutStream::Seek64(int64 Offset, uint32 Origin)
+bool CFileOutStream::Seek64(int64_t Offset, uint32_t Origin)
 {
-    if (!IsValid()) return false;
+    if (!IsValid())
+        return false;
+
 #ifdef _WIN32
     return (_fseeki64(mpFStream, Offset, Origin) != 0);
 #else
@@ -89,15 +97,19 @@ bool CFileOutStream::Seek64(int64 Offset, uint32 Origin)
 #endif
 }
 
-uint32 CFileOutStream::Tell() const
+uint32_t CFileOutStream::Tell() const
 {
-    if (!IsValid()) return 0;
+    if (!IsValid())
+        return 0;
+
     return ftell(mpFStream);
 }
 
-uint64 CFileOutStream::Tell64() const
+uint64_t CFileOutStream::Tell64() const
 {
-    if (!IsValid()) return 0;
+    if (!IsValid())
+        return 0;
+
 #ifdef _WIN32
     return _ftelli64(mpFStream);
 #else
@@ -115,9 +127,11 @@ bool CFileOutStream::IsValid() const
     return (mpFStream != 0);
 }
 
-uint32 CFileOutStream::Size() const
+uint32_t CFileOutStream::Size() const
 {
-    if (!IsValid()) return 0;
+    if (!IsValid())
+        return 0;
+
     return mSize;
 }
 

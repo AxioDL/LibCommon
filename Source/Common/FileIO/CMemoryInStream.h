@@ -6,23 +6,23 @@
 class CMemoryInStream : public IInputStream
 {
     const char *mpDataStart = nullptr;
-    uint32 mDataSize = 0;
-    uint32 mPos = 0;
+    uint32_t mDataSize = 0;
+    uint32_t mPos = 0;
 
 public:
     CMemoryInStream();
-    explicit CMemoryInStream(const void *pkData, uint32 Size, std::endian dataEndianness);
+    explicit CMemoryInStream(const void *pkData, uint32_t Size, std::endian dataEndianness);
     ~CMemoryInStream() override;
 
-    void SetData(const void *pkData, uint32 Size, std::endian dataEndianness);
+    void SetData(const void *pkData, uint32_t Size, std::endian dataEndianness);
 
-    void ReadBytes(void* pDst, uint32 Count) override;
-    bool Seek(int32 Offset, uint32 Origin) override;
-    uint32 Tell() const override;
+    void ReadBytes(void* pDst, uint32_t Count) override;
+    bool Seek(int32_t Offset, uint32_t Origin) override;
+    uint32_t Tell() const override;
     bool EoF() const override;
     bool IsValid() const override;
-    uint32 Size() const override;
-    void SetSize(uint32 Size);
+    uint32_t Size() const override;
+    void SetSize(uint32_t Size);
     const void* Data() const;
     const void* DataAtPosition() const;
 };

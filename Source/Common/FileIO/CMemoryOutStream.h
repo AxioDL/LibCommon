@@ -6,25 +6,25 @@
 class CMemoryOutStream : public IOutputStream
 {
     char *mpDataStart = nullptr;
-    uint32 mDataSize = 0;
-    uint32 mPos = 0;
-    uint32 mUsed = 0;
+    uint32_t mDataSize = 0;
+    uint32_t mPos = 0;
+    uint32_t mUsed = 0;
 
 public:
     CMemoryOutStream();
-    explicit CMemoryOutStream(void *pData, uint32 Size, std::endian mDataEndianness);
+    explicit CMemoryOutStream(void *pData, uint32_t Size, std::endian mDataEndianness);
     ~CMemoryOutStream() override;
 
-    void SetData(void *pData, uint32 Size, std::endian mDataEndianness);
+    void SetData(void *pData, uint32_t Size, std::endian mDataEndianness);
 
-    void WriteBytes(const void* pkSrc, uint32 Count) override;
-    bool Seek(int32 Offset, uint32 Origin) override;
-    uint32 Tell() const override;
+    void WriteBytes(const void* pkSrc, uint32_t Count) override;
+    bool Seek(int32_t Offset, uint32_t Origin) override;
+    uint32_t Tell() const override;
     bool EoF() const override;
     bool IsValid() const override;
-    uint32 Size() const override;
-    uint32 SpaceUsed() const;
-    void SetSize(uint32 Size);
+    uint32_t Size() const override;
+    uint32_t SpaceUsed() const;
+    void SetSize(uint32_t Size);
     void* Data() const;
     void* DataAtPosition() const;
 };

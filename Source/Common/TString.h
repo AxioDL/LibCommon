@@ -1,14 +1,16 @@
 #ifndef TSTRING_H
 #define TSTRING_H
 
-#include "Common/BasicTypes.h"
 #include "Common/Hash/CCRC32.h"
 #include "Common/Hash/CFNV1A.h"
 #include "Common/Macros.h"
 
 #include <cassert>
 #include <cstdarg>
+#include <cstddef>
+#include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <iomanip>
 #include <list>
 #include <sstream>
@@ -426,10 +428,10 @@ public:
         return SubString(0, Size() - Amount);
     }
 
-    int32 ToInt32(int Base = 10) const
+    int32_t ToInt32(int Base = 10) const
     {
         try {
-            return (int32) std::stoul(mInternalString, nullptr, Base);
+            return (int32_t) std::stoul(mInternalString, nullptr, Base);
         }
         catch(...) {
             assert(false);
@@ -437,10 +439,10 @@ public:
         }
     }
 
-    int64 ToInt64(int Base = 10) const
+    int64_t ToInt64(int Base = 10) const
     {
         try {
-            return (int64) std::stoull(mInternalString, nullptr, Base);
+            return (int64_t) std::stoull(mInternalString, nullptr, Base);
         }
         catch(...) {
             assert(false);
@@ -452,8 +454,8 @@ public:
     {
         try {
             // TODO: only works in base 16
-            uint64 Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
-            uint64 Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
+            uint64_t Part1 = std::stoull(mInternalString.substr(0, 16), nullptr, Base);
+            uint64_t Part2 = std::stoull(mInternalString.substr(16, 16), nullptr, Base);
 
             if constexpr (std::endian::native == std::endian::little)
             {
@@ -637,12 +639,12 @@ public:
     }
 
     // Hashing
-    uint32 Hash32() const
+    uint32_t Hash32() const
     {
         return CCRC32::StaticHashData(Data(), Size() * sizeof(CharType));
     }
 
-    uint64 Hash64() const
+    uint64_t Hash64() const
     {
         return CFNV1A::StaticHashData64(Data(), Size() * sizeof(CharType));
     }
@@ -1072,14 +1074,14 @@ public:
         return _TString(StringBuffer, static_cast<size_t>(size));
     }
 
-    static _TString FromInt32(int32 Value, int Width = 0, int Base = 16)
+    static _TString FromInt32(int32_t Value, int Width = 0, int Base = 16)
     {
         std::basic_ostringstream<CharType> SStream;
         SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
         return SStream.str();
     }
 
-    static _TString FromInt64(int64 Value, int Width = 0, int Base = 16)
+    static _TString FromInt64(int64_t Value, int Width = 0, int Base = 16)
     {
         std::basic_ostringstream<CharType> SStream;
         SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
@@ -1124,7 +1126,7 @@ public:
         return Out;
     }
 
-    static _TString FileSizeString(int64 Size, int NumDecimals = 2)
+    static _TString FileSizeString(int64_t Size, int NumDecimals = 2)
     {
         _TString Out;
         _TString Type;
@@ -1156,22 +1158,22 @@ public:
         return Out + Type;
     }
 
-    static _TString HexString(uint8 Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
+    static _TString HexString(uint8_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
     {
         return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
     }
 
-    static _TString HexString(uint16 Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
+    static _TString HexString(uint16_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
     {
         return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
     }
 
-    static _TString HexString(uint32 Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
+    static _TString HexString(uint32_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
     {
         return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
     }
 
-    static _TString HexString(uint64 Num, int Width = 16, bool AddPrefix = true, bool Uppercase = true)
+    static _TString HexString(uint64_t Num, int Width = 16, bool AddPrefix = true, bool Uppercase = true)
     {
         std::basic_ostringstream<CharType> SStream;
         SStream << std::hex << std::setw(Width) << std::setfill('0') << Num;
@@ -1255,7 +1257,7 @@ public:
     TString(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
 
-    void AppendCodePoint(uint32 CodePoint);
+    void AppendCodePoint(uint32_t CodePoint);
     class T16String ToUTF16() const;
     class T32String ToUTF32() const;
 };
@@ -1270,7 +1272,7 @@ public:
     T16String(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
 
-    void AppendCodePoint(uint32 CodePoint);
+    void AppendCodePoint(uint32_t CodePoint);
     class TString ToUTF8() const;
     class T32String ToUTF32() const;
 };
@@ -1285,7 +1287,7 @@ public:
     T32String(const BaseClass& kIn) : BaseClass(kIn) {}
     using BaseClass::BaseClass;
 
-    void AppendCodePoint(uint32 CodePoint);
+    void AppendCodePoint(uint32_t CodePoint);
     class TString ToUTF8() const;
     class T16String ToUTF16() const;
 };
