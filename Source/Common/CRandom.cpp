@@ -2,26 +2,26 @@
 #include <ctime>
 
 /** Advance the generator and retrieve a new random number */
-int32 CRandom::Int32()
+int32_t CRandom::Int32()
 {
-    static const uint32 kMul = 0x41C64E6D;
-    static const uint32 kInc = 12345;
+    static constexpr uint32_t kMul = 0x41C64E6D;
+    static constexpr uint32_t kInc = 12345;
 
     mSeed = (mSeed * kMul) + kInc;
     return mSeed;
 }
 
 /** Generate a random 16-bit int */
-int16 CRandom::Int16()
+int16_t CRandom::Int16()
 {
     // This function matches the output of Metroid Prime's Next()
-    return (int16) (Int32() >> 16);
+    return int16_t(Int32() >> 16);
 }
 
 /** Generate a random 64-bit int */
-int64 CRandom::Int64()
+int64_t CRandom::Int64()
 {
-    return ( ((int64) Int32()) << 32 ) | ((int64) Int32());
+    return (int64_t(Int32()) << 32) | int64_t(Int32());
 }
 
 /** Generate a random float between 0 and 1 */
@@ -31,16 +31,16 @@ float CRandom::Float()
 }
 
 /** Generate a random number within the given range */
-int32 CRandom::Range(int32 Min, int32 Max)
+int32_t CRandom::Range(int32_t Min, int32_t Max)
 {
-    int32 Range = Max-Min;
-    int32 Value = Int32() % (Range+1);
+    const int32_t Range = Max - Min;
+    const int32_t Value = Int32() % (Range + 1);
     return Min + Value;
 }
 
 float CRandom::Range(float Min, float Max)
 {
-    float Range = Max-Min;
+    const float Range = Max - Min;
     return Min + Float()*Range;
 }
 
