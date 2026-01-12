@@ -18,14 +18,14 @@ class CBasicBinaryReader : public IArchive
     bool mOwnsStream = true;
 
 public:
-    explicit CBasicBinaryReader(const TString& rkFilename, uint32 Magic)
+    explicit CBasicBinaryReader(const TString& rkFilename, uint32_t Magic)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
         mpStream = new CFileInStream(rkFilename, std::endian::big);
 
         if (mpStream->IsValid())
         {
-            mMagicValid = (mpStream->ReadLong() == Magic);
+            mMagicValid = (mpStream->ReadU32() == Magic);
             SerializeVersion();
         }
     }
@@ -41,7 +41,7 @@ public:
         SetVersion(rkVersion);
     }
 
-    explicit CBasicBinaryReader(void *pData, uint32 DataSize, const CSerialVersion& rkVersion, std::endian Endian = std::endian::native)
+    explicit CBasicBinaryReader(void *pData, uint32_t DataSize, const CSerialVersion& rkVersion, std::endian Endian = std::endian::native)
         : mMagicValid(true)
     {
         mArchiveFlags = AF_Binary | AF_Reader | AF_NoSkipping;
@@ -62,28 +62,28 @@ public:
     virtual bool IsWriter() const       { return false; }
     virtual bool IsTextFormat() const   { return false; }
 
-    bool ParamBegin(const char*, uint32) override { return true; }
+    bool ParamBegin(const char*, uint32_t) override { return true; }
     void ParamEnd() override {}
 
-    bool PreSerializePointer(void*& Pointer, uint32 Flags) override                     { return ArchiveVersion() >= eArVer_Refactor ? mpStream->ReadBool() : true; }
-    virtual void SerializeContainerSize(uint32& rSize, const TString&, uint32 Flags)    { SerializePrimitive(rSize, Flags); }
-    void SerializeBulkData(void* pData, uint32 Size, uint32 Flags) override             { mpStream->ReadBytes(pData, Size); }
+    bool PreSerializePointer(void*& Pointer, uint32_t Flags) override                     { return ArchiveVersion() >= eArVer_Refactor ? mpStream->ReadBool() : true; }
+    virtual void SerializeContainerSize(uint32_t& rSize, const TString&, uint32_t Flags)  { SerializePrimitive(rSize, Flags); }
+    void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override           { mpStream->ReadBytes(pData, Size); }
 
-    void SerializePrimitive(bool& rValue, uint32 Flags) override { rValue = mpStream->ReadBool(); }
-    void SerializePrimitive(char& rValue, uint32 Flags) override { rValue = mpStream->ReadByte(); }
-    void SerializePrimitive(int8& rValue, uint32 Flags) override { rValue = mpStream->ReadByte(); }
-    void SerializePrimitive(uint8& rValue, uint32 Flags) override { rValue = mpStream->ReadByte(); }
-    void SerializePrimitive(int16& rValue, uint32 Flags) override { rValue = mpStream->ReadShort(); }
-    void SerializePrimitive(uint16& rValue, uint32 Flags) override { rValue = mpStream->ReadShort(); }
-    void SerializePrimitive(int32& rValue, uint32 Flags) override { rValue = mpStream->ReadLong(); }
-    void SerializePrimitive(uint32& rValue, uint32 Flags) override { rValue = mpStream->ReadLong(); }
-    void SerializePrimitive(int64& rValue, uint32 Flags) override { rValue = mpStream->ReadLongLong(); }
-    void SerializePrimitive(uint64& rValue, uint32 Flags) override { rValue = mpStream->ReadLongLong(); }
-    void SerializePrimitive(float& rValue, uint32 Flags) override { rValue = mpStream->ReadFloat(); }
-    void SerializePrimitive(double& rValue, uint32 Flags) override { rValue = mpStream->ReadDouble(); }
-    void SerializePrimitive(TString& rValue, uint32 Flags) override { rValue = mpStream->ReadSizedString(); }
-    void SerializePrimitive(CFourCC& rValue, uint32 Flags) override { rValue = CFourCC(*mpStream); }
-    void SerializePrimitive(CAssetID& rValue, uint32 Flags) override { rValue = CAssetID(*mpStream, mGame); }
+    void SerializePrimitive(bool& rValue, uint32_t Flags) override     { rValue = mpStream->ReadBool(); }
+    void SerializePrimitive(char& rValue, uint32_t Flags) override     { rValue = mpStream->ReadS8(); }
+    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { rValue = mpStream->ReadS8(); }
+    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { rValue = mpStream->ReadU8(); }
+    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { rValue = mpStream->ReadS16(); }
+    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { rValue = mpStream->ReadU16(); }
+    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override  { rValue = mpStream->ReadS32(); }
+    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { rValue = mpStream->ReadU32(); }
+    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { rValue = mpStream->ReadS64(); }
+    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { rValue = mpStream->ReadU64(); }
+    void SerializePrimitive(float& rValue, uint32_t Flags) override    { rValue = mpStream->ReadF32(); }
+    void SerializePrimitive(double& rValue, uint32_t Flags) override   { rValue = mpStream->ReadF64(); }
+    void SerializePrimitive(TString& rValue, uint32_t Flags) override  { rValue = mpStream->ReadSizedString(); }
+    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override  { rValue = CFourCC(*mpStream); }
+    void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { rValue = CAssetID(*mpStream, mGame); }
 };
 
 #endif // CBASICBINARYREADER

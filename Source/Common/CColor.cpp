@@ -11,17 +11,17 @@ CColor::CColor(IInputStream& rInput, bool Integral /*= false*/)
 {
     if (Integral)
     {
-        R = (uint8_t) rInput.ReadByte() / 255.f;
-        G = (uint8_t) rInput.ReadByte() / 255.f;
-        B = (uint8_t) rInput.ReadByte() / 255.f;
-        A = (uint8_t) rInput.ReadByte() / 255.f;
+        R = rInput.ReadU8() / 255.f;
+        G = rInput.ReadU8() / 255.f;
+        B = rInput.ReadU8() / 255.f;
+        A = rInput.ReadU8() / 255.f;
     }
     else
     {
-        R = rInput.ReadFloat();
-        G = rInput.ReadFloat();
-        B = rInput.ReadFloat();
-        A = rInput.ReadFloat();
+        R = rInput.ReadF32();
+        G = rInput.ReadF32();
+        B = rInput.ReadF32();
+        A = rInput.ReadF32();
     }
 }
 

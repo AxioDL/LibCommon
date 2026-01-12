@@ -6,6 +6,8 @@
 
 #include <bit>
 
+class CFourCC;
+
 class IInputStream
 {
 protected:
@@ -14,17 +16,17 @@ protected:
     
 public:
     bool ReadBool();
-    int8_t ReadByte();
-    uint8_t ReadUByte();
-    int16_t ReadShort();
-    uint16_t ReadUShort();
-    int32_t ReadLong();
-    uint32_t ReadULong();
-    int64_t ReadLongLong();
-    uint64_t ReadULongLong();
-    float ReadFloat();
-    double ReadDouble();
-    uint32_t ReadFourCC();
+    int8_t ReadS8();
+    uint8_t ReadU8();
+    int16_t ReadS16();
+    uint16_t ReadU16();
+    int32_t ReadS32();
+    uint32_t ReadU32();
+    int64_t ReadS64();
+    uint64_t ReadU64();
+    float ReadF32();
+    double ReadF64();
+    CFourCC ReadFourCC();
     TString ReadString();
     TString ReadString(size_t Count);
     TString ReadSizedString();
@@ -32,17 +34,17 @@ public:
     T16String Read16String(size_t Count);
     T16String ReadSized16String();
 
-    int8_t PeekByte();
-    uint8_t PeekUByte();
-    int16_t PeekShort();
-    uint16_t PeekUShort();
-    int32_t PeekLong();
-    uint32_t PeekULong();
-    int64_t PeekLongLong();
-    uint64_t PeekULongLong();
-    float PeekFloat();
-    double PeekDouble();
-    uint32_t PeekFourCC();
+    int8_t PeekS8();
+    uint8_t PeekU8();
+    int16_t PeekS16();
+    uint16_t PeekU16();
+    int32_t PeekS32();
+    uint32_t PeekU32();
+    int64_t PeekS64();
+    uint64_t PeekU64();
+    float PeekF32();
+    double PeekF64();
+    CFourCC PeekFourCC();
 
     bool GoTo(uint32_t Address);
     bool Skip(int32_t SkipAmount);

@@ -6,10 +6,10 @@
 
 CVector4f::CVector4f(IInputStream& rInput)
 {
-    X = rInput.ReadFloat();
-    Y = rInput.ReadFloat();
-    Z = rInput.ReadFloat();
-    W = rInput.ReadFloat();
+    X = rInput.ReadF32();
+    Y = rInput.ReadF32();
+    Z = rInput.ReadF32();
+    W = rInput.ReadF32();
 }
 
 void CVector4f::Write(IOutputStream& rOutput)

@@ -37,7 +37,7 @@ public:
     // Functionality
     void Read(IInputStream& rInput)
     {
-        mFourCC = rInput.ReadULong();
+        mFourCC = rInput.ReadU32();
         if (rInput.GetEndianness() == std::endian::little)
             Reverse();
     }

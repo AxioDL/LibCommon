@@ -20,8 +20,8 @@ CSerialVersion::CSerialVersion(IInputStream& rInput)
 
 void CSerialVersion::Read(IInputStream& rInput)
 {
-    mArchiveVersion = rInput.ReadUShort();
-    mFileVersion = rInput.ReadUShort();
+    mArchiveVersion = rInput.ReadU16();
+    mFileVersion = rInput.ReadU16();
     CFourCC GameID(rInput);
     mGame = GameFrom4CC(GameID);
 }

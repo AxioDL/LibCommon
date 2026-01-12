@@ -25,7 +25,7 @@ CTransform4f::CTransform4f(const CMatrix4f& rkMtx)
 CTransform4f::CTransform4f(IInputStream& rInput)
 {
     for (size_t val = 0; val < 12; val++)
-        _m[val] = rInput.ReadFloat();
+        _m[val] = rInput.ReadF32();
 
     SetupRow4();
 }

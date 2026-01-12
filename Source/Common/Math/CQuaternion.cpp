@@ -7,10 +7,10 @@
 #include <cmath>
 
 CQuaternion::CQuaternion(IInputStream& rInput)
-    : W(rInput.ReadFloat())
-    , X(rInput.ReadFloat())
-    , Y(rInput.ReadFloat())
-    , Z(rInput.ReadFloat())
+    : W(rInput.ReadF32())
+    , X(rInput.ReadF32())
+    , Y(rInput.ReadF32())
+    , Z(rInput.ReadF32())
 {
 }
 

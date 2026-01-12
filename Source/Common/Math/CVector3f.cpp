@@ -13,9 +13,9 @@ CVector3f::CVector3f(IInputStream& Input)
 
 void CVector3f::Read(IInputStream& Input)
 {
-    X = Input.ReadFloat();
-    Y = Input.ReadFloat();
-    Z = Input.ReadFloat();
+    X = Input.ReadF32();
+    Y = Input.ReadF32();
+    Z = Input.ReadF32();
 }
 
 void CVector3f::Write(IOutputStream& Output) const

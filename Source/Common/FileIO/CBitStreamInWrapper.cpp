@@ -15,9 +15,9 @@ void CBitStreamInWrapper::SetChunkSize(EChunkSize Size)
 
 long CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true*/)
 {
-    uint32 BitsRemaining = NumBits;
-    uint32 Out = 0;
-    uint32 Shift = 0;
+    uint32_t BitsRemaining = NumBits;
+    uint32_t Out = 0;
+    uint32_t Shift = 0;
 
     while (BitsRemaining > 0)
     {
@@ -57,11 +57,11 @@ bool CBitStreamInWrapper::ReadBit()
 void CBitStreamInWrapper::ReplenishPool()
 {
     if (mChunkSize == k8Bit)
-        mBitPool = mpSourceStream->ReadByte();
+        mBitPool = mpSourceStream->ReadU8();
     else if (mChunkSize == k16Bit)
-        mBitPool = mpSourceStream->ReadShort();
+        mBitPool = mpSourceStream->ReadU16();
     else if (mChunkSize == k32Bit)
-        mBitPool = mpSourceStream->ReadLong();
+        mBitPool = mpSourceStream->ReadU32();
 
     mBitsRemaining = mChunkSize;
 }

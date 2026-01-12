@@ -1,4 +1,6 @@
 #include "IInputStream.h"
+
+#include "Common/CFourCC.h"
 #include "Common/Log.h"
 
 #include <bit>
@@ -21,85 +23,85 @@ bool IInputStream::ReadBool()
     return Val != 0;
 }
 
-int8_t IInputStream::ReadByte()
+int8_t IInputStream::ReadS8()
 {
     int8_t Val;
-    ReadBytes(&Val, 1);
+    ReadBytes(&Val, sizeof(Val));
     return Val;
 }
 
-uint8_t IInputStream::ReadUByte()
+uint8_t IInputStream::ReadU8()
 {
-    return static_cast<uint8_t>(ReadByte());
+    return static_cast<uint8_t>(ReadS8());
 }
 
-int16_t IInputStream::ReadShort()
+int16_t IInputStream::ReadS16()
 {
     int16_t Val;
-    ReadBytes(&Val, 2);
+    ReadBytes(&Val, sizeof(Val));
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint16_t IInputStream::ReadUShort()
+uint16_t IInputStream::ReadU16()
 {
-    return static_cast<uint16_t>(ReadShort());
+    return static_cast<uint16_t>(ReadS16());
 }
 
-int32_t IInputStream::ReadLong()
+int32_t IInputStream::ReadS32()
 {
     int32_t Val;
-    ReadBytes(&Val, 4);
+    ReadBytes(&Val, sizeof(Val));
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint32_t IInputStream::ReadULong()
+uint32_t IInputStream::ReadU32()
 {
-    return static_cast<uint32_t>(ReadLong());
+    return static_cast<uint32_t>(ReadS32());
 }
 
-int64_t IInputStream::ReadLongLong()
+int64_t IInputStream::ReadS64()
 {
     int64_t Val;
-    ReadBytes(&Val, 8);
+    ReadBytes(&Val, sizeof(Val));
     if (mDataEndianness != std::endian::native)
         Val = std::byteswap(Val);
     return Val;
 }
 
-uint64_t IInputStream::ReadULongLong()
+uint64_t IInputStream::ReadU64()
 {
-    return static_cast<uint64_t>(ReadLongLong());
+    return static_cast<uint64_t>(ReadS64());
 }
 
-float IInputStream::ReadFloat()
+float IInputStream::ReadF32()
 {
     float Val;
-    ReadBytes(&Val, 4);
+    ReadBytes(&Val, sizeof(Val));
     if (mDataEndianness != std::endian::native)
         Val = std::bit_cast<float>(std::byteswap(std::bit_cast<uint32_t>(Val)));
     return Val;
 }
 
-double IInputStream::ReadDouble()
+double IInputStream::ReadF64()
 {
     double Val;
-    ReadBytes(&Val, 8);
+    ReadBytes(&Val, sizeof(Val));
     if (mDataEndianness != std::endian::native)
         Val = std::bit_cast<double>(std::byteswap(std::bit_cast<uint64_t>(Val)));
     return Val;
 }
 
-uint32_t IInputStream::ReadFourCC()
+CFourCC IInputStream::ReadFourCC()
 {
     uint32_t Val;
-    ReadBytes(&Val, 4);
+    ReadBytes(&Val, sizeof(Val));
     if constexpr (std::endian::native == std::endian::little)
         Val = std::byteswap(Val);
-    return Val;
+    return CFourCC(Val);
 }
 
 TString IInputStream::ReadString()
@@ -109,7 +111,7 @@ TString IInputStream::ReadString()
 
     do
     {
-        Chr = ReadByte();
+        Chr = ReadS8();
         if (Chr != 0)
             Str.Append(Chr);
     }
@@ -127,7 +129,7 @@ TString IInputStream::ReadString(size_t Count)
 
 TString IInputStream::ReadSizedString()
 {
-    const uint32 StringSize = ReadULong();
+    const auto StringSize = ReadU32();
     return ReadString(StringSize);
 }
 
@@ -138,7 +140,7 @@ T16String IInputStream::Read16String()
 
     do
     {
-        Chr = ReadShort();
+        Chr = ReadS16();
         if (Chr != 0)
             Out.Append(Chr);
     }
@@ -153,7 +155,7 @@ T16String IInputStream::Read16String(size_t Count)
 
     for (size_t i = 0; i < Count; i++)
     {
-        Out[i] = ReadShort();
+        Out[i] = ReadS16();
     }
 
     return Out;
@@ -161,75 +163,75 @@ T16String IInputStream::Read16String(size_t Count)
 
 T16String IInputStream::ReadSized16String()
 {
-    const uint32_t StringSize = ReadULong();
+    const auto StringSize = ReadU32();
     return Read16String(StringSize);
 }
 
-int8_t IInputStream::PeekByte()
+int8_t IInputStream::PeekS8()
 {
-    const int8_t Val = ReadByte();
+    const auto Val = ReadS8();
     Seek(-1, SEEK_CUR);
     return Val;
 }
 
-uint8_t IInputStream::PeekUByte()
+uint8_t IInputStream::PeekU8()
 {
-    return static_cast<uint8_t>(PeekByte());
+    return static_cast<uint8_t>(PeekS8());
 }
 
-int16_t IInputStream::PeekShort()
+int16_t IInputStream::PeekS16()
 {
-    const int16_t Val = ReadShort();
+    const auto Val = ReadS16();
     Seek(-2, SEEK_CUR);
     return Val;
 }
 
-uint16_t IInputStream::PeekUShort()
+uint16_t IInputStream::PeekU16()
 {
-    return static_cast<uint16_t>(PeekShort());
+    return static_cast<uint16_t>(PeekS16());
 }
 
-int32_t IInputStream::PeekLong()
+int32_t IInputStream::PeekS32()
 {
-    const int32_t Val = ReadLong();
+    const auto Val = ReadS32();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-uint32_t IInputStream::PeekULong()
+uint32_t IInputStream::PeekU32()
 {
-    return static_cast<uint32_t>(PeekLong());
+    return static_cast<uint32_t>(PeekS32());
 }
 
-int64_t IInputStream::PeekLongLong()
+int64_t IInputStream::PeekS64()
 {
-    const int64_t Val = ReadLongLong();
+    const auto Val = ReadS64();
     Seek(-8, SEEK_CUR);
     return Val;
 }
 
-uint64_t IInputStream::PeekULongLong()
+uint64_t IInputStream::PeekU64()
 {
-    return static_cast<uint64_t>(PeekLongLong());
+    return static_cast<uint64_t>(PeekS64());
 }
 
-float IInputStream::PeekFloat()
+float IInputStream::PeekF32()
 {
-    const float Val = ReadFloat();
+    const auto Val = ReadF32();
     Seek(-4, SEEK_CUR);
     return Val;
 }
 
-double IInputStream::PeekDouble()
+double IInputStream::PeekF64()
 {
-    const double Val = ReadDouble();
+    const auto Val = ReadF64();
     Seek(-8, SEEK_CUR);
     return Val;
 }
 
-uint32_t IInputStream::PeekFourCC()
+CFourCC IInputStream::PeekFourCC()
 {
-    const uint32_t Val = ReadFourCC();
+    const auto Val = ReadFourCC();
     Seek(-4, SEEK_CUR);
     return Val;
 }

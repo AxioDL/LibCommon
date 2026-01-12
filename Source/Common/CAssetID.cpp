@@ -19,9 +19,9 @@ CAssetID::CAssetID(IInputStream& rInput, EIDLength Length)
     : mLength(Length)
 {
     if (Length == EIDLength::k32Bit)
-        mID = rInput.ReadULong();
+        mID = rInput.ReadU32();
     else
-        mID = rInput.ReadULongLong();
+        mID = rInput.ReadU64();
 }
 
 CAssetID::CAssetID(IInputStream& rInput, EGame Game)
