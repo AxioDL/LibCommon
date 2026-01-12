@@ -5,6 +5,8 @@
 
 #include <bit>
 
+class CFourCC;
+
 class IOutputStream
 {
 protected:
@@ -13,17 +15,17 @@ protected:
 
 public:
     void WriteBool(bool Val);
-    void WriteByte(int8_t Val);
-    void WriteUByte(uint8_t Val);
-    void WriteShort(int16_t Val);
-    void WriteUShort(uint16_t Val);
-    void WriteLong(int32_t Val);
-    void WriteULong(uint32_t Val);
-    void WriteLongLong(int64_t Val);
-    void WriteULongLong(uint64_t Val);
-    void WriteFloat(float Val);
-    void WriteDouble(double Val);
-    void WriteFourCC(uint32_t Val);
+    void WriteS8(int8_t Val);
+    void WriteU8(uint8_t Val);
+    void WriteS16(int16_t Val);
+    void WriteU16(uint16_t Val);
+    void WriteS32(int32_t Val);
+    void WriteU32(uint32_t Val);
+    void WriteS64(int64_t Val);
+    void WriteU64(uint64_t Val);
+    void WriteF32(float Val);
+    void WriteF64(double Val);
+    void WriteFourCC(const CFourCC& fcc);
     void WriteString(const TString& rkVal, int Count = -1, bool Terminate = true);
     void WriteSizedString(const TString& rkVal);
     void Write16String(const T16String& rkVal, int Count = -1, bool Terminate = true);

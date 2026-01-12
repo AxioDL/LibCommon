@@ -14,10 +14,10 @@ CVector4f::CVector4f(IInputStream& rInput)
 
 void CVector4f::Write(IOutputStream& rOutput)
 {
-    rOutput.WriteFloat(X);
-    rOutput.WriteFloat(Y);
-    rOutput.WriteFloat(Z);
-    rOutput.WriteFloat(W);
+    rOutput.WriteF32(X);
+    rOutput.WriteF32(Y);
+    rOutput.WriteF32(Z);
+    rOutput.WriteF32(W);
 }
 
 // ************ VECTOR/MATRIX ************

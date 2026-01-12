@@ -47,7 +47,7 @@ public:
         uint32_t Val = mFourCC;
         if (rOutput.GetEndianness() == std::endian::little)
             Val = std::byteswap(Val);
-        rOutput.WriteULong(Val);
+        rOutput.WriteU32(Val);
     }
 
     [[nodiscard]] constexpr uint32_t ToU32() const

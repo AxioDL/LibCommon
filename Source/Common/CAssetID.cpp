@@ -10,9 +10,9 @@ void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalid
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);
 
     if (Length == EIDLength::k32Bit)
-        rOutput.WriteULong(ToU32());
+        rOutput.WriteU32(ToU32());
     else
-        rOutput.WriteULongLong(ToU64());
+        rOutput.WriteU64(ToU64());
 }
 
 CAssetID::CAssetID(IInputStream& rInput, EIDLength Length)

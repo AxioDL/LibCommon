@@ -84,7 +84,7 @@ void CTransform4f::Serialize(IArchive& rOut)
 void CTransform4f::Write(IOutputStream& rOut) const
 {
     for (size_t iFlt = 0; iFlt < 12; iFlt++)
-        rOut.WriteFloat(_m[iFlt]);
+        rOut.WriteF32(_m[iFlt]);
 }
 
 // ************ MATH ************

@@ -28,12 +28,12 @@ public:
 
         if (mpStream->IsValid())
         {
-            mpStream->WriteLong(0); // Magic is written after the rest of the file has been successfully written
+            mpStream->WriteS32(0); // Magic is written after the rest of the file has been successfully written
             SetVersion(skCurrentArchiveVersion, FileVersion, Game);
         }
 
-        mpStream->WriteShort(mArchiveVersion);
-        mpStream->WriteShort(mFileVersion);
+        mpStream->WriteU16(mArchiveVersion);
+        mpStream->WriteU16(mFileVersion);
         mpStream->WriteFourCC(GameTo4CC(mGame).ToU32());
 
         InitParamStack();
@@ -69,7 +69,7 @@ public:
         if (mOwnsStream)
         {
             mpStream->GoTo(0);
-            mpStream->WriteLong(mMagic);
+            mpStream->WriteU32(mMagic);
             delete mpStream;
         }
     }
@@ -80,8 +80,8 @@ private:
     void InitParamStack()
     {
         mParamStack.reserve(20);
-        mpStream->WriteLong(0xFFFFFFFF);
-        mpStream->WriteLong(0); // Size filler
+        mpStream->WriteU32(0xFFFFFFFF);
+        mpStream->WriteU32(0); // Size filler
         mParamStack.push_back(SParameter{mpStream->Tell(), 0});
     }
 
@@ -93,12 +93,12 @@ public:
         mParamStack.back().NumSubParams++;
 
         if (mParamStack.back().NumSubParams == 1)
-            mpStream->WriteLong(-1); // Sub-param count filler
+            mpStream->WriteS32(-1); // Sub-param count filler
 
         // Write param metadata
         uint32_t ParamID = TString(pkName).Hash32();
-        mpStream->WriteLong(ParamID);
-        mpStream->WriteLong(-1); // Param size filler
+        mpStream->WriteU32(ParamID);
+        mpStream->WriteS32(-1); // Param size filler
 
         // Add new param to the stack
         mParamStack.push_back(SParameter{mpStream->Tell(), 0});
@@ -115,12 +115,12 @@ public:
         uint32_t ParamSize = (EndOffset - StartOffset);
 
         mpStream->GoTo(StartOffset - 4);
-        mpStream->WriteLong(ParamSize);
+        mpStream->WriteU32(ParamSize);
 
         // Write param child count
         if (rParam.NumSubParams > 0 || mParamStack.size() == 1)
         {
-            mpStream->WriteLong(rParam.NumSubParams);
+            mpStream->WriteU32(rParam.NumSubParams);
         }
 
         mpStream->GoTo(EndOffset);
@@ -138,23 +138,23 @@ public:
     {
         // Normally handled by ParamBegin and ParamEnd but we need to do something here to account for zero-sized containers
         if (rSize == 0)
-            mpStream->WriteLong(0);
+            mpStream->WriteS32(0);
     }
 
-    void SerializePrimitive(bool& rValue, uint32_t Flags) override { mpStream->WriteBool(rValue); }
-    void SerializePrimitive(char& rValue, uint32_t Flags) override { mpStream->WriteByte(rValue); }
-    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override { mpStream->WriteByte(rValue); }
-    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override { mpStream->WriteByte(rValue); }
-    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override { mpStream->WriteShort(rValue); }
-    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { mpStream->WriteShort(rValue); }
-    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override { mpStream->WriteLong(rValue); }
-    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { mpStream->WriteLong(rValue); }
-    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override { mpStream->WriteLongLong(rValue); }
-    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { mpStream->WriteLongLong(rValue); }
-    void SerializePrimitive(float& rValue, uint32_t Flags) override { mpStream->WriteFloat(rValue); }
-    void SerializePrimitive(double& rValue, uint32_t Flags) override { mpStream->WriteDouble(rValue); }
-    void SerializePrimitive(TString& rValue, uint32_t Flags) override { mpStream->WriteSizedString(rValue); }
-    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override { rValue.Write(*mpStream); }
+    void SerializePrimitive(bool& rValue, uint32_t Flags) override     { mpStream->WriteBool(rValue); }
+    void SerializePrimitive(char& rValue, uint32_t Flags) override     { mpStream->WriteS8(rValue); }
+    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { mpStream->WriteS8(rValue); }
+    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { mpStream->WriteU8(rValue); }
+    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { mpStream->WriteS16(rValue); }
+    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { mpStream->WriteU16(rValue); }
+    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override  { mpStream->WriteS32(rValue); }
+    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { mpStream->WriteU32(rValue); }
+    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { mpStream->WriteS64(rValue); }
+    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { mpStream->WriteU64(rValue); }
+    void SerializePrimitive(float& rValue, uint32_t Flags) override    { mpStream->WriteF32(rValue); }
+    void SerializePrimitive(double& rValue, uint32_t Flags) override   { mpStream->WriteF64(rValue); }
+    void SerializePrimitive(TString& rValue, uint32_t Flags) override  { mpStream->WriteSizedString(rValue); }
+    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override  { rValue.Write(*mpStream); }
     void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { rValue.Write(*mpStream, CAssetID::GameIDLength(Game())); }
     void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override { mpStream->WriteBytes(pData, Size); }
 };

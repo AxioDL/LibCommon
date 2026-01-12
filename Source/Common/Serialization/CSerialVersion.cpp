@@ -28,8 +28,8 @@ void CSerialVersion::Read(IInputStream& rInput)
 
 void CSerialVersion::Write(IOutputStream& rOutput)
 {
-    rOutput.WriteUShort(mArchiveVersion);
-    rOutput.WriteUShort(mFileVersion);
+    rOutput.WriteU16(mArchiveVersion);
+    rOutput.WriteU16(mFileVersion);
     CFourCC GameID = GameTo4CC(mGame);
     GameID.Write(rOutput);
 }

@@ -20,9 +20,9 @@ void CVector3f::Read(IInputStream& Input)
 
 void CVector3f::Write(IOutputStream& Output) const
 {
-    Output.WriteFloat(X);
-    Output.WriteFloat(Y);
-    Output.WriteFloat(Z);
+    Output.WriteF32(X);
+    Output.WriteF32(Y);
+    Output.WriteF32(Z);
 }
 
 void CVector3f::Serialize(IArchive& Arc)

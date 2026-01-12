@@ -11,6 +11,6 @@ CVector2f::CVector2f(IInputStream& rInput)
 
 void CVector2f::Write(IOutputStream& rOutput) const
 {
-    rOutput.WriteFloat(X);
-    rOutput.WriteFloat(Y);
+    rOutput.WriteF32(X);
+    rOutput.WriteF32(Y);
 }

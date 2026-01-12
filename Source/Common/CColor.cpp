@@ -29,14 +29,14 @@ void CColor::Write(IOutputStream &rOutput, bool Integral /*= false*/) const
 {
     if (Integral)
     {
-        rOutput.WriteULong(ToRGBA());
+        rOutput.WriteU32(ToRGBA());
     }
     else
     {
-        rOutput.WriteFloat(R);
-        rOutput.WriteFloat(G);
-        rOutput.WriteFloat(B);
-        rOutput.WriteFloat(A);
+        rOutput.WriteF32(R);
+        rOutput.WriteF32(G);
+        rOutput.WriteF32(B);
+        rOutput.WriteF32(A);
     }
 }
 
