@@ -11,7 +11,6 @@ class IOutputStream
 {
 protected:
     std::endian mDataEndianness{};
-    TString mDataDest;
 
 public:
     void WriteBool(bool Val);
@@ -36,9 +35,7 @@ public:
 
     void WriteToBoundary(uint32_t Boundary, uint8_t Fill);
     void SetEndianness(std::endian Endianness);
-    void SetDestString(const TString& rkDest);
     std::endian GetEndianness() const;
-    TString GetDestString() const;
 
     virtual ~IOutputStream();
     virtual void WriteBytes(const void *pkSrc, uint32_t Count) = 0;

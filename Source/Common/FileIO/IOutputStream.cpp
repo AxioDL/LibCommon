@@ -148,19 +148,9 @@ void IOutputStream::SetEndianness(std::endian Endianness)
     mDataEndianness = Endianness;
 }
 
-void IOutputStream::SetDestString(const TString& rkDest)
-{
-    mDataDest = rkDest;
-}
-
 std::endian IOutputStream::GetEndianness() const
 {
     return mDataEndianness;
-}
-
-TString IOutputStream::GetDestString() const
-{
-    return mDataDest;
 }
 
 bool IOutputStream::Seek64(int64_t Offset, uint32_t Origin)
