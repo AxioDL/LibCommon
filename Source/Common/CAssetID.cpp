@@ -10,18 +10,18 @@ void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalid
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);
 
     if (Length == EIDLength::k32Bit)
-        rOutput.WriteLong(ToLong());
+        rOutput.WriteULong(ToU32());
     else
-        rOutput.WriteLongLong(ToLongLong());
+        rOutput.WriteULongLong(ToU64());
 }
 
 CAssetID::CAssetID(IInputStream& rInput, EIDLength Length)
     : mLength(Length)
 {
     if (Length == EIDLength::k32Bit)
-        mID = static_cast<uint64_t>(rInput.ReadLong()) & 0xFFFFFFFF;
+        mID = rInput.ReadULong();
     else
-        mID = rInput.ReadLongLong();
+        mID = rInput.ReadULongLong();
 }
 
 CAssetID::CAssetID(IInputStream& rInput, EGame Game)
@@ -34,9 +34,9 @@ TString CAssetID::ToString(EIDLength ForcedLength /*= eInvalidIDLength*/) const
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);
 
     if (Length == EIDLength::k32Bit)
-        return TString::HexString(ToLong(), 8, false, true);
+        return TString::HexString(ToU32(), 8, false, true);
     else
-        return TString::FromInt64(ToLongLong(), 16, 16).ToUpper();
+        return TString::FromInt64(ToU64(), 16, 16).ToUpper();
 }
 
 // ************ STATIC ************

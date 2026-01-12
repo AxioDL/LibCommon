@@ -64,10 +64,10 @@ public:
     [[nodiscard]] constexpr bool operator!=(uint64_t Other) const            { return mID != Other; }
 
     // Accessors
-    [[nodiscard]] constexpr uint32_t ToLong() const          { return uint32_t(mID); }
-    [[nodiscard]] constexpr uint64_t ToLongLong() const      { return mID; }
-    [[nodiscard]] constexpr EIDLength Length() const         { return mLength; }
-    constexpr void SetLength(EIDLength Length) { mLength = Length; }
+    [[nodiscard]] constexpr uint32_t ToU32() const   { return uint32_t(mID); }
+    [[nodiscard]] constexpr uint64_t ToU64() const   { return mID; }
+    [[nodiscard]] constexpr EIDLength Length() const { return mLength; }
+    constexpr void SetLength(EIDLength Length)       { mLength = Length; }
 
     // Static
     [[nodiscard]] static CAssetID FromString(const TString& rkString);
