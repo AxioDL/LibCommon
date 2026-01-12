@@ -79,5 +79,5 @@ CAssetID CAssetID::RandomID(EGame Game)
 }
 
 // ************ STATIC MEMBER INITIALIZATION ************
-CAssetID CAssetID::skInvalidID32 = CAssetID(UINT64_MAX, EIDLength::k32Bit);
-CAssetID CAssetID::skInvalidID64 = CAssetID(UINT64_MAX, EIDLength::k64Bit);
+constinit const CAssetID CAssetID::skInvalidID32 = CAssetID(UINT64_MAX, EIDLength::k32Bit);
+constinit const CAssetID CAssetID::skInvalidID64 = CAssetID(UINT64_MAX, EIDLength::k64Bit);

@@ -89,8 +89,8 @@ public:
         return InvalidID(Game <= EGame::Echoes ? EIDLength::k32Bit : EIDLength::k64Bit);
     }
 
-    static CAssetID skInvalidID32;
-    static CAssetID skInvalidID64;
+    static const CAssetID skInvalidID32;
+    static const CAssetID skInvalidID64;
 };
 
 #endif // CASSETID_H
