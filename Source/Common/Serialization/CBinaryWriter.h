@@ -34,7 +34,7 @@ public:
 
         mpStream->WriteShort(mArchiveVersion);
         mpStream->WriteShort(mFileVersion);
-        mpStream->WriteFourCC(GameTo4CC(mGame).ToLong());
+        mpStream->WriteFourCC(GameTo4CC(mGame).ToU32());
 
         InitParamStack();
     }

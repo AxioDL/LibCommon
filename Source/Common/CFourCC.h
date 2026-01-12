@@ -18,7 +18,7 @@ class CFourCC
     // Note: mFourCC_Chars isn't used much due to endianness.
     union
     {
-        uint32 mFourCC = 0;
+        uint32_t mFourCC = 0;
         char mFourCC_Chars[4];
     };
 
@@ -31,7 +31,7 @@ public:
         ASSERT(rkSrc.Length() == 4);
         mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
     }
-    constexpr CFourCC(uint32 Src) : mFourCC{Src} {}
+    constexpr CFourCC(uint32_t Src) : mFourCC{Src} {}
     explicit CFourCC(IInputStream& rSrc) { Read(rSrc); }
 
     // Functionality
@@ -44,13 +44,13 @@ public:
 
     void Write(IOutputStream& rOutput) const
     {
-        uint32 Val = mFourCC;
+        uint32_t Val = mFourCC;
         if (rOutput.GetEndianness() == std::endian::little)
             Val = std::byteswap(Val);
         rOutput.WriteULong(Val);
     }
 
-    [[nodiscard]] constexpr uint32 ToLong() const
+    [[nodiscard]] constexpr uint32_t ToU32() const
     {
         return mFourCC;
     }
@@ -71,7 +71,7 @@ public:
     {
         CFourCC Out;
 
-        for (int iChr = 0; iChr < 4; iChr++)
+        for (size_t iChr = 0; iChr < 4; iChr++)
             Out.mFourCC_Chars[iChr] = TString::CharToUpper(mFourCC_Chars[iChr]);
 
         return CFourCC(Out);
@@ -133,7 +133,7 @@ public:
         return *this;
     }
 
-    CFourCC& operator=(uint32 Src)
+    CFourCC& operator=(uint32_t Src)
     {
         mFourCC = Src;
         return *this;

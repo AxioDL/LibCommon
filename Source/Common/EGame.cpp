@@ -78,7 +78,7 @@ EGame GameFrom4CC(CFourCC GameId)
     }};
 
     const auto iter = std::find_if(skIdToGame.cbegin(), skIdToGame.cend(),
-                                   [GameId](const auto& entry) { return entry.first == GameId.ToLong(); });
+                                   [GameId](const auto& entry) { return entry.first == GameId.ToU32(); });
     if (iter == skIdToGame.cend())
     {
         return EGame::Invalid;
