@@ -9,20 +9,22 @@ class IOutputStream;
 
 class CSerialVersion
 {
-    uint16 mArchiveVersion = 0;
-    uint16 mFileVersion = 0;
+    uint16_t mArchiveVersion = 0;
+    uint16_t mFileVersion = 0;
     EGame mGame{};
 
 public:
-    CSerialVersion();
-    explicit CSerialVersion(uint16 ArchiveVer, uint16 FileVer, EGame Game);
+    constexpr CSerialVersion() = default;
+    explicit constexpr CSerialVersion(uint16_t ArchiveVer, uint16_t FileVer, EGame Game)
+        : mArchiveVersion{ArchiveVer}, mFileVersion{FileVer}, mGame{Game} {}
+
     explicit CSerialVersion(IInputStream& rInput);
 
     void Read(IInputStream& rInput);
-    void Write(IOutputStream& rOutput);
+    void Write(IOutputStream& rOutput) const;
 
-    uint16 ArchiveVersion() const    { return mArchiveVersion; }
-    uint16 FileVersion() const       { return mFileVersion; }
+    uint16_t ArchiveVersion() const  { return mArchiveVersion; }
+    uint16_t FileVersion() const     { return mFileVersion; }
     EGame Game() const               { return mGame; }
 };
 
