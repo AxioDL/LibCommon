@@ -53,8 +53,8 @@ public:
         return {0.0f, 0.0f, 0.0f, 0.0f};
     }
 
-    static CQuaternion skIdentity;
-    static CQuaternion skZero;
+    static const CQuaternion skIdentity;
+    static const CQuaternion skZero;
 };
 
 #endif // CQUATERNION_H

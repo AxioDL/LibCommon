@@ -223,5 +223,5 @@ CQuaternion CQuaternion::FromAxes(const CVector3f& rkX, const CVector3f& rkY, co
     return CQuaternion::FromRotationMatrix(RotMtx);
 }
 
-CQuaternion CQuaternion::skIdentity = CQuaternion(1.f, 0.f, 0.f, 0.f);
-CQuaternion CQuaternion::skZero = CQuaternion(0.f, 0.f, 0.f, 0.f);
+constexpr CQuaternion CQuaternion::skIdentity = CQuaternion(1.f, 0.f, 0.f, 0.f);
+constexpr CQuaternion CQuaternion::skZero = CQuaternion(0.f, 0.f, 0.f, 0.f);
