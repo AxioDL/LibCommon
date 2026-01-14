@@ -12,7 +12,7 @@ CVector4f::CVector4f(IInputStream& rInput)
     W = rInput.ReadF32();
 }
 
-void CVector4f::Write(IOutputStream& rOutput)
+void CVector4f::Write(IOutputStream& rOutput) const
 {
     rOutput.WriteF32(X);
     rOutput.WriteF32(Y);

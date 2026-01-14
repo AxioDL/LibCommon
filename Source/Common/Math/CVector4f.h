@@ -25,7 +25,7 @@ public:
     constexpr CVector4f(const CVector3f& XYZ) : X{XYZ.X}, Y{XYZ.Y}, Z{XYZ.Z}, W{1.0f} {}
     constexpr CVector4f(const CVector3f& XYZ, float W_) : X{XYZ.X}, Y{XYZ.Y}, Z{XYZ.Z}, W{W_} {}
     explicit CVector4f(IInputStream& rInput);
-    void Write(IOutputStream& rOutput);
+    void Write(IOutputStream& rOutput) const;
 
     // Swizzle
     [[nodiscard]] constexpr CVector3f XYZ() const { return {X, Y, Z}; }
