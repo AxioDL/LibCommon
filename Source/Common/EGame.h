@@ -2,6 +2,7 @@
 #define EGAME_H
 
 #include "TString.h"
+#include "EnumReflection.h"
 
 class CFourCC;
 class IArchive;
@@ -18,10 +19,25 @@ enum class EGame
     Corruption,
     DKCReturns,
     PrimeRemastered,
-    
+
     Max,
     Invalid = -1
 };
+template <>
+const CEnumNameMap TEnumReflection<EGame>::skNameMap = {
+    {0, "PrimeDemo"},
+    {1, "Prime"},
+    {2, "EchoesDemo"},
+    {3, "Echoes"},
+    {4, "CorruptionProto"},
+    {5, "Corruption"},
+    {6, "DKCReturns"},
+    {7, "PrimeRemastered"},
+    {8, "Max"},
+    {-1, "Invalid"},
+};
+template <>
+const int TEnumReflection<EGame>::skErrorValue = -1;
 
 TString GetGameName(EGame Game);
 TString GetGameShortName(EGame Game);
@@ -37,5 +53,14 @@ enum class ERegion
     JPN,
     Unknown = -1
 };
+template <>
+const CEnumNameMap TEnumReflection<ERegion>::skNameMap = {
+    {0, "NTSC"},
+    {1, "PAL"},
+    {2, "JPN"},
+    {-1, "Unknown"},
+};
+template <>
+const int TEnumReflection<ERegion>::skErrorValue = -1;
 
 #endif // EGAME_H

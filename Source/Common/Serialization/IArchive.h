@@ -753,9 +753,8 @@ public:
 template <typename Value>
 constexpr inline bool TIsPrimitive = SerializeType<Value, IArchive> == SerialType::Primitive;
 
-#if WITH_CODEGEN
 // Default enum serializer; can be overridden
-#include <codegen/EnumReflection.h>
+#include "Common/EnumReflection.h"
 
 template<typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
 inline void DefaultEnumSerialize(IArchive& Arc, T& Val)
@@ -785,7 +784,6 @@ inline void Serialize(IArchive& Arc, T& Val)
 {
     DefaultEnumSerialize(Arc, Val);
 }
-#endif
 
 // Container serialize methods
 

@@ -6,12 +6,6 @@ endif()
 
 project(libcommon VERSION 0.1 LANGUAGES C CXX)
 
-# Ensure submodules checked out
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Externals/CodeGen/CMakeLists.txt)
-    message(FATAL_ERROR "Please run 'git submodules update --init --recursive' to fetch submodules.")
-endif()
-
-add_subdirectory(Externals/CodeGen)
 find_package(tinyxml2 CONFIG REQUIRED)
 
 if (NOT APPLE AND NOT MSVC)
@@ -82,20 +76,7 @@ target_link_libraries(libcommon
         spdlog::spdlog
         tinyxml2::tinyxml2
         "${FS_LIBRARY}"
-        codegen
 )
-
-add_codegen_targets(
-    "${source_files}"
-    codegen_generated_files
-    "${PROJECT_SOURCE_DIR}"
-    "${PROJECT_BINARY_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-)
-add_custom_target(libcommon_codegen DEPENDS ${codegen_generated_files} SOURCES ${source_files})
-
-# Add the generated sources to the library target
-target_sources(libcommon PRIVATE ${codegen_generated_files})
 
 #
 # If we're told to, make install targets
