@@ -354,7 +354,7 @@ private:
 
     // Instantiate an abstract object from the file
     // Only readers are allowed to instantiate objects
-    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
     std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(Basic), ValType*>
     inline InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
@@ -363,7 +363,7 @@ private:
         return (ValType*) ValType::ArchiveConstructor(Type);
     }
 
-    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
     std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(Advanced), ValType*>
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
@@ -372,7 +372,7 @@ private:
         return (ValType*) ValType::ArchiveConstructor(Type, *this);
     }
 
-    template<typename ValType, typename ObjType = typename ABSTRACT_TYPE>
+    template<typename ValType, typename ObjType = ABSTRACT_TYPE>
     std::enable_if_t<IS_ARCHIVE_CONSTRUCTOR_TYPE(None), ValType*>
     InstantiateAbstractObject(const TSerialParameter<ValType*>& Param, ObjType Type)
     {
