@@ -62,7 +62,7 @@ CQuaternion CQuaternion::Slerp(const CQuaternion& rkRight, float t) const
     }
     else
     {
-        float HalfTheta = std::acosf(CosHalfTheta);
+        float HalfTheta = std::acos(CosHalfTheta);
         ScalarA = std::sin((1.f - t) * HalfTheta) / SinHalfTheta;
         ScalarB = std::sin(t * HalfTheta) / SinHalfTheta;
     }
