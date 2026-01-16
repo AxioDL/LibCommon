@@ -63,8 +63,8 @@ CQuaternion CQuaternion::Slerp(const CQuaternion& rkRight, float t) const
     else
     {
         float HalfTheta = std::acosf(CosHalfTheta);
-        ScalarA = std::sinf((1.f - t) * HalfTheta) / SinHalfTheta;
-        ScalarB = std::sinf(t * HalfTheta) / SinHalfTheta;
+        ScalarA = std::sin((1.f - t) * HalfTheta) / SinHalfTheta;
+        ScalarB = std::sin(t * HalfTheta) / SinHalfTheta;
     }
 
     return CQuaternion((W * ScalarA) + (rkRight.W * ScalarB),
@@ -80,9 +80,9 @@ CVector3f CQuaternion::ToEuler() const
     // we can just have a single conversion function. Handy!
     // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
-    float EulerX = std::atan2f(2 * (W*X + Y*Z), 1 - (2 * (Math::Square(X) + Math::Square(Y))));
-    float EulerY = std::asinf(2 * (W*Y - Z*X));
-    float EulerZ = std::atan2f(2 * (W*Z + X*Y), 1 - (2 * (Math::Square(Y) + Math::Square(Z))));
+    float EulerX = std::atan2(2 * (W*X + Y*Z), 1 - (2 * (Math::Square(X) + Math::Square(Y))));
+    float EulerY = std::asin(2 * (W*Y - Z*X));
+    float EulerZ = std::atan2(2 * (W*Z + X*Y), 1 - (2 * (Math::Square(Y) + Math::Square(Z))));
     return CVector3f(Math::RadiansToDegrees(EulerX), Math::RadiansToDegrees(EulerY), Math::RadiansToDegrees(EulerZ));
 }
 
@@ -162,10 +162,10 @@ CQuaternion CQuaternion::FromEuler(const CVector3f& Euler)
 CQuaternion CQuaternion::FromAxisAngle(float Angle, const CVector3f& Axis)
 {
     const auto Norm = Axis.Normalized();
-    const float sa = std::sinf(Angle / 2);
+    const float sa = std::sin(Angle / 2);
 
     CQuaternion Quat;
-    Quat.W = std::cosf(Angle / 2);
+    Quat.W = std::cos(Angle / 2);
     Quat.X = Norm.X * sa;
     Quat.Y = Norm.Y * sa;
     Quat.Z = Norm.Z * sa;
