@@ -4,42 +4,60 @@
 #include "BasicTypes.h"
 #include "Serialization/IArchive.h"
 
+#include <compare>
+#include <type_traits>
+
 template<typename FlagEnum>
+requires(std::is_enum_v<FlagEnum>)
 class TFlags
 {
-    uint32 mValue = 0;
+    using UnsignedT = std::make_unsigned_t<std::underlying_type_t<FlagEnum>>;
+
+    UnsignedT mValue = 0;
 
 public:
     constexpr TFlags() = default;
-    constexpr TFlags(int Val) : mValue(uint32(Val)) {}
-    constexpr TFlags(uint32 Val) : mValue(Val) {}
-    constexpr TFlags(FlagEnum Val) : mValue(uint32(Val)) {}
+    constexpr TFlags(FlagEnum Val) : mValue(UnsignedT(Val)) {}
+    constexpr explicit TFlags(UnsignedT Val) : mValue(Val) {}
 
-    constexpr operator int()     const { return int(mValue);  }
-    [[nodiscard]] constexpr bool operator!()   const { return !mValue; }
-    [[nodiscard]] constexpr TFlags operator~() const { return TFlags(FlagEnum(~mValue)); }
+    [[nodiscard]] constexpr explicit operator bool() const { return mValue != 0; }
+    [[nodiscard]] constexpr auto operator<=>(const TFlags&) const noexcept = default;
 
-    constexpr void operator&=(int Mask)        { mValue &= uint32(Mask); }
-    constexpr void operator&=(uint32 Mask)     { mValue &= Mask; }
-    constexpr void operator|=(TFlags Flags)    { mValue |= Flags.mValue; }
-    constexpr void operator|=(FlagEnum Flag)   { mValue |= uint32(Flag); }
+    [[nodiscard]] constexpr TFlags operator~() const { return TFlags(UnsignedT(~mValue)); }
 
-    [[nodiscard]] constexpr TFlags operator|(TFlags Flags) const     { return TFlags(FlagEnum(mValue | Flags.mValue)); }
-    [[nodiscard]] constexpr TFlags operator|(FlagEnum Flag) const    { return TFlags(FlagEnum(mValue | uint32(Flag))); }
-    [[nodiscard]] constexpr TFlags operator&(int Mask) const         { return TFlags(FlagEnum(mValue & uint32(Mask))); }
-    [[nodiscard]] constexpr TFlags operator&(uint32 Mask) const      { return TFlags(FlagEnum(mValue & Mask)); }
-    [[nodiscard]] constexpr TFlags operator&(FlagEnum Flag) const    { return TFlags(FlagEnum(mValue & uint32(Flag))); }
+#define FLAG_BITWISE_OP_ENUM(op)                           \
+    constexpr TFlags operator op (FlagEnum val) const {    \
+        return TFlags(FlagEnum(mValue op UnsignedT(val))); \
+    }                                                      \
+    constexpr TFlags operator op (TFlags val) const {      \
+        return TFlags(mValue op val.mValue);               \
+    }
+    FLAG_BITWISE_OP_ENUM(|)
+    FLAG_BITWISE_OP_ENUM(&)
+    FLAG_BITWISE_OP_ENUM(^)
+#undef FLAG_BITWISE_OP_ENUM
 
-    [[nodiscard]] constexpr bool operator==(FlagEnum Flag) const     { return mValue == uint32(Flag); }
-    [[nodiscard]] constexpr bool operator!=(FlagEnum Flag) const     { return !operator==(Flag); }
+#define FLAG_BITWISE_OP_ASSIGN_ENUM(op)            \
+    constexpr TFlags& operator op (FlagEnum val) { \
+        mValue op UnsignedT(val);                  \
+        return *this;                              \
+    }                                              \
+    constexpr TFlags& operator op (TFlags val) {   \
+        mValue op val.mValue;                      \
+        return *this;                              \
+    }
+    FLAG_BITWISE_OP_ASSIGN_ENUM(|=)
+    FLAG_BITWISE_OP_ASSIGN_ENUM(&=)
+    FLAG_BITWISE_OP_ASSIGN_ENUM(^=)
+#undef FLAG_BITWISE_OP_ASSIGN_ENUM
 
-    [[nodiscard]] constexpr bool HasFlag(FlagEnum Flag) const    { return ((mValue & (uint32) Flag) != 0); }
-    [[nodiscard]] constexpr bool HasAnyFlags(TFlags Flags) const { return ((mValue & Flags) != 0); }
-    [[nodiscard]] constexpr bool HasAllFlags(TFlags Flags) const { return ((mValue & Flags) == Flags); }
-    constexpr void SetFlag(FlagEnum Flag)   { mValue |= uint32(Flag); }
-    constexpr void SetFlag(TFlags Flags)    { mValue |= Flags; }
-    constexpr void ClearFlag(FlagEnum Flag) { mValue &= ~(uint32(Flag)); }
-    constexpr void ClearFlag(TFlags Flags)  { mValue &= ~Flags; }
+    [[nodiscard]] constexpr bool HasFlag(FlagEnum Flag) const    { return ((mValue & UnsignedT(Flag)) != 0); }
+    [[nodiscard]] constexpr bool HasAnyFlags(TFlags Flags) const { return ((mValue & Flags.mValue) != 0); }
+    [[nodiscard]] constexpr bool HasAllFlags(TFlags Flags) const { return ((mValue & Flags.mValue) == Flags.mValue); }
+    constexpr void SetFlag(FlagEnum Flag)   { mValue |= UnsignedT(Flag); }
+    constexpr void SetFlag(TFlags Flags)    { mValue |= Flags.mValue; }
+    constexpr void ClearFlag(FlagEnum Flag) { mValue &= ~(UnsignedT(Flag)); }
+    constexpr void ClearFlag(TFlags Flags)  { mValue &= ~Flags.mValue; }
 
     constexpr void AssignFlag(FlagEnum Flag, bool Value)
     {
@@ -49,54 +67,79 @@ public:
             ClearFlag(Flag);
     }
 
-    [[nodiscard]] constexpr uint32 ToInt32() const { return mValue; }
+    constexpr void Reset(FlagEnum value) { mValue = UnsignedT(value); }
+    constexpr void Reset(TFlags flags) { mValue = flags.mValue; }
+
+    [[nodiscard]] constexpr UnsignedT Value() const { return mValue; }
     void Serialize(IArchive& rArc) { rArc.SerializePrimitive(mValue, SH_HexDisplay); }
 };
 // Note: When declaring flags for an enum class, use DECLARE_FLAGS_ENUMCLASS instead, defined below.
-#define DECLARE_FLAGS(Enum, FlagTypeName) using FlagTypeName = TFlags<Enum>;
+#define AXIO_DECLARE_FLAGS(Enum, FlagTypeName) using FlagTypeName = TFlags<Enum>;
 
-// Operator definitions for enum class flags
-#define ENUMCLASS_OPERATOR_OR(LeftType, RightType) \
-    constexpr int operator|(const LeftType Left, const RightType Right) \
-    { \
-        return (int) Left | (int) Right; \
+#define AXIO_DEFINE_ENUM_OPS(EnumT)                                             \
+    constexpr EnumT operator|(EnumT lhs, EnumT rhs)                             \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(Underlying(lhs) | Underlying(rhs));                        \
+    }                                                                           \
+    constexpr EnumT operator&(EnumT lhs, EnumT rhs)                             \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(Underlying(lhs) & Underlying(rhs));                        \
+    }                                                                           \
+    constexpr EnumT operator^(EnumT lhs, EnumT rhs)                             \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(Underlying(lhs) | Underlying(rhs));                        \
+    }                                                                           \
+    constexpr EnumT operator~(EnumT value)                                      \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(~Underlying(value));                                       \
+    }                                                                           \
+    constexpr EnumT& operator|=(EnumT& lhs, EnumT rhs)                          \
+    {                                                                           \
+        lhs = lhs | rhs;                                                        \
+        return lhs;                                                             \
+    }                                                                           \
+    constexpr EnumT& operator&=(EnumT& lhs, EnumT rhs)                          \
+    {                                                                           \
+        lhs = lhs & rhs;                                                        \
+        return lhs;                                                             \
+    }                                                                           \
+    constexpr EnumT& operator^=(EnumT& lhs, EnumT rhs)                          \
+    {                                                                           \
+        lhs = lhs ^ rhs;                                                        \
+        return lhs;                                                             \
+    }                                                                           \
+    template <std::integral Shift>                                              \
+    constexpr EnumT operator<<(EnumT lhs, Shift value)                          \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(Underlying(lhs) << value);                                 \
+    }                                                                           \
+    template <std::integral Shift>                                              \
+    constexpr EnumT operator>>(EnumT lhs, Shift value)                          \
+    {                                                                           \
+        using Underlying = std::make_unsigned_t<std::underlying_type_t<EnumT>>; \
+        return EnumT(Underlying(lhs) >> value);                                 \
+    }                                                                           \
+    template <std::integral Shift>                                              \
+    constexpr EnumT& operator<<=(EnumT& lhs, Shift value)                       \
+    {                                                                           \
+        lhs = lhs << value;                                                     \
+        return lhs;                                                             \
+    }                                                                           \
+    template <std::integral Shift>                                              \
+    constexpr EnumT& operator>>=(EnumT& lhs, Shift value)                       \
+    {                                                                           \
+        lhs = lhs >> value;                                                     \
+        return lhs;                                                             \
     }
 
-#define ENUMCLASS_OPERATOR_AND(LeftType, RightType) \
-    constexpr int operator&(const LeftType Left, const RightType Right) \
-    { \
-        return (int) Left & (int) Right; \
-    }
-
-#define ENUMCLASS_OPERATOR_BITSHIFT_LEFT(LeftType, RightType) \
-    constexpr int operator<<(const LeftType Left, const RightType Right) \
-    { \
-        return (int) Left << (int) Right; \
-    }
-
-#define ENUMCLASS_OPERATOR_BITSHIFT_RIGHT(LeftType, RightType) \
-    constexpr int operator>>(const LeftType Left, const RightType Right) \
-    { \
-        return (int) Left >> (int) Right; \
-    }
-
-#define ENUMCLASS_OPERATOR_NOT(InType) \
-    constexpr int operator~(const InType Value) \
-    { \
-        return ~((int) Value); \
-    } \
-
-#define DECLARE_FLAGS_ENUMCLASS(Enum, FlagTypeName) \
-    DECLARE_FLAGS(Enum, FlagTypeName) \
-    ENUMCLASS_OPERATOR_OR(Enum, Enum) \
-    ENUMCLASS_OPERATOR_OR(Enum, int) \
-    ENUMCLASS_OPERATOR_OR(int, Enum) \
-    ENUMCLASS_OPERATOR_AND(Enum, Enum) \
-    ENUMCLASS_OPERATOR_AND(Enum, int) \
-    ENUMCLASS_OPERATOR_AND(int, Enum) \
-    ENUMCLASS_OPERATOR_BITSHIFT_LEFT(Enum, int) \
-    ENUMCLASS_OPERATOR_BITSHIFT_RIGHT(Enum, int) \
-    ENUMCLASS_OPERATOR_NOT(Enum)
+#define AXIO_DECLARE_FLAGS_ENUMCLASS(Enum, FlagTypeName) \
+    AXIO_DECLARE_FLAGS(Enum, FlagTypeName)               \
+    AXIO_DEFINE_ENUM_OPS(Enum)
 
 #endif // FLAGS_H
 

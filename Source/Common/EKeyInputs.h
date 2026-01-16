@@ -15,7 +15,7 @@ enum class EKeyInput
     S     = 0x40,
     D     = 0x80
 };
-DECLARE_FLAGS_ENUMCLASS(EKeyInput, FKeyInputs)
+AXIO_DECLARE_FLAGS_ENUMCLASS(EKeyInput, FKeyInputs)
 
 #endif // EKEYINPUTS
 

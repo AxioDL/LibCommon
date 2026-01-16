@@ -9,7 +9,7 @@ enum class EMouseInput
     MiddleButton = 0x2,
     RightButton  = 0x4
 };
-DECLARE_FLAGS_ENUMCLASS(EMouseInput, FMouseInputs)
+AXIO_DECLARE_FLAGS_ENUMCLASS(EMouseInput, FMouseInputs)
 
 #endif // EMOUSEINPUTS
 

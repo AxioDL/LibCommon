@@ -14,6 +14,6 @@ enum class EAxis
     YZ   = Y | Z,
     XYZ  = X | Y | Z
 };
-DECLARE_FLAGS_ENUMCLASS(EAxis, FAxes)
+AXIO_DECLARE_FLAGS_ENUMCLASS(EAxis, FAxes)
 
 #endif // EAXIS_H
