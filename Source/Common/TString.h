@@ -6,6 +6,7 @@
 #include "Common/Macros.h"
 
 #include <algorithm>
+#include <bit>
 #include <cassert>
 #include <cstdarg>
 #include <cstddef>
