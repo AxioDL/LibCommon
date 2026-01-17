@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H
+#ifndef AXIO_MATHUTIL_H
+#define AXIO_MATHUTIL_H
 
 #include <cmath>
 #include <cstdint>
@@ -68,5 +68,5 @@ CMatrix4f OrthographicMatrix(float Left, float Right, float Bottom, float Top, f
 
 }
 
-#endif // MATH_H
+#endif // AXIO_MATHUTIL_H
 
