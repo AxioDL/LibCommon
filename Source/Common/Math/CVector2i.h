@@ -1,5 +1,5 @@
-#ifndef CVECTOR2I_H
-#define CVECTOR2I_H
+#ifndef AXIO_CVECTOR2I_H
+#define AXIO_CVECTOR2I_H
 
 class CVector2i
 {
@@ -84,4 +84,4 @@ public:
     }
 };
 
-#endif // CVECTOR2I_H
+#endif // AXIO_CVECTOR2I_H

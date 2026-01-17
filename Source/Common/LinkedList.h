@@ -1,5 +1,5 @@
-#ifndef TLINK_H
-#define TLINK_H
+#ifndef AXIO_TLINK_H
+#define AXIO_TLINK_H
 
 #include "Macros.h"
 
@@ -129,4 +129,4 @@ public:
     };
 };
 
-#endif // TLINK_H
+#endif // AXIO_TLINK_H

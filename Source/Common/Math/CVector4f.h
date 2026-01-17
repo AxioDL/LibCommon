@@ -1,5 +1,5 @@
-#ifndef CVECTOR4F
-#define CVECTOR4F
+#ifndef AXIO_CVECTOR4F_H
+#define AXIO_CVECTOR4F_H
 
 #include "Common/Math/CVector2f.h"
 #include "Common/Math/CVector3f.h"
@@ -112,4 +112,4 @@ public:
     }
 };
 
-#endif // CVECTOR4F
+#endif // AXIO_CVECTOR4F_H

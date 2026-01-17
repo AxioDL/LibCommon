@@ -1,5 +1,5 @@
-#ifndef CTRANSFORM4F_H
-#define CTRANSFORM4F_H
+#ifndef AXIO_CTRANSFORM4F_H
+#define AXIO_CTRANSFORM4F_H
 
 #include "CMatrix4f.h"
 #include "CQuaternion.h"
@@ -80,4 +80,4 @@ protected:
     }
 };
 
-#endif // CTRANSFORM4F_H
+#endif // AXIO_CTRANSFORM4F_H

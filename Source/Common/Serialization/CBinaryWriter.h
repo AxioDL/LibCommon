@@ -1,5 +1,5 @@
-#ifndef CBINARYWRITER
-#define CBINARYWRITER
+#ifndef AXIO_CBINARYWRITER_H
+#define AXIO_CBINARYWRITER_H
 
 #include "Common/CFourCC.h"
 #include "Common/FileIO/CFileOutStream.h"
@@ -159,5 +159,5 @@ public:
     void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override { mpStream->WriteBytes(pData, Size); }
 };
 
-#endif // CBINARYWRITER
+#endif // AXIO_CBINARYWRITER_H
 

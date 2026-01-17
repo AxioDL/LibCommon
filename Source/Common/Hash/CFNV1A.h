@@ -1,5 +1,5 @@
-#ifndef CFNV1A_H
-#define CFNV1A_H
+#ifndef AXIO_CFNV1A_H
+#define AXIO_CFNV1A_H
 
 #include <cstddef>
 #include <cstdint>
@@ -87,4 +87,4 @@ public:
     }
 };
 
-#endif // CFNV1A_H
+#endif // AXIO_CFNV1A_H

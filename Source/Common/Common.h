@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef AXIO_COMMON_H
+#define AXIO_COMMON_H
 
 #include "BasicTypes.h"
 #include "Macros.h"
@@ -23,4 +23,4 @@
 #include "Serialization/XML.h"
 #include "NBasics.h"
 
-#endif // COMMON_H
+#endif // AXIO_COMMON_H

@@ -1,5 +1,5 @@
-#ifndef CXMLWRITER
-#define CXMLWRITER
+#ifndef AXIO_CXMLWRITER_H
+#define AXIO_CXMLWRITER_H
 
 #include "Common/CFourCC.h"
 #include "Common/Log.h"
@@ -165,4 +165,4 @@ public:
     }
 };
 
-#endif // CXMLWRITER
+#endif // AXIO_CXMLWRITER_H

@@ -1,5 +1,5 @@
-#ifndef CRANDOM_H
-#define CRANDOM_H
+#ifndef AXIO_CRANDOM_H
+#define AXIO_CRANDOM_H
 
 #include <cstdint>
 #include <ctime>
@@ -60,4 +60,4 @@ public:
     ~CGlobalRandomContext();
 };
 
-#endif // CRANDOM_H
+#endif // AXIO_CRANDOM_H

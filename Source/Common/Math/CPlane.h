@@ -1,5 +1,5 @@
-#ifndef CPLANE_H
-#define CPLANE_H
+#ifndef AXIO_CPLANE_H
+#define AXIO_CPLANE_H
 
 #include "CVector3f.h"
 
@@ -48,4 +48,4 @@ public:
     constexpr void SetDist(float dist)                      { mDist = dist; }
 };
 
-#endif // CPLANE_H
+#endif // AXIO_CPLANE_H

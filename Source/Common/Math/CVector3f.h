@@ -1,5 +1,5 @@
-#ifndef CVECTOR3F_H
-#define CVECTOR3F_H
+#ifndef AXIO_CVECTOR3F_H
+#define AXIO_CVECTOR3F_H
 
 #include "Common/TString.h"
 #include "Common/Math/CVector2f.h"
@@ -209,4 +209,4 @@ public:
     friend std::ostream& operator<<(std::ostream& rOut, const CVector3f& rkVector);
 };
 
-#endif // CVECTOR3F_H
+#endif // AXIO_CVECTOR3F_H

@@ -1,5 +1,5 @@
-#ifndef FILEIO_H
-#define FILEIO_H
+#ifndef AXIO_FILEIO_H
+#define AXIO_FILEIO_H
 
 #include "FileIO/IInputStream.h"
 #include "FileIO/CFileInStream.h"
@@ -12,4 +12,4 @@
 
 #include "FileIO/CBitStreamInWrapper.h"
 
-#endif // FILEIO
+#endif // AXIO_FILEIO_H

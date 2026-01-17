@@ -1,5 +1,5 @@
-#ifndef CBITSTREAMINWRAPPER_H
-#define CBITSTREAMINWRAPPER_H
+#ifndef AXIO_CBITSTREAMINWRAPPER_H
+#define AXIO_CBITSTREAMINWRAPPER_H
 
 #include <cstdint>
 
@@ -29,4 +29,4 @@ private:
     void ReplenishPool();
 };
 
-#endif // CBITSTREAMINWRAPPER_H
+#endif // AXIO_CBITSTREAMINWRAPPER_H

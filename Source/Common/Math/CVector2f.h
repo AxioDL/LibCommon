@@ -1,5 +1,5 @@
-#ifndef CVECTOR2F
-#define CVECTOR2F
+#ifndef AXIO_CVECTOR2F_H
+#define AXIO_CVECTOR2F_H
 
 #include <cstdint>
 #include <cmath>
@@ -127,4 +127,4 @@ public:
     }
 };
 
-#endif // CVECTOR2F
+#endif // AXIO_CVECTOR2F_H

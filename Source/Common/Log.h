@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef AXIO_LOG_H
+#define AXIO_LOG_H
 
 #include <Common/TString.h>
 #include <spdlog/spdlog.h>
@@ -41,5 +41,5 @@ void Fatal(spdlog::format_string_t<Args...> fmt, Args&&... args)
 
 } // namespace NLog
 
-#endif // LOG_H
+#endif // AXIO_LOG_H
 

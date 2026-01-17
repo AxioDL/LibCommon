@@ -1,5 +1,5 @@
-#ifndef CAABOX_H
-#define CAABOX_H
+#ifndef AXIO_CAABOX_H
+#define AXIO_CAABOX_H
 
 #include "CVector3f.h"
 #include <utility>
@@ -99,4 +99,4 @@ public:
     }
 };
 
-#endif // CAABOX_H
+#endif // AXIO_CAABOX_H

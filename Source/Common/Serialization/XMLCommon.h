@@ -1,5 +1,5 @@
-#ifndef XMLCOMMON_H
-#define XMLCOMMON_H
+#ifndef AXIO_XMLCOMMON_H
+#define AXIO_XMLCOMMON_H
 
 #include <tinyxml2.h>
 
@@ -29,4 +29,4 @@ inline const char* XMLErrorString(tinyxml2::XMLError Error)
     }
 }
 
-#endif // XMLCOMMON_H
+#endif // AXIO_XMLCOMMON_H

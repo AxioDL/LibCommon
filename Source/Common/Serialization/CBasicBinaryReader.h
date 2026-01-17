@@ -1,5 +1,5 @@
-#ifndef CBASICBINARYREADER
-#define CBASICBINARYREADER
+#ifndef AXIO_CBASICBINARYREADER_H
+#define AXIO_CBASICBINARYREADER_H
 
 #include "Common/CFourCC.h"
 #include "Common/FileIO/CFileInStream.h"
@@ -86,5 +86,5 @@ public:
     void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { rValue = CAssetID(*mpStream, mGame); }
 };
 
-#endif // CBASICBINARYREADER
+#endif // AXIO_CBASICBINARYREADER_H
 

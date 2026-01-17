@@ -1,5 +1,5 @@
-#ifndef IINPUTSTREAM_H
-#define IINPUTSTREAM_H
+#ifndef AXIO_IINPUTSTREAM_H
+#define AXIO_IINPUTSTREAM_H
 
 #include "Common/BasicTypes.h"
 #include "Common/TString.h"
@@ -66,4 +66,4 @@ public:
     virtual uint32_t Size() const = 0;
 };
 
-#endif // IINPUTSTREAM_H
+#endif // AXIO_IINPUTSTREAM_H

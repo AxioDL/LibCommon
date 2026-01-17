@@ -1,5 +1,5 @@
-#ifndef TSTRING_H
-#define TSTRING_H
+#ifndef AXIO_TSTRING_H
+#define AXIO_TSTRING_H
 
 #include "Common/Hash/CCRC32.h"
 #include "Common/Hash/CFNV1A.h"
@@ -1343,4 +1343,4 @@ using TStringList = std::list<TString>;
 using T16StringList = std::list<T16String>;
 using T32StringList = std::list<T32String>;
 
-#endif // TSTRING_H
+#endif // AXIO_TSTRING_H

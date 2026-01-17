@@ -1,5 +1,5 @@
-#ifndef CFILEINSTREAM_H
-#define CFILEINSTREAM_H
+#ifndef AXIO_CFILEINSTREAM_H
+#define AXIO_CFILEINSTREAM_H
 
 #include "IInputStream.h"
 
@@ -31,4 +31,4 @@ public:
     TString FileName() const;
 };
 
-#endif // CFILEINSTREAM_H
+#endif // AXIO_CFILEINSTREAM_H

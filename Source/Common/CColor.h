@@ -1,5 +1,5 @@
-#ifndef CCOLOR_H
-#define CCOLOR_H
+#ifndef AXIO_CCOLOR_H
+#define AXIO_CCOLOR_H
 
 #include <cstdint>
 
@@ -138,4 +138,4 @@ public:
     }
 };
 
-#endif // CCOLOR_H
+#endif // AXIO_CCOLOR_H

@@ -1,5 +1,5 @@
-#ifndef CMEMORYOUTSTREAM_H
-#define CMEMORYOUTSTREAM_H
+#ifndef AXIO_CMEMORYOUTSTREAM_H
+#define AXIO_CMEMORYOUTSTREAM_H
 
 #include "IOutputStream.h"
 
@@ -29,4 +29,4 @@ public:
     void* DataAtPosition() const;
 };
 
-#endif // CMEMORYOUTSTREAM_H
+#endif // AXIO_CMEMORYOUTSTREAM_H

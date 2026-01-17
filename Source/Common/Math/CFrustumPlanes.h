@@ -1,5 +1,5 @@
-#ifndef CFRUSTUMPLANES_H
-#define CFRUSTUMPLANES_H
+#ifndef AXIO_CFRUSTUMPLANES_H
+#define AXIO_CFRUSTUMPLANES_H
 
 #include "CPlane.h"
 #include <array>
@@ -31,4 +31,4 @@ public:
     bool BoxInFrustum(const CAABox& rkBox) const;
 };
 
-#endif // CFRUSTUMPLANES_H
+#endif // AXIO_CFRUSTUMPLANES_H

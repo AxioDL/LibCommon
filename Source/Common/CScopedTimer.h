@@ -1,5 +1,5 @@
-#ifndef CSCOPEDTIMER
-#define CSCOPEDTIMER
+#ifndef AXIO_CSCOPEDTIMER_H
+#define AXIO_CSCOPEDTIMER_H
 
 #include "Common/CTimer.h"
 #include "Common/Log.h"
@@ -37,5 +37,5 @@ public:
 #define SCOPED_TIMER(TimerName) \
     [[maybe_unused]] CScopedTimer TimerName(#TimerName)
 
-#endif // CSCOPEDTIMER
+#endif // AXIO_CSCOPEDTIMER_H
 

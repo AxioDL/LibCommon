@@ -1,10 +1,10 @@
-#ifndef ETRANSFORMSPACE
-#define ETRANSFORMSPACE
+#ifndef AXIO_ETRANSFORMSPACE_H
+#define AXIO_ETRANSFORMSPACE_H
 
 enum class ETransformSpace
 {
     World, Local
 };
 
-#endif // ETRANSFORMSPACE
+#endif // AXIO_ETRANSFORMSPACE_H
 

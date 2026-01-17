@@ -1,5 +1,5 @@
-#ifndef CMATRIX4_H
-#define CMATRIX4_H
+#ifndef AXIO_CMATRIX4_H
+#define AXIO_CMATRIX4_H
 
 #include <array>
 #include <cstdint>
@@ -44,4 +44,4 @@ public:
     static const CMatrix4f skIdentity;
 };
 
-#endif // CMATRIX4_H
+#endif // AXIO_CMATRIX4_H

@@ -1,5 +1,5 @@
-#ifndef IOUTPUTSTREAM_H
-#define IOUTPUTSTREAM_H
+#ifndef AXIO_IOUTPUTSTREAM_H
+#define AXIO_IOUTPUTSTREAM_H
 
 #include "Common/TString.h"
 
@@ -47,4 +47,4 @@ public:
     virtual bool IsValid() const = 0;
     virtual uint32_t Size() const = 0;
 };
-#endif // COUTPUTSTREAM_H
+#endif // AXIO_IOUTPUTSTREAM_H

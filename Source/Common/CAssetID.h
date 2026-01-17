@@ -1,5 +1,5 @@
-#ifndef CASSETID_H
-#define CASSETID_H
+#ifndef AXIO_CASSETID_H
+#define AXIO_CASSETID_H
 
 #include "EGame.h"
 #include "TString.h"
@@ -93,4 +93,4 @@ public:
     static const CAssetID skInvalidID64;
 };
 
-#endif // CASSETID_H
+#endif // AXIO_CASSETID_H

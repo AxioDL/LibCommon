@@ -1,5 +1,5 @@
-#ifndef FILEUTIL
-#define FILEUTIL
+#ifndef AXIO_FILEUTIL_H
+#define AXIO_FILEUTIL_H
 
 #include "TString.h"
 #include <vector>
@@ -46,5 +46,5 @@ bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8_t>& kBu
 
 }
 
-#endif // FILEUTIL
+#endif // AXIO_FILEUTIL_H
 

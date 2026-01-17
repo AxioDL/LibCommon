@@ -1,5 +1,5 @@
-#ifndef CMEMORYINSTREAM_H
-#define CMEMORYINSTREAM_H
+#ifndef AXIO_CMEMORYINSTREAM_H
+#define AXIO_CMEMORYINSTREAM_H
 
 #include "IInputStream.h"
 
@@ -27,4 +27,4 @@ public:
     const void* DataAtPosition() const;
 };
 
-#endif // CMEMORYINSTREAM_H
+#endif // AXIO_CMEMORYINSTREAM_H

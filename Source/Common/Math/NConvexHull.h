@@ -1,5 +1,5 @@
-#ifndef NCONVEXHULL_H
-#define NCONVEXHULL_H
+#ifndef AXIO_NCONVEXHULL_H
+#define AXIO_NCONVEXHULL_H
 
 #include <cstdint>
 #include <vector>
@@ -26,4 +26,4 @@ bool BuildConvexHullMesh(const std::vector<CVector3f>& kInPoints,
 
 }
 
-#endif // NCONVEXHULL_H
+#endif // AXIO_NCONVEXHULL_H

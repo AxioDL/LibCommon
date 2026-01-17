@@ -1,5 +1,5 @@
-#ifndef CFILELOCK_H
-#define CFILELOCK_H
+#ifndef AXIO_CFILELOCK_H
+#define AXIO_CFILELOCK_H
 
 #include <cstdio>
 #include "Common/TString.h"
@@ -49,4 +49,4 @@ public:
     }
 };
 
-#endif // CFILELOCK_H
+#endif // AXIO_CFILELOCK_H

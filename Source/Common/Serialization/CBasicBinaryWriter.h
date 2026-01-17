@@ -1,5 +1,5 @@
-#ifndef CBASICBINARYWRITER
-#define CBASICBINARYWRITER
+#ifndef AXIO_CBASICBINARYWRITER_H
+#define AXIO_CBASICBINARYWRITER_H
 
 #include "Common/CFourCC.h"
 #include "Common/FileIO/IOutputStream.h"

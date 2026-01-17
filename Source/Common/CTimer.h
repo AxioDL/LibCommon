@@ -1,5 +1,5 @@
-#ifndef CTIMER_H
-#define CTIMER_H
+#ifndef AXIO_CTIMER_H
+#define AXIO_CTIMER_H
 
 class CTimer
 {
@@ -26,4 +26,4 @@ public:
     static float SecondsMod900();
 };
 
-#endif // CTIMER_H
+#endif // AXIO_CTIMER_H

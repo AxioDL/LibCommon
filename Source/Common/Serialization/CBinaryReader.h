@@ -1,5 +1,5 @@
-#ifndef CBINARYREADER
-#define CBINARYREADER
+#ifndef AXIO_CBINARYREADER_H
+#define AXIO_CBINARYREADER_H
 
 #include "Common/CFourCC.h"
 #include "Common/FileIO/CFileInStream.h"
@@ -192,5 +192,5 @@ public:
     void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override { mpStream->ReadBytes(pData, Size); }
 };
 
-#endif // CBINARYREADER
+#endif // AXIO_CBINARYREADER_H
 

@@ -1,5 +1,5 @@
-#ifndef EAXIS_H
-#define EAXIS_H
+#ifndef AXIO_EAXIS_H
+#define AXIO_EAXIS_H
 
 #include "Common/Flags.h"
 
@@ -16,4 +16,4 @@ enum class EAxis
 };
 AXIO_DECLARE_FLAGS_ENUMCLASS(EAxis, FAxes)
 
-#endif // EAXIS_H
+#endif // AXIO_EAXIS_H

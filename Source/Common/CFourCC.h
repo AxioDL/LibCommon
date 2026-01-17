@@ -1,5 +1,5 @@
-#ifndef CFOURCC_H
-#define CFOURCC_H
+#ifndef AXIO_CFOURCC_H
+#define AXIO_CFOURCC_H
 
 #include "BasicTypes.h"
 #include "FileIO/IInputStream.h"
@@ -147,4 +147,4 @@ public:
     [[nodiscard]] bool operator<=(const CFourCC& rkOther) const    { return mFourCC <= rkOther.mFourCC;                    }
 };
 
-#endif // CFOURCC_H
+#endif // AXIO_CFOURCC_H

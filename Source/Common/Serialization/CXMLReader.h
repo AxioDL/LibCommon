@@ -1,5 +1,5 @@
-#ifndef CXMLREADER
-#define CXMLREADER
+#ifndef AXIO_CXMLREADER_H
+#define AXIO_CXMLREADER_H
 
 #include "Common/Log.h"
 #include "Common/Serialization/IArchive.h"
@@ -159,5 +159,5 @@ public:
     }
 };
 
-#endif // CXMLREADER
+#endif // AXIO_CXMLREADER_H
 

@@ -1,5 +1,5 @@
-#ifndef ASSERT_H
-#define ASSERT_H
+#ifndef AXIO_ASSERT_H
+#define AXIO_ASSERT_H
 
 #include <cstdlib>
 #include <string.h>
@@ -70,4 +70,4 @@
     #define ASSERT(Expression) {}
 #endif
 
-#endif // ASSERT_H
+#endif // AXIO_ASSERT_H

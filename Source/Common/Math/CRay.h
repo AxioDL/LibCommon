@@ -1,5 +1,5 @@
-#ifndef CRAY_H
-#define CRAY_H
+#ifndef AXIO_CRAY_H
+#define AXIO_CRAY_H
 
 #include "CTransform4f.h"
 #include "CVector3f.h"
@@ -34,4 +34,4 @@ public:
     constexpr CVector3f PointOnRay(float distance) const { return mOrigin + (mDirection * distance); }
 };
 
-#endif // CRAY_H
+#endif // AXIO_CRAY_H

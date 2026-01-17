@@ -1,5 +1,5 @@
-#ifndef EMOUSEINPUTS
-#define EMOUSEINPUTS
+#ifndef AXIO_EMOUSEINPUTS_H
+#define AXIO_EMOUSEINPUTS_H
 
 #include "Flags.h"
 
@@ -11,5 +11,5 @@ enum class EMouseInput
 };
 AXIO_DECLARE_FLAGS_ENUMCLASS(EMouseInput, FMouseInputs)
 
-#endif // EMOUSEINPUTS
+#endif // AXIO_EMOUSEINPUTS_H
 

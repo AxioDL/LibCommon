@@ -1,5 +1,5 @@
-#ifndef EKEYINPUTS
-#define EKEYINPUTS
+#ifndef AXIO_EKEYINPUTS_H
+#define AXIO_EKEYINPUTS_H
 
 #include "Flags.h"
 
@@ -17,5 +17,5 @@ enum class EKeyInput
 };
 AXIO_DECLARE_FLAGS_ENUMCLASS(EKeyInput, FKeyInputs)
 
-#endif // EKEYINPUTS
+#endif // AXIO_EKEYINPUTS_H
 

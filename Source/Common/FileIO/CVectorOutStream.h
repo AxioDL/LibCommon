@@ -1,5 +1,5 @@
-#ifndef CVECTOROUTSTREAM_H
-#define CVECTOROUTSTREAM_H
+#ifndef AXIO_CVECTOROUTSTREAM_H
+#define AXIO_CVECTOROUTSTREAM_H
 
 #include "IOutputStream.h"
 #include <vector>
@@ -33,4 +33,4 @@ public:
     void Clear();
 };
 
-#endif // CVECTOROUTSTREAM_H
+#endif // AXIO_CVECTOROUTSTREAM_H

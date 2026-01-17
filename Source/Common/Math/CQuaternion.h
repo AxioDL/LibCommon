@@ -1,5 +1,5 @@
-#ifndef CQUATERNION_H
-#define CQUATERNION_H
+#ifndef AXIO_CQUATERNION_H
+#define AXIO_CQUATERNION_H
 
 #include "CVector3f.h"
 
@@ -57,4 +57,4 @@ public:
     static const CQuaternion skZero;
 };
 
-#endif // CQUATERNION_H
+#endif // AXIO_CQUATERNION_H

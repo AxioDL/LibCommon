@@ -1,5 +1,5 @@
-#ifndef CSERIALVERSION
-#define CSERIALVERSION
+#ifndef AXIO_CSERIALVERSION_H
+#define AXIO_CSERIALVERSION_H
 
 #include "Common/BasicTypes.h"
 #include "Common/EGame.h"
@@ -28,5 +28,5 @@ public:
     EGame Game() const               { return mGame; }
 };
 
-#endif // CSERIALVERSION
+#endif // AXIO_CSERIALVERSION_H
 

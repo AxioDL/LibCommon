@@ -1,5 +1,5 @@
-#ifndef IARCHIVE
-#define IARCHIVE
+#ifndef AXIO_IARCHIVE_H
+#define AXIO_IARCHIVE_H
 
 #include "CSerialVersion.h"
 #include "Common/Macros.h"
@@ -957,4 +957,4 @@ void Serialize(IArchive& Arc, std::shared_ptr<T>& Pointer)
 #undef IS_ARCHIVE_CONSTRUCTOR_TYPE
 #undef ABSTRACT_TYPE
 
-#endif // IARCHIVE
+#endif // AXIO_IARCHIVE_H

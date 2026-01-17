@@ -1,5 +1,5 @@
-#ifndef CFILEOUTSTREAM_H
-#define CFILEOUTSTREAM_H
+#ifndef AXIO_CFILEOUTSTREAM_H
+#define AXIO_CFILEOUTSTREAM_H
 
 #include "IOutputStream.h"
 
@@ -32,4 +32,4 @@ public:
     TString FileName() const;
 };
 
-#endif // CFILEOUTSTREAM_H
+#endif // AXIO_CFILEOUTSTREAM_H

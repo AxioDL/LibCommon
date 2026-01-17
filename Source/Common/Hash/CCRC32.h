@@ -1,5 +1,5 @@
-#ifndef CCRC32_H
-#define CCRC32_H
+#ifndef AXIO_CCRC32_H
+#define AXIO_CCRC32_H
 
 #include <cstddef>
 #include <cstdint>
@@ -37,4 +37,4 @@ public:
     static uint32_t StaticHashData(const void* pkData, size_t Size);
 };
 
-#endif // CCRC32_H
+#endif // AXIO_CCRC32_H

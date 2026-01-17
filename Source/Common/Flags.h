@@ -1,5 +1,5 @@
-#ifndef FLAGS_H
-#define FLAGS_H
+#ifndef AXIO_FLAGS_H
+#define AXIO_FLAGS_H
 
 #include "BasicTypes.h"
 #include "Serialization/IArchive.h"
@@ -141,5 +141,5 @@ public:
     AXIO_DECLARE_FLAGS(Enum, FlagTypeName)               \
     AXIO_DEFINE_ENUM_OPS(Enum)
 
-#endif // FLAGS_H
+#endif // AXIO_FLAGS_H
 

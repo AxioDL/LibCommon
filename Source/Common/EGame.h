@@ -1,5 +1,5 @@
-#ifndef EGAME_H
-#define EGAME_H
+#ifndef AXIO_EGAME_H
+#define AXIO_EGAME_H
 
 #include "TString.h"
 #include "EnumReflection.h"
@@ -39,4 +39,4 @@ enum class ERegion
     Unknown = -1
 };
 
-#endif // EGAME_H
+#endif // AXIO_EGAME_H
