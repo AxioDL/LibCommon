@@ -4,18 +4,6 @@
 #include <cstdlib>
 #include <string.h>
 
-/** Returns the size of a static array */
-#define ARRAY_SIZE(Array) ( sizeof(Array) / sizeof(Array[0]) )
-
-/** Aligns the input value to be a multiple of Align. Align must be a power of 2. */
-#define VAL_ALIGN(Value, Align) ( (Value + Align-1) & ~(Align-1) )
-
-#define VAL_ALIGN_4(Value)  VAL_ALIGN(Value, 4)
-#define VAL_ALIGN_8(Value)  VAL_ALIGN(Value, 8)
-#define VAL_ALIGN_16(Value) VAL_ALIGN(Value, 16)
-#define VAL_ALIGN_32(Value) VAL_ALIGN(Value, 32)
-#define VAL_ALIGN_64(Value) VAL_ALIGN(Value, 64)
-
 /** Returns the offset of a class member within that class */
 #define MEMBER_OFFSET(TypeName, MemberName) ( (int) (long long) &((TypeName*)0)->MemberName )
 

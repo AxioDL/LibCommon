@@ -2,7 +2,8 @@
 #define AXIO_MATHUTIL_H
 
 #include <cmath>
-#include <cstdint>
+#include <concepts>
+#include <cstddef>
 #include <utility>
 
 #include <Common/Math/CVector3f.h>
@@ -17,6 +18,13 @@ namespace Math
 // Constants
 constexpr float skPi = 3.14159265358979323846f;
 constexpr float skHalfPi = skPi / 2.f;
+
+/** Aligns the input value to be a multiple of Align. Align must be a power of 2. */
+template <std::unsigned_integral Value>
+constexpr Value Align(Value value, size_t align)
+{
+    return Value((value + align - 1) & ~(align - 1));
+}
 
 template<typename T>
 constexpr T Square(const T& V)

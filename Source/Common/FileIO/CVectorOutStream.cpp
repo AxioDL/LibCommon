@@ -1,5 +1,5 @@
 #include "CVectorOutStream.h"
-#include "Common/Common.h"
+#include "Common/Math/MathUtil.h"
 
 CVectorOutStream::CVectorOutStream()
     : mpVector(new std::vector<char>())
@@ -42,7 +42,7 @@ void CVectorOutStream::WriteBytes(const void *pkSrc, uint32_t Count)
     if (NewSize > mpVector->size())
     {
         if (NewSize > mpVector->capacity())
-            mpVector->reserve( VAL_ALIGN(mPos + Count, skAllocSize) );
+            mpVector->reserve(Math::Align(mPos + Count, skAllocSize));
 
         mpVector->resize(NewSize);
     }
