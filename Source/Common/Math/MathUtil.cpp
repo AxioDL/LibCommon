@@ -6,6 +6,7 @@
 #include "CPlane.h"
 
 #include <cfloat>
+#include <cmath>
 
 namespace Math
 {
@@ -18,7 +19,7 @@ std::pair<bool,float> RayPlaneIntersection(const CRay& rkRay, const CPlane& rkPl
     // Are ray and plane parallel?
     float Denom = rkPlane.Normal().Dot(rkRay.Direction());
 
-    if (Abs(Denom) < FLT_EPSILON)
+    if (std::abs(Denom) < FLT_EPSILON)
         return {false, 0.f};
 
     // Not parallel
@@ -241,7 +242,7 @@ std::pair<bool,float> RaySphereIntersection(const CRay& rkRay, const CVector3f& 
         if (DSquared >= 0.f && DSquared <= SquaredRadius)
         {
             Out.first = true;
-            Out.second = CenterDist - Sqrt(SquaredRadius - DSquared);
+            Out.second = CenterDist - std::sqrt(SquaredRadius - DSquared);
         }
     }
 
