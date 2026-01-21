@@ -1,10 +1,10 @@
 #ifndef AXIO_IINPUTSTREAM_H
 #define AXIO_IINPUTSTREAM_H
 
-#include "Common/BasicTypes.h"
 #include "Common/TString.h"
 
 #include <bit>
+#include <cstdint>
 
 class CFourCC;
 

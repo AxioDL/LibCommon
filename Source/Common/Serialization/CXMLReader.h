@@ -39,7 +39,7 @@ public:
     }
 
     // Interface
-    bool ParamBegin(const char *pkName, uint32 Flags) override
+    bool ParamBegin(const char *pkName, uint32_t Flags) override
     {
         ASSERT(IsValid());
         ASSERT(!mpAttribute); // Attributes cannot have sub-children
@@ -116,7 +116,7 @@ protected:
     }
 
 public:
-    void SerializeArraySize(uint32& Value) override
+    void SerializeArraySize(uint32_t& Value) override
     {
         Value = 0;
 
@@ -124,34 +124,34 @@ public:
             Value++;
     }
 
-    bool PreSerializePointer(void*& InPointer, uint32 Flags) override
+    bool PreSerializePointer(void*& InPointer, uint32_t Flags) override
     {
         return mpCurElem->GetText() == nullptr || strcmp(mpCurElem->GetText(), "NULL") != 0;
     }
 
-    void SerializePrimitive(bool& rValue, uint32 Flags)  override    { rValue = ReadParam() == "true"; }
-    void SerializePrimitive(char& rValue, uint32 Flags) override     { rValue = ReadParam().Front(); }
-    void SerializePrimitive(int8& rValue, uint32 Flags) override     { rValue = (int8)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(uint8& rValue, uint32 Flags) override    { rValue = (uint8)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(int16& rValue, uint32 Flags) override    { rValue = (int16)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(uint16& rValue, uint32 Flags) override   { rValue = (uint16)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(int32& rValue, uint32 Flags) override    { rValue = (int32)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(uint32& rValue, uint32 Flags) override   { rValue = (uint32)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(int64& rValue, uint32 Flags) override    { rValue = (int64)ReadParam().ToInt64((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(uint64& rValue, uint32 Flags) override   { rValue = (uint64)ReadParam().ToInt64((Flags & SH_HexDisplay) ? 16 : 0); }
-    void SerializePrimitive(float& rValue, uint32 Flags) override    { rValue = ReadParam().ToFloat(); }
-    void SerializePrimitive(double& rValue, uint32 Flags) override   { rValue = (double)ReadParam().ToFloat(); }
-    void SerializePrimitive(TString& rValue, uint32 Flags) override  { rValue = ReadParam(); }
-    void SerializePrimitive(CFourCC& rValue, uint32 Flags) override  { rValue = CFourCC(ReadParam()); }
-    void SerializePrimitive(CAssetID& rValue, uint32 Flags) override { rValue = CAssetID::FromString(ReadParam()); }
+    void SerializePrimitive(bool& rValue, uint32_t Flags)  override    { rValue = ReadParam() == "true"; }
+    void SerializePrimitive(char& rValue, uint32_t Flags) override     { rValue = ReadParam().Front(); }
+    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { rValue = (int8_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { rValue = (uint8_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { rValue = (int16_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { rValue = (uint16_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override  { rValue = (int32_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { rValue = (uint32_t)ReadParam().ToInt32((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { rValue = (int64_t)ReadParam().ToInt64((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { rValue = (uint64_t)ReadParam().ToInt64((Flags & SH_HexDisplay) ? 16 : 0); }
+    void SerializePrimitive(float& rValue, uint32_t Flags) override    { rValue = ReadParam().ToFloat(); }
+    void SerializePrimitive(double& rValue, uint32_t Flags) override   { rValue = (double)ReadParam().ToFloat(); }
+    void SerializePrimitive(TString& rValue, uint32_t Flags) override  { rValue = ReadParam(); }
+    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override  { rValue = CFourCC(ReadParam()); }
+    void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { rValue = CAssetID::FromString(ReadParam()); }
 
-    void SerializeBulkData(void* pData, uint32 Size, uint32 Flags) override
+    void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override
     {
         char* pCharData = (char*) pData;
         TString StringData = ReadParam();
         ASSERT(StringData.Size() == Size*2);
 
-        for (uint32 ByteIdx = 0; ByteIdx < Size; ByteIdx++)
+        for (uint32_t ByteIdx = 0; ByteIdx < Size; ByteIdx++)
         {
             *pCharData = (char) StringData.SubString(ByteIdx*2, 2).ToInt32(16);
             pCharData++;

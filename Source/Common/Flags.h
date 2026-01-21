@@ -1,10 +1,10 @@
 #ifndef AXIO_FLAGS_H
 #define AXIO_FLAGS_H
 
-#include "BasicTypes.h"
 #include "Serialization/IArchive.h"
 
 #include <compare>
+#include <cstdint>
 #include <type_traits>
 
 template<typename FlagEnum>

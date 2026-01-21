@@ -16,7 +16,7 @@ class CBasicBinaryWriter : public IArchive
     bool mOwnsStream = true;
 
 public:
-    explicit CBasicBinaryWriter(const TString& rkFilename, uint32_t Magic, uint16 FileVersion, EGame Game)
+    explicit CBasicBinaryWriter(const TString& rkFilename, uint32_t Magic, uint16_t FileVersion, EGame Game)
         : mMagic(Magic)
     {
         mArchiveFlags = AF_Binary | AF_Writer | AF_NoSkipping;
@@ -30,7 +30,7 @@ public:
         }
     }
 
-    explicit CBasicBinaryWriter(IOutputStream *pStream, uint16 FileVersion, EGame Game)
+    explicit CBasicBinaryWriter(IOutputStream *pStream, uint16_t FileVersion, EGame Game)
         : mOwnsStream(false)
     {
         ASSERT(pStream->IsValid());

@@ -1,12 +1,12 @@
 #ifndef AXIO_CFOURCC_H
 #define AXIO_CFOURCC_H
 
-#include "BasicTypes.h"
 #include "FileIO/IInputStream.h"
 #include "FileIO/IOutputStream.h"
 #include "Macros.h"
 #include "TString.h"
 
+#include <cstdint>
 
 #define FOURCC_FROM_TEXT(Text) (Text[0] << 24 | Text[1] << 16 | Text[2] << 8 | Text[3])
 

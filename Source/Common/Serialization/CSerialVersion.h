@@ -1,8 +1,9 @@
 #ifndef AXIO_CSERIALVERSION_H
 #define AXIO_CSERIALVERSION_H
 
-#include "Common/BasicTypes.h"
 #include "Common/EGame.h"
+
+#include <cstdint>
 
 class IInputStream;
 class IOutputStream;
