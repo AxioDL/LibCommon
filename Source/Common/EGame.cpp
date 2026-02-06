@@ -47,18 +47,18 @@ TString GetGameShortName(EGame Game)
 CFourCC GameTo4CC(EGame Game)
 {
     static constexpr std::array skGame4CCs{
-        CFourCC(FOURCC('MP1D')),
-        CFourCC(FOURCC('MPRM')),
-        CFourCC(FOURCC('MP2D')),
-        CFourCC(FOURCC('MP2E')),
-        CFourCC(FOURCC('MP3P')),
-        CFourCC(FOURCC('MP3C')),
-        CFourCC(FOURCC('DKCR')),
-        CFourCC(FOURCC('MP1R')),
+        CFourCC("MP1D"),
+        CFourCC("MPRM"),
+        CFourCC("MP2D"),
+        CFourCC("MP2E"),
+        CFourCC("MP3P"),
+        CFourCC("MP3C"),
+        CFourCC("DKCR"),
+        CFourCC("MP1R"),
     };
 
     if (Game < EGame::PrimeDemo || Game > EGame::PrimeRemastered) {
-        return FOURCC('UNKN');
+        return CFourCC("UNKN");
     }
 
     return skGame4CCs[static_cast<size_t>(Game)];
@@ -66,21 +66,20 @@ CFourCC GameTo4CC(EGame Game)
 
 EGame GameFrom4CC(CFourCC GameId)
 {
-    static constexpr std::array<std::pair<uint32_t, EGame>, 8> skIdToGame{{
-        {FOURCC('MP1D'), EGame::PrimeDemo},
-        {FOURCC('MPRM'), EGame::Prime},
-        {FOURCC('MP2D'), EGame::EchoesDemo},
-        {FOURCC('MP2E'), EGame::Echoes},
-        {FOURCC('MP3P'), EGame::CorruptionProto},
-        {FOURCC('MP3C'), EGame::Corruption},
-        {FOURCC('DKCR'), EGame::DKCReturns},
-        {FOURCC('MP1R'), EGame::PrimeRemastered},
+    static constexpr std::array<std::pair<CFourCC, EGame>, 8> skIdToGame{{
+        {CFourCC("MP1D"), EGame::PrimeDemo},
+        {CFourCC("MPRM"), EGame::Prime},
+        {CFourCC("MP2D"), EGame::EchoesDemo},
+        {CFourCC("MP2E"), EGame::Echoes},
+        {CFourCC("MP3P"), EGame::CorruptionProto},
+        {CFourCC("MP3C"), EGame::Corruption},
+        {CFourCC("DKCR"), EGame::DKCReturns},
+        {CFourCC("MP1R"), EGame::PrimeRemastered},
     }};
 
-    const auto iter = std::find_if(skIdToGame.cbegin(), skIdToGame.cend(),
-                                   [GameId](const auto& entry) { return entry.first == GameId.ToU32(); });
-    if (iter == skIdToGame.cend())
-    {
+    const auto iter = std::ranges::find_if(skIdToGame,
+                                           [GameId](const auto& entry) { return entry.first == GameId; });
+    if (iter == skIdToGame.cend()) {
         return EGame::Invalid;
     }
 
