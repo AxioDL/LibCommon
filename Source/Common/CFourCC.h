@@ -6,6 +6,7 @@
 #include "Macros.h"
 #include "TString.h"
 
+#include <compare>
 #include <cstdint>
 
 // Note: All FourCC constants should be wrapped in this macro
@@ -13,12 +14,7 @@
 
 class CFourCC
 {
-    // Note: mFourCC_Chars isn't used much due to endianness.
-    union
-    {
-        uint32_t mFourCC = 0;
-        char mFourCC_Chars[4];
-    };
+    uint32_t mFourCC = 0;
 
     static constexpr uint32_t FourCCFromText(std::string_view str)
     {
@@ -74,8 +70,8 @@ public:
     {
         CFourCC Out;
 
-        for (size_t iChr = 0; iChr < 4; iChr++)
-            Out.mFourCC_Chars[iChr] = TString::CharToUpper(mFourCC_Chars[iChr]);
+        for (size_t i = 0; i < 4; i++)
+            reinterpret_cast<char*>(&Out.mFourCC)[i] = TString::CharToUpper(reinterpret_cast<const char*>(&mFourCC)[i]);
 
         return CFourCC(Out);
     }
@@ -142,12 +138,7 @@ public:
         return *this;
     }
 
-    [[nodiscard]] bool operator==(const CFourCC& rkOther) const    { return mFourCC == rkOther.mFourCC;                    }
-    [[nodiscard]] bool operator!=(const CFourCC& rkOther) const    { return mFourCC != rkOther.mFourCC;                    }
-    [[nodiscard]] bool operator> (const CFourCC& rkOther) const    { return mFourCC >  rkOther.mFourCC;                    }
-    [[nodiscard]] bool operator>=(const CFourCC& rkOther) const    { return mFourCC >= rkOther.mFourCC;                    }
-    [[nodiscard]] bool operator< (const CFourCC& rkOther) const    { return mFourCC <  rkOther.mFourCC;                    }
-    [[nodiscard]] bool operator<=(const CFourCC& rkOther) const    { return mFourCC <= rkOther.mFourCC;                    }
+    [[nodiscard]] constexpr auto operator<=>(const CFourCC&) const noexcept = default;
 };
 
 #endif // AXIO_CFOURCC_H
