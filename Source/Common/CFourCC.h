@@ -8,8 +8,6 @@
 
 #include <cstdint>
 
-#define FOURCC_FROM_TEXT(Text) (Text[0] << 24 | Text[1] << 16 | Text[2] << 8 | Text[3])
-
 // Note: All FourCC constants should be wrapped in this macro
 #define FOURCC(Value) Value
 
@@ -22,14 +20,19 @@ class CFourCC
         char mFourCC_Chars[4];
     };
 
+    static constexpr uint32_t FourCCFromText(std::string_view str)
+    {
+        return uint32_t(str[0]) << 24 | uint32_t(str[1]) << 16 | uint32_t(str[2]) << 8 | uint32_t(str[3]);
+    }
+
 public:
     // Constructors
     constexpr CFourCC() = default;
-    constexpr explicit CFourCC(const char* pkSrc) : mFourCC{static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc))} {}
+    constexpr explicit CFourCC(const char* pkSrc) : mFourCC{FourCCFromText(pkSrc)} {}
     explicit CFourCC(const TString& rkSrc)
     {
         ASSERT(rkSrc.Length() == 4);
-        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
+        mFourCC = FourCCFromText(rkSrc);
     }
     constexpr CFourCC(uint32_t Src) : mFourCC{Src} {}
     explicit CFourCC(IInputStream& rSrc) { Read(rSrc); }
@@ -123,13 +126,13 @@ public:
 
     CFourCC& operator=(const char* pkSrc)
     {
-        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(pkSrc));
+        mFourCC = FourCCFromText(pkSrc);
         return *this;
     }
 
     CFourCC& operator=(const TString& rkSrc)
     {
-        mFourCC = static_cast<uint32_t>(FOURCC_FROM_TEXT(rkSrc));
+        mFourCC = FourCCFromText(rkSrc);
         return *this;
     }
 
