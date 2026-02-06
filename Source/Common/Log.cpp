@@ -1,5 +1,4 @@
 #include "Common/Log.h"
-#include "Common/TString.h"
 
 #include <chrono>
 #include <cstdio>
@@ -19,7 +18,7 @@ namespace NLog
 {
 static bool gInitialized = false;
 
-bool InitLog(const TString& rkFilename)
+bool InitLog(const std::string& filename)
 {
     if (gInitialized)
         return true;
@@ -28,7 +27,7 @@ bool InitLog(const TString& rkFilename)
     {
         std::vector<spdlog::sink_ptr> sinks{
             std::make_shared<spdlog::sinks::stdout_color_sink_mt>(),
-            std::make_shared<spdlog::sinks::basic_file_sink_mt>(rkFilename.ToStdString(), true),
+            std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true),
 #ifdef _WIN32
             std::make_shared<spdlog::sinks::msvc_sink_mt>(true)
 #endif

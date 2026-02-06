@@ -1,14 +1,14 @@
 #ifndef AXIO_LOG_H
 #define AXIO_LOG_H
 
-#include <Common/TString.h>
 #include <spdlog/spdlog.h>
+#include <string>
 
 /** Application logging functionality */
 namespace NLog
 {
 
-bool InitLog(const TString& rkFilename);
+bool InitLog(const std::string& filename);
 
 inline auto Get()
 {
