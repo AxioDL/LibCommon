@@ -24,12 +24,7 @@ class CFourCC
 public:
     // Constructors
     constexpr CFourCC() = default;
-    constexpr explicit CFourCC(const char* pkSrc) : mFourCC{FourCCFromText(pkSrc)} {}
-    explicit CFourCC(const TString& rkSrc)
-    {
-        ASSERT(rkSrc.Length() == 4);
-        mFourCC = FourCCFromText(rkSrc);
-    }
+    constexpr explicit CFourCC(std::string_view txt) : mFourCC{FourCCFromText(txt)} {}
     constexpr CFourCC(uint32_t Src) : mFourCC{Src} {}
     explicit CFourCC(IInputStream& rSrc) { Read(rSrc); }
 
@@ -100,35 +95,19 @@ public:
         return reinterpret_cast<const char*>(&mFourCC)[Index];
     }
 
-    [[nodiscard]] TString operator+(const char *pkText) const
+    [[nodiscard]] TString operator+(std::string_view text) const
     {
-        return ToString() + pkText;
+        return ToString() + TString(text);
     }
 
-    [[nodiscard]]  TString operator+(const TString& rkStr) const
+    [[nodiscard]] friend TString operator+(std::string_view text, const CFourCC& fourcc)
     {
-        return ToString() + rkStr;
+        return TString(text) + fourcc.ToString();
     }
 
-    [[nodiscard]] friend TString operator+(const char *pkText, const CFourCC& rkFourCC)
+    CFourCC& operator=(std::string_view str)
     {
-        return pkText + rkFourCC.ToString();
-    }
-
-    [[nodiscard]] friend TString operator+(const TString& rkStr, const CFourCC& rkFourCC)
-    {
-        return rkStr + rkFourCC.ToString();
-    }
-
-    CFourCC& operator=(const char* pkSrc)
-    {
-        mFourCC = FourCCFromText(pkSrc);
-        return *this;
-    }
-
-    CFourCC& operator=(const TString& rkSrc)
-    {
-        mFourCC = FourCCFromText(rkSrc);
+        mFourCC = FourCCFromText(str);
         return *this;
     }
 
