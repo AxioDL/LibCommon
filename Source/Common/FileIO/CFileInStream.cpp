@@ -73,7 +73,7 @@ bool CFileInStream::Seek(int32_t Offset, uint32_t Origin)
     if (!IsValid())
         return false;
 
-    return (fseek(mpFStream, Offset, Origin) != 0);
+    return (fseek(mpFStream, Offset, Origin) == 0);
 }
 
 bool CFileInStream::Seek64(int64_t Offset, uint32_t Origin)
@@ -82,9 +82,9 @@ bool CFileInStream::Seek64(int64_t Offset, uint32_t Origin)
         return false;
 
 #ifdef _WIN32
-    return (_fseeki64(mpFStream, Offset, Origin) != 0);
+    return (_fseeki64(mpFStream, Offset, Origin) == 0);
 #else
-    return (fseeko(mpFStream, Offset, Origin) != 0);
+    return (fseeko(mpFStream, Offset, Origin) == 0);
 #endif
 }
 
