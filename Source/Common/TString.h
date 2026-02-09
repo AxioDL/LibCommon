@@ -1068,20 +1068,6 @@ public:
         return _TString(StringBuffer, static_cast<size_t>(size));
     }
 
-    static _TString FromInt32(int32_t Value, int Width = 0, int Base = 16)
-    {
-        std::basic_ostringstream<CharType> SStream;
-        SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
-        return SStream.str();
-    }
-
-    static _TString FromInt64(int64_t Value, int Width = 0, int Base = 16)
-    {
-        std::basic_ostringstream<CharType> SStream;
-        SStream << std::setbase(Base) << std::setw(Width) << std::setfill(CHAR_LITERAL('0')) << Value;
-        return SStream.str();
-    }
-
     static _TString FromFloat(float Value, int MinDecimals = 1, bool Scientific = false)
     {
         _TString Out = _TString::Format(Scientific ? "%.8g" : "%f", Value);
@@ -1118,66 +1104,6 @@ public:
         }
 
         return Out;
-    }
-
-    static _TString FileSizeString(int64_t Size, int NumDecimals = 2)
-    {
-        _TString Out;
-        _TString Type;
-
-        if (Size < 100)
-        {
-            return FromInt64(Size, 0, 10) + LITERAL(" bytes");
-        }
-        else if (Size < 1000000)
-        {
-            Out = FromFloat(Size / 1000.f, NumDecimals);
-            Type = LITERAL("KB");
-        }
-        else if (Size < 1000000000)
-        {
-            Out = FromFloat(Size / 1000000.f, NumDecimals);
-            Type = LITERAL("MB");
-        }
-        else
-        {
-            Out = FromFloat(Size / 1000000000.f, NumDecimals);
-            Type = LITERAL("GB");
-        }
-
-        const size_t DecCount = Out.Size() - (Out.IndexOf(CHAR_LITERAL('.')) + 1);
-        if (DecCount > static_cast<size_t>(NumDecimals))
-            Out = Out.ChopBack(DecCount - NumDecimals);
-
-        return Out + Type;
-    }
-
-    static _TString HexString(uint8_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
-    {
-        return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
-    }
-
-    static _TString HexString(uint16_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
-    {
-        return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
-    }
-
-    static _TString HexString(uint32_t Num, int Width = 8, bool AddPrefix = true, bool Uppercase = true)
-    {
-        return HexString(uint64_t{Num}, Width, AddPrefix, Uppercase);
-    }
-
-    static _TString HexString(uint64_t Num, int Width = 16, bool AddPrefix = true, bool Uppercase = true)
-    {
-        std::basic_ostringstream<CharType> SStream;
-        SStream << std::hex << std::setw(Width) << std::setfill('0') << Num;
-
-        _TString Str = std::move(SStream).str();
-        if (Uppercase)
-            Str = Str.ToUpper();
-        if (AddPrefix)
-            Str.Prepend(LITERAL("0x"));
-        return Str;
     }
 
     static constexpr bool CompareCStrings(const CharType* pkA, const CharType* pkB)

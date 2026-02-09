@@ -136,14 +136,14 @@ public:
 
     void SerializePrimitive(bool& rValue, uint32_t Flags) override     { WriteParam(rValue ? "true" : "false"); }
     void SerializePrimitive(char& rValue, uint32_t Flags) override     { WriteParam(*TString(rValue)); }
-    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint8_t)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint16_t)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString((uint32_t)rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? *TString::HexString(rValue, 0) : *TString::FromInt32(rValue, 0, 10)); }
-    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { WriteParam(*TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10)); }
-    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { WriteParam(*TString::FromInt64(rValue, 0, (Flags & SH_HexDisplay) ? 16 : 10)); }
+    void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(uint16_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(int32_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
+    void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
     void SerializePrimitive(float& rValue, uint32_t Flags) override    { WriteParam(*TString::FromFloat(rValue, 1, true)); }
     void SerializePrimitive(double& rValue, uint32_t Flags) override   { WriteParam(*TString::FromFloat((float)rValue, 1, true)); }
     void SerializePrimitive(TString& rValue, uint32_t Flags) override  { WriteParam(*rValue); }

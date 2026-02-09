@@ -5,6 +5,8 @@
 #include "Common/FileIO/IInputStream.h"
 #include "Common/FileIO/IOutputStream.h"
 
+#include <fmt/format.h>
+
 void CAssetID::Write(IOutputStream& rOutput, EIDLength ForcedLength /*= eInvalidIDLength*/) const
 {
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);
@@ -32,11 +34,10 @@ CAssetID::CAssetID(IInputStream& rInput, EGame Game)
 TString CAssetID::ToString(EIDLength ForcedLength /*= eInvalidIDLength*/) const
 {
     const auto Length = (ForcedLength == EIDLength::kInvalidIDLength ? mLength : ForcedLength);
-
     if (Length == EIDLength::k32Bit)
-        return TString::HexString(ToU32(), 8, false, true);
+        return fmt::format("{:08X}", ToU32());
     else
-        return TString::FromInt64(ToU64(), 16, 16).ToUpper();
+        return fmt::format("{:016X}", ToU64());
 }
 
 // ************ STATIC ************
