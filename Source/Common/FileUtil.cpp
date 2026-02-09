@@ -77,7 +77,7 @@ bool IsEmpty(const TString& rkDirPath)
 {
     if (!IsDirectory(rkDirPath))
     {
-        NLog::Error("Non-directory path passed to IsEmpty(): {}", rkDirPath.ToStdString());
+        NLog::Error("Non-directory path passed to IsEmpty(): {}", rkDirPath);
         return false;
     }
 
@@ -88,7 +88,7 @@ bool MakeDirectory(const TString& rkNewDir)
 {
     if (!IsValidPath(rkNewDir, true))
     {
-        NLog::Error("Unable to create directory because name contains illegal characters: {}", rkNewDir.ToStdString());
+        NLog::Error("Unable to create directory because name contains illegal characters: {}", rkNewDir);
         return false;
     }
 
@@ -101,7 +101,7 @@ bool CopyFile(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        NLog::Error("Unable to copy file because destination name contains illegal characters: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to copy file because destination name contains illegal characters: {}", rkNewPath);
         return false;
     }
 
@@ -116,7 +116,7 @@ bool CopyDirectory(const TString& rkOrigPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        NLog::Error("Unable to copy directory because destination name contains illegal characters: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to copy directory because destination name contains illegal characters: {}", rkNewPath);
         return false;
     }
 
@@ -131,13 +131,13 @@ bool MoveFile(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, false))
     {
-        NLog::Error("Unable to move file because destination name contains illegal characters: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to move file because destination name contains illegal characters: {}", rkNewPath);
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        NLog::Error("Unable to move file because there is an existing file at the destination path: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to move file because there is an existing file at the destination path: {}", rkNewPath);
         return false;
     }
 
@@ -150,13 +150,13 @@ bool MoveDirectory(const TString& rkOldPath, const TString& rkNewPath)
 {
     if (!IsValidPath(rkNewPath, true))
     {
-        NLog::Error("Unable to move directory because destination name contains illegal characters: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to move directory because destination name contains illegal characters: {}", rkNewPath);
         return false;
     }
 
     if (Exists(rkNewPath))
     {
-        NLog::Error("Unable to move directory because there is an existing directory at the destination path: {}", rkNewPath.ToStdString());
+        NLog::Error("Unable to move directory because there is an existing directory at the destination path: {}", rkNewPath);
         return false;
     }
 
@@ -228,7 +228,7 @@ bool ClearDirectory(const TString& rkDirPath)
             Success = DeleteDirectory(DirContent, false);
 
         if (!Success)
-            NLog::Error("Failed to delete filesystem object: {}", DirContent.ToStdString());
+            NLog::Error("Failed to delete filesystem object: {}", DirContent);
     }
 
     return true;
@@ -247,7 +247,7 @@ void MarkHidden(const TString& rkFilePath, bool Hidden)
 
     SetFileAttributesW( ToWChar(FilePath16), Attrs );
 #else
-    NLog::Error("MarkHidden unimplemented: {}", rkFilePath.ToStdString());
+    NLog::Error("MarkHidden unimplemented: {}", rkFilePath);
 #endif
 }
 

@@ -19,6 +19,8 @@
 #include <string>
 #include <type_traits>
 
+#include <fmt/format.h>
+
 /**
  * This is a string class which is essentially a wrapper around std::basic_string.
  * The reason for this is because there are a lot of extremely common string operations
@@ -1343,5 +1345,13 @@ public:
 using TStringList = std::list<TString>;
 using T16StringList = std::list<T16String>;
 using T32StringList = std::list<T32String>;
+
+template <>
+struct fmt::formatter<TString> : fmt::formatter<std::string_view>
+{
+    auto format(const TString& str, fmt::format_context& ctx) const {
+        return fmt::formatter<std::string_view>::format(str.ToStdString(), ctx);
+    }
+};
 
 #endif // AXIO_TSTRING_H

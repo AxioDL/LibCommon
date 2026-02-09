@@ -49,12 +49,12 @@ public:
             return false;
         }
 
-        tinyxml2::XMLError Error = mDoc.SaveFile(*mOutFilename);
+        tinyxml2::XMLError Error = mDoc.SaveFile(mOutFilename.CString());
         mSaved = true;
 
         if (Error != tinyxml2::XML_SUCCESS)
         {
-            NLog::Error("Failed to save XML file: {}", mOutFilename.ToStdString());
+            NLog::Error("Failed to save XML file: {}", mOutFilename);
             return false;
         }
 

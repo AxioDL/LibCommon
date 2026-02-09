@@ -23,7 +23,7 @@ public:
 
         if (Error != tinyxml2::XML_SUCCESS)
         {
-            NLog::Error("{}: Failed to open XML for read: {}", rkFileName.ToStdString(), XMLErrorString(Error));
+            NLog::Error("{}: Failed to open XML for read: {}", rkFileName, XMLErrorString(Error));
         }
         else
         {
