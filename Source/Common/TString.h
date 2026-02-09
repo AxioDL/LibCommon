@@ -1347,6 +1347,13 @@ using T16StringList = std::list<T16String>;
 using T32StringList = std::list<T32String>;
 
 template <>
+struct fmt::formatter<TBasicString<char, TStringList>> : fmt::formatter<std::string_view>
+{
+    auto format(const TBasicString<char, TStringList>& str, fmt::format_context& ctx) const {
+        return fmt::formatter<std::string_view>::format(str.ToStdString(), ctx);
+    }
+};
+template <>
 struct fmt::formatter<TString> : fmt::formatter<std::string_view>
 {
     auto format(const TString& str, fmt::format_context& ctx) const {
