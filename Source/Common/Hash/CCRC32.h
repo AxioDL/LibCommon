@@ -28,9 +28,11 @@ public:
     uint32_t Digest() const { return mHash; }
 
     /** Convenience hash methods */
+    void Hash(const char* str) { Hash(std::string_view(str)); }
     void Hash(std::string_view str) { Hash(str.data(), str.size()); }
+
     template <typename T>
-    requires(std::is_trivially_copyable_v<T>)
+    requires(std::is_trivially_copyable_v<T> && !std::is_pointer_v<T>)
     void Hash(const T& value) { Hash(&value, sizeof(value)); }
 
     static uint32_t StaticHashString(std::string_view str);
