@@ -19,7 +19,7 @@ public:
         mArchiveFlags = AF_Reader | AF_Text;
 
         // Load XML and set current element to the root element; read version
-        tinyxml2::XMLError Error = mDoc.LoadFile(*rkFileName);
+        tinyxml2::XMLError Error = mDoc.LoadFile(rkFileName.CString());
 
         if (Error != tinyxml2::XML_SUCCESS)
         {

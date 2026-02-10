@@ -176,9 +176,9 @@ template<typename InStringType, typename OutStringType>
 static OutStringType ConvertString(const InStringType& kInString)
 {
     OutStringType Out;
-    Out.Reserve( kInString.Size() );
+    Out.Reserve(kInString.Size());
 
-    const typename InStringType::CharType* pkString = *kInString;
+    const auto* pkString = kInString.CString();
 
     while (*pkString != 0)
     {

@@ -35,9 +35,9 @@ void CVector3f::Serialize(IArchive& Arc)
 TString CVector3f::ToString() const
 {
     return TString::Format("%s, %s, %s",
-                           *TString::FromFloat(X),
-                           *TString::FromFloat(Y),
-                           *TString::FromFloat(Z));
+                           TString::FromFloat(X).CString(),
+                           TString::FromFloat(Y).CString(),
+                           TString::FromFloat(Z).CString());
 }
 
 // ************ OPERATORS ************

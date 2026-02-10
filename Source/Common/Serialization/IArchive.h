@@ -765,7 +765,7 @@ inline void DefaultEnumSerialize(IArchive& Arc, T& Val)
         {
             TString ValueName;
             Arc.SerializePrimitive(ValueName, 0);
-            Val = TEnumReflection<T>::ConvertStringToValue( *ValueName );
+            Val = TEnumReflection<T>::ConvertStringToValue(ValueName.CString());
         }
         else
         {

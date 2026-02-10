@@ -25,7 +25,7 @@ public:
         tinyxml2::XMLDeclaration *pDecl = mDoc.NewDeclaration();
         mDoc.LinkEndChild(pDecl);
 
-        mpCurElem = mDoc.NewElement(*rkRootName);
+        mpCurElem = mDoc.NewElement(rkRootName.CString());
         mDoc.LinkEndChild(mpCurElem);
 
         // Write version data
@@ -135,7 +135,7 @@ public:
     }
 
     void SerializePrimitive(bool& rValue, uint32_t Flags) override     { WriteParam(rValue ? "true" : "false"); }
-    void SerializePrimitive(char& rValue, uint32_t Flags) override     { WriteParam(*TString(rValue)); }
+    void SerializePrimitive(char& rValue, uint32_t Flags) override     { WriteParam(TString(rValue).CString()); }
     void SerializePrimitive(int8_t& rValue, uint32_t Flags) override   { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
     void SerializePrimitive(uint8_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
     void SerializePrimitive(int16_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
@@ -144,11 +144,11 @@ public:
     void SerializePrimitive(uint32_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
     void SerializePrimitive(int64_t& rValue, uint32_t Flags) override  { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
     void SerializePrimitive(uint64_t& rValue, uint32_t Flags) override { WriteParam((Flags & SH_HexDisplay) ? fmt::format("0x{:X}", rValue).c_str() : fmt::format("{}", rValue).c_str()); }
-    void SerializePrimitive(float& rValue, uint32_t Flags) override    { WriteParam(*TString::FromFloat(rValue, 1, true)); }
-    void SerializePrimitive(double& rValue, uint32_t Flags) override   { WriteParam(*TString::FromFloat((float)rValue, 1, true)); }
-    void SerializePrimitive(TString& rValue, uint32_t Flags) override  { WriteParam(*rValue); }
-    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override  { WriteParam(*rValue.ToString()); }
-    void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { WriteParam(*rValue.ToString(CAssetID::GameIDLength(Game()))); }
+    void SerializePrimitive(float& rValue, uint32_t Flags) override    { WriteParam(TString::FromFloat(rValue, 1, true).CString()); }
+    void SerializePrimitive(double& rValue, uint32_t Flags) override   { WriteParam(TString::FromFloat((float)rValue, 1, true).CString()); }
+    void SerializePrimitive(TString& rValue, uint32_t Flags) override  { WriteParam(rValue.CString()); }
+    void SerializePrimitive(CFourCC& rValue, uint32_t Flags) override  { WriteParam(rValue.ToString().CString()); }
+    void SerializePrimitive(CAssetID& rValue, uint32_t Flags) override { WriteParam(rValue.ToString(CAssetID::GameIDLength(Game())).CString()); }
 
     void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override
     {
@@ -161,7 +161,7 @@ public:
             sprintf(&OutString[ByteIdx*2], "%02X", pCharData[ByteIdx]);
         }
 
-        WriteParam(*OutString);
+        WriteParam(OutString.CString());
     }
 };
 

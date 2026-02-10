@@ -735,11 +735,6 @@ public:
         return mInternalString;
     }
 
-    const CharType* operator*() const
-    {
-        return CString();
-    }
-
     _TString operator+(CharType Other) const
     {
         return _TString(mInternalString + Other);
@@ -795,12 +790,12 @@ public:
 
     _TString operator/(const _TString& kOther) const
     {
-        return operator/(*kOther);
+        return operator/(kOther.CString());
     }
 
     friend _TString operator/(const CharType* pkLeft, const _TString& rkRight)
     {
-        return  _TString(pkLeft).operator/(*rkRight);
+        return  _TString(pkLeft).operator/(rkRight.CString());
     }
 
     friend _TString operator+(CharType Left, const _TString& rkRight)
@@ -1221,34 +1216,30 @@ public:
 class CToWChar
 {
 #if WCHAR_IS_16BIT
-    const T16String* mpStringPtr;
+    const T16String* mpStringPtr = nullptr;
     T16String mConvertedString;
 #else
-    const T32String* mpStringPtr;
+    const T32String* mpStringPtr = nullptr;
     T32String mConvertedString;
 #endif
 
 public:
 #if WCHAR_IS_16BIT
     CToWChar(const TString& kInString)
-        : mpStringPtr(nullptr)
-        , mConvertedString( kInString.ToUTF16() )
+        : mConvertedString(kInString.ToUTF16())
     {}
     CToWChar(const T16String& kInString)
         : mpStringPtr(&kInString)
     {}
     CToWChar(const T32String& kInString)
-        : mpStringPtr(nullptr)
-        , mConvertedString( kInString.ToUTF16() )
+        : mConvertedString(kInString.ToUTF16())
     {}
 #else
     CToWChar(const TString& kInString)
-        : mpStringPtr(nullptr)
-        , mConvertedString( kInString.ToUTF32() )
+        : mConvertedString(kInString.ToUTF32())
     {}
     CToWChar(const T16String& kInString)
-        : mpStringPtr(nullptr)
-        , mConvertedString( kInString.ToUTF32() )
+        : mConvertedString(kInString.ToUTF32())
     {}
     CToWChar(const T32String& kInString)
         : mpStringPtr(&kInString)
@@ -1257,7 +1248,7 @@ public:
 
     const wchar_t* Decay() const
     {
-        return reinterpret_cast<const wchar_t*>( mpStringPtr ? **mpStringPtr : *mConvertedString );
+        return reinterpret_cast<const wchar_t*>(mpStringPtr ? mpStringPtr->CString() : mConvertedString.CString());
     }
     const wchar_t* operator*() const
     {

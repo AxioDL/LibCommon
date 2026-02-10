@@ -60,7 +60,7 @@ bool IsDirectory(const TString& rkDirPath)
 
 bool IsDirectoryWritable(const TString& rkDirPath)
 {
-    return check_dir_access(*rkDirPath) == 0;
+    return check_dir_access(rkDirPath.CString()) == 0;
 }
 
 bool IsAbsolute(const TString& rkDirPath)
