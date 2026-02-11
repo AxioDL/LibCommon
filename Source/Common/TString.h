@@ -255,16 +255,10 @@ public:
         mInternalString.insert(Pos, 1, Chr);
     }
 
-    void Insert(size_t Pos, const CharType* pkStr)
+    void Insert(size_t Pos, _TStdStringView str)
     {
         assert(Size() >= Pos);
-        mInternalString.insert(Pos, pkStr);
-    }
-
-    void Insert(size_t Pos, const _TString& rkStr)
-    {
-        assert(Size() >= Pos);
-        mInternalString.insert(Pos, rkStr.mInternalString);
+        mInternalString.insert(Pos, str);
     }
 
     void Remove(size_t Pos, size_t Len)
@@ -275,11 +269,11 @@ public:
         mInternalString.erase(Pos, Len);
     }
 
-    void Remove(const CharType* pkStr, bool CaseSensitive = false)
+    void Remove(_TStdStringView str, bool CaseSensitive = false)
     {
-        size_t InStrLen = CStringLength(pkStr);
+        const size_t InStrLen = str.size();
 
-        for (auto Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Idx, CaseSensitive))
+        for (auto Idx = IndexOfPhrase(str, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(str, Idx, CaseSensitive))
             Remove(Idx, InStrLen);
     }
 
@@ -293,23 +287,18 @@ public:
         std::erase_if(mInternalString, &IsWhitespace);
     }
 
-    void Replace(const CharType* pkStr, const CharType *pkReplacement, bool CaseSensitive = false)
+    void Replace(_TStdStringView str, _TStdStringView replacement, bool CaseSensitive = false)
     {
         size_t Offset = 0;
-        size_t InStrLen = CStringLength(pkStr);
-        size_t ReplaceStrLen = CStringLength(pkReplacement);
+        const size_t InStrLen = str.size();
+        const size_t ReplaceStrLen = replacement.size();
 
-        for (auto Idx = IndexOfPhrase(pkStr, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(pkStr, Offset, CaseSensitive))
+        for (auto Idx = IndexOfPhrase(str, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(str, Offset, CaseSensitive))
         {
             Remove(Idx, InStrLen);
-            Insert(Idx, pkReplacement);
+            Insert(Idx, replacement);
             Offset = Idx + ReplaceStrLen;
         }
-    }
-
-    void Replace(const _TString& rkStr, const _TString& rkReplacement, bool CaseSensitive)
-    {
-        Replace(rkStr.CString(), rkReplacement.CString(), CaseSensitive);
     }
 
     void Append(CharType Chr)
@@ -317,14 +306,9 @@ public:
         mInternalString.append(1, Chr);
     }
 
-    void Append(const CharType* pkText)
+    void Append(_TStdStringView text)
     {
-        mInternalString.append(pkText);
-    }
-
-    void Append(const _TString& rkStr)
-    {
-        mInternalString.append(rkStr.mInternalString);
+        mInternalString.append(text);
     }
 
     void Prepend(CharType Chr)
@@ -332,14 +316,9 @@ public:
         Insert(0, Chr);
     }
 
-    void Prepend(const CharType* pkText)
+    void Prepend(_TStdStringView text)
     {
-        Insert(0, pkText);
-    }
-
-    void Prepend(const _TString& rkStr)
-    {
-        Insert(0, rkStr);
+        Insert(0, text);
     }
 
     _TString ToUpper() const
@@ -462,7 +441,7 @@ public:
         return mInternalString;
     }
 
-    _TStringList Split(const CharType* pkTokens, bool KeepEmptyParts = false) const
+    _TStringList Split(_TStdStringView tokens, bool KeepEmptyParts = false) const
     {
         _TStringList Out;
         size_t LastSplit = 0;
@@ -471,12 +450,9 @@ public:
         for (size_t iChr = 0; iChr < Length(); iChr++)
         {
             // Check whether this character is one of the user-provided tokens
-            for (size_t iTok = 0; true; iTok++)
+            for (const auto token : tokens)
             {
-                if (!pkTokens[iTok])
-                    break;
-
-                if (mInternalString[iChr] == pkTokens[iTok])
+                if (mInternalString[iChr] == token)
                 {
                     // Token found - split string
                     if (iChr > LastSplit || KeepEmptyParts)
@@ -504,10 +480,10 @@ public:
             Append(Chr);
     }
 
-    void EnsureEndsWith(const CharType* pkText)
+    void EnsureEndsWith(_TStdStringView text)
     {
-        if (!EndsWith(pkText))
-            Append(pkText);
+        if (!EndsWith(text))
+            Append(text);
     }
 
     // Check String
