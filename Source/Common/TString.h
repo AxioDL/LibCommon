@@ -159,24 +159,14 @@ public:
         return Size();
     }
 
-    int64_t IndexOf(CharType Character, size_t Offset) const
+    int64_t IndexOf(CharType Character, size_t Offset = 0) const
     {
         return mInternalString.find_first_of(Character, Offset);
     }
 
-    int64_t IndexOf(CharType Character) const
+    int64_t IndexOf(_TStdStringView characters, size_t Offset = 0) const
     {
-        return IndexOf(Character, 0);
-    }
-
-    int64_t IndexOf(const CharType* pkCharacters, size_t Offset) const
-    {
-        return mInternalString.find_first_of(pkCharacters, Offset);
-    }
-
-    int64_t IndexOf(const CharType* pkCharacters) const
-    {
-        return IndexOf(pkCharacters, 0);
+        return mInternalString.find_first_of(characters, Offset);
     }
 
     int64_t LastIndexOf(CharType Character) const
@@ -184,9 +174,9 @@ public:
         return mInternalString.find_last_of(Character);
     }
 
-    int64_t LastIndexOf(const CharType* pkCharacters) const
+    int64_t LastIndexOf(_TStdStringView characters) const
     {
-        return mInternalString.find_last_of(pkCharacters);
+        return mInternalString.find_last_of(characters);
     }
 
     int64_t IndexOfPhrase(_TStdStringView rkStr, size_t Offset, bool CaseSensitive = true) const
