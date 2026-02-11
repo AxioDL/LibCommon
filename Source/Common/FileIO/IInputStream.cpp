@@ -261,9 +261,9 @@ void IInputStream::SetEndianness(std::endian Endianness)
     mDataEndianness = Endianness;
 }
 
-void IInputStream::SetSourceString(const TString& rkSource)
+void IInputStream::SetSourceString(TString source)
 {
-    mDataSource = rkSource;
+    mDataSource = std::move(source);
 }
 
 std::endian IInputStream::GetEndianness() const
@@ -271,7 +271,7 @@ std::endian IInputStream::GetEndianness() const
     return mDataEndianness;
 }
 
-TString IInputStream::GetSourceString() const
+const TString& IInputStream::GetSourceString() const
 {
     return mDataSource;
 }

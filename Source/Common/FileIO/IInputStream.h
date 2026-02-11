@@ -51,9 +51,9 @@ public:
 
     void SeekToBoundary(uint32_t Boundary);
     void SetEndianness(std::endian Endianness);
-    void SetSourceString(const TString& rkSource);
+    void SetSourceString(TString source);
     std::endian GetEndianness() const;
-    TString GetSourceString() const;
+    const TString& GetSourceString() const;
 
     virtual ~IInputStream();
     virtual void ReadBytes(void *pDst, uint32_t Count) = 0;
