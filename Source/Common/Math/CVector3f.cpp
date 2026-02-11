@@ -6,6 +6,8 @@
 #include "Common/FileIO/IOutputStream.h"
 #include "Common/Serialization/IArchive.h"
 
+#include <fmt/format.h>
+
 CVector3f::CVector3f(IInputStream& Input)
 {
     Read(Input);
@@ -34,10 +36,10 @@ void CVector3f::Serialize(IArchive& Arc)
 
 TString CVector3f::ToString() const
 {
-    return TString::Format("%s, %s, %s",
-                           TString::FromFloat(X).CString(),
-                           TString::FromFloat(Y).CString(),
-                           TString::FromFloat(Z).CString());
+    return fmt::format("{}, {}, {}",
+                       TString::FromFloat(X).CString(),
+                       TString::FromFloat(Y).CString(),
+                       TString::FromFloat(Z).CString());
 }
 
 // ************ OPERATORS ************

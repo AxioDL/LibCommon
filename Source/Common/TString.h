@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <bit>
 #include <cassert>
-#include <cstdarg>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -1044,28 +1043,10 @@ public:
     auto crend() const { return mInternalString.crend(); }
 
     // Static
-    static _TString Format(const CharType *pkFmt, ...)
-    {
-        // Probably better to rewrite this at some point for better error handling + avoiding all the C-style syntax
-        constexpr int kBufferSize = 4096;
-        CharType StringBuffer[kBufferSize];
-
-        std::va_list Args;
-        va_start(Args, pkFmt);
-
-        int size = 0;
-        if constexpr (std::is_same_v<CharType, char>)
-            size = vsnprintf(StringBuffer, kBufferSize, pkFmt, Args);
-        else
-            size = vswprintf(StringBuffer, kBufferSize, pkFmt, Args);
-
-        va_end(Args);
-        return _TString(StringBuffer, static_cast<size_t>(size));
-    }
-
     static _TString FromFloat(float Value, int MinDecimals = 1, bool Scientific = false)
     {
-        _TString Out = _TString::Format(Scientific ? "%.8g" : "%f", Value);
+        _TString Out = Scientific ? fmt::format("{:.8g}", Value)
+                                  : fmt::format("{}", Value);
 
         // Make sure we have the right number of decimals
         int64_t DecIdx = Out.IndexOf(CHAR_LITERAL('.'));
