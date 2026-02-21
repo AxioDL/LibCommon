@@ -1054,16 +1054,6 @@ public:
         return (Chr >= CHAR_LITERAL('a') && Chr <= CHAR_LITERAL('z')) ? Chr - 0x20 : Chr;
     }
 
-    static bool IsVowel(CharType Chr)
-    {
-        Chr = CharToUpper(Chr);
-        return (Chr == 'A' ||
-                Chr == 'E' ||
-                Chr == 'I' ||
-                Chr == 'O' ||
-                Chr == 'U');
-    }
-
     static bool IsWhitespace(CharType Chr)
     {
         return ( (Chr == CHAR_LITERAL('\t')) ||
@@ -1072,11 +1062,6 @@ public:
                  (Chr == CHAR_LITERAL('\f')) ||
                  (Chr == CHAR_LITERAL('\r')) ||
                  (Chr == CHAR_LITERAL(' '))  );
-    }
-
-    static bool IsNumerical(CharType Chr)
-    {
-        return (Chr >= CHAR_LITERAL('0') && Chr <= CHAR_LITERAL('9'));
     }
 };
 
