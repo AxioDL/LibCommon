@@ -169,58 +169,9 @@ public:
         return mInternalString.find_last_of(characters);
     }
 
-    int64_t IndexOfPhrase(_TStdStringView rkStr, size_t Offset, bool CaseSensitive = true) const
+    int64_t IndexOfPhrase(_TStdStringView rkStr, size_t Offset = 0) const
     {
-        if (Size() < rkStr.size())
-            return -1;
-
-        // Now loop from the offset provided by the user.
-        size_t Pos = Offset;
-        size_t LatestPossibleStart = Size() - rkStr.size();
-        int64_t MatchStart = -1;
-        int64_t Matched = 0;
-
-        while (Pos < Size())
-        {
-            // If this character matches, increment Matched!
-            const bool Match = CaseSensitive ? (mInternalString[Pos] == rkStr[Matched])
-                                             : (CharToUpper(mInternalString[Pos]) == CharToUpper(rkStr[Matched]));
-
-            if (Match)
-            {
-                Matched++;
-
-                if (MatchStart == -1)
-                    MatchStart = Pos;
-
-                // If we matched the entire string, we can return.
-                if (Matched == rkStr.size())
-                    return MatchStart;
-            }
-            else
-            {
-                // If we didn't match, clear our existing match check.
-                if (Matched > 0)
-                {
-                    Pos = MatchStart;
-                    Matched = 0;
-                    MatchStart = -1;
-                }
-
-                // Check if we're too far in to find another match.
-                if (Pos > LatestPossibleStart)
-                    break;
-            }
-
-            Pos++;
-        }
-
-        return -1;
-    }
-
-    int64_t IndexOfPhrase(_TStdStringView rkStr, bool CaseSensitive = true) const
-    {
-        return IndexOfPhrase(rkStr, 0, CaseSensitive);
+        return int64_t(mInternalString.find(rkStr, Offset));
     }
 
     // Modify String
@@ -259,11 +210,11 @@ public:
         mInternalString.erase(Pos, Len);
     }
 
-    void Remove(_TStdStringView str, bool CaseSensitive = false)
+    void Remove(_TStdStringView str)
     {
         const size_t InStrLen = str.size();
 
-        for (auto Idx = IndexOfPhrase(str, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(str, Idx, CaseSensitive))
+        for (auto Idx = IndexOfPhrase(str); Idx != -1; Idx = IndexOfPhrase(str, Idx))
             Remove(Idx, InStrLen);
     }
 
@@ -277,13 +228,13 @@ public:
         std::erase_if(mInternalString, &IsWhitespace);
     }
 
-    void Replace(_TStdStringView str, _TStdStringView replacement, bool CaseSensitive = false)
+    void Replace(_TStdStringView str, _TStdStringView replacement)
     {
         size_t Offset = 0;
         const size_t InStrLen = str.size();
         const size_t ReplaceStrLen = replacement.size();
 
-        for (auto Idx = IndexOfPhrase(str, CaseSensitive); Idx != -1; Idx = IndexOfPhrase(str, Offset, CaseSensitive))
+        for (auto Idx = IndexOfPhrase(str); Idx != -1; Idx = IndexOfPhrase(str, Offset))
         {
             Remove(Idx, InStrLen);
             Insert(Idx, replacement);
@@ -523,9 +474,9 @@ public:
         return CaseInsensitiveCompare(tmp, rkStr);
     }
 
-    bool Contains(_TStdStringView Str, bool CaseSensitive = true) const
+    bool Contains(_TStdStringView Str) const
     {
-        return IndexOfPhrase(Str, CaseSensitive) != -1;
+        return mInternalString.contains(Str);
     }
 
     bool Contains(CharType Chr) const
