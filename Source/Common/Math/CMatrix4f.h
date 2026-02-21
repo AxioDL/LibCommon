@@ -23,7 +23,6 @@ public:
 
     constexpr explicit CMatrix4f(float Diagonal)
     {
-        m = {};
         m[0][0] = Diagonal;
         m[1][1] = Diagonal;
         m[2][2] = Diagonal;
