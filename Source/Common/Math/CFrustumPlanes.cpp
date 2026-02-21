@@ -10,8 +10,6 @@ static constexpr size_t SideToIndex(CFrustumPlanes::ESide side)
     return static_cast<size_t>(side);
 }
 
-CFrustumPlanes::CFrustumPlanes() = default;
-
 const CPlane& CFrustumPlanes::GetPlane(ESide Side) const
 {
     return mPlanes[SideToIndex(Side)];

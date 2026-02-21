@@ -9,6 +9,9 @@ class CVector3f;
 
 class CFrustumPlanes
 {
+private:
+    std::array<CPlane, 6> mPlanes;
+
 public:
     enum class ESide
     {
@@ -20,11 +23,8 @@ public:
         RightPlane,
     };
 
-private:
-    std::array<CPlane, 6> mPlanes;
+    constexpr CFrustumPlanes() = default;
 
-public:
-    CFrustumPlanes();
     const CPlane& GetPlane(ESide Side) const;
     void SetPlanes(const CVector3f& rkPosition, const CVector3f& rkDirection, float FieldOfView, float AspectRatio, float Near, float Far);
     bool PointInFrustum(const CVector3f& rkPoint) const;
