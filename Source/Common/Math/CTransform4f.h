@@ -64,32 +64,32 @@ public:
     void Scale(float XScale, float YScale, float ZScale);
     void SetIdentity();
     void ZeroTranslation();
-    CTransform4f MultiplyIgnoreTranslation(const CTransform4f& rkMtx) const;
-    CTransform4f QuickInverse() const;
-    CTransform4f NoTranslation() const;
-    CTransform4f TranslationOnly() const;
-    CTransform4f RotationOnly() const;
+    [[nodiscard]] CTransform4f MultiplyIgnoreTranslation(const CTransform4f& rkMtx) const;
+    [[nodiscard]] CTransform4f QuickInverse() const;
+    [[nodiscard]] CTransform4f NoTranslation() const;
+    [[nodiscard]] CTransform4f TranslationOnly() const;
+    [[nodiscard]] CTransform4f RotationOnly() const;
     void SetTranslation(const CVector3f& kTranslation);
     void SetRotationFromAxes(const CVector3f& kX, const CVector3f& kY, const CVector3f& kZ);
 
-    CVector3f ExtractTranslation() const;
-    CQuaternion ExtractRotation() const;
+    [[nodiscard]] CVector3f ExtractTranslation() const;
+    [[nodiscard]] CQuaternion ExtractRotation() const;
 
     // Static
-    static CTransform4f TranslationMatrix(const CVector3f& Translation);
-    static CTransform4f RotationMatrix(const CQuaternion& Rotation);
-    static CTransform4f ScaleMatrix(const CVector3f& Scale);
+    [[nodiscard]] static CTransform4f TranslationMatrix(const CVector3f& Translation);
+    [[nodiscard]] static CTransform4f RotationMatrix(const CQuaternion& Rotation);
+    [[nodiscard]] static CTransform4f ScaleMatrix(const CVector3f& Scale);
 
     // Operators
-    constexpr std::array<float, 4>& operator[](int64_t index) { return m[index]; }
-    constexpr const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
-    CVector3f operator*(const CVector3f& rkVec) const;
-    CVector4f operator*(const CVector4f& rkVec) const;
-    CQuaternion operator*(const CQuaternion& rkQuat) const;
-    CTransform4f operator*(const CTransform4f& rkMtx) const;
+    [[nodiscard]] constexpr std::array<float, 4>& operator[](int64_t index) { return m[index]; }
+    [[nodiscard]] constexpr const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
+    [[nodiscard]] CVector3f operator*(const CVector3f& rkVec) const;
+    [[nodiscard]] CVector4f operator*(const CVector4f& rkVec) const;
+    [[nodiscard]] CQuaternion operator*(const CQuaternion& rkQuat) const;
+    [[nodiscard]] CTransform4f operator*(const CTransform4f& rkMtx) const;
     void operator*=(const CTransform4f& rkMtx);
-    bool operator==(const CTransform4f& rkMtx) const;
-    bool operator!=(const CTransform4f& rkMtx) const;
+    [[nodiscard]] bool operator==(const CTransform4f& rkMtx) const;
+    [[nodiscard]] bool operator!=(const CTransform4f& rkMtx) const;
 
     // Constant
     static const CTransform4f skIdentity;
