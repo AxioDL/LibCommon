@@ -25,10 +25,11 @@ public:
 
     constexpr CFrustumPlanes() = default;
 
-    const CPlane& GetPlane(ESide Side) const;
+    [[nodiscard]] const CPlane& GetPlane(ESide Side) const;
     void SetPlanes(const CVector3f& rkPosition, const CVector3f& rkDirection, float FieldOfView, float AspectRatio, float Near, float Far);
-    bool PointInFrustum(const CVector3f& rkPoint) const;
-    bool BoxInFrustum(const CAABox& rkBox) const;
+
+    [[nodiscard]] bool PointInFrustum(const CVector3f& rkPoint) const;
+    [[nodiscard]] bool BoxInFrustum(const CAABox& rkBox) const;
 };
 
 #endif // AXIO_CFRUSTUMPLANES_H
