@@ -168,14 +168,3 @@ CMatrix4f CMatrix4f::operator*(const CMatrix4f& rkMtx) const
     out[3][3] = (m[3][0] * rkMtx[0][3]) + (m[3][1] * rkMtx[1][3]) + (m[3][2] * rkMtx[2][3]) + (m[3][3] * rkMtx[3][3]);
     return out;
 }
-
-// ************ CONSTANT ************
-const CMatrix4f CMatrix4f::skZero(0.0f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f,
-                                  0.0f, 0.0f, 0.0f, 0.0f);
-
-const CMatrix4f CMatrix4f::skIdentity(1.0f, 0.0f, 0.0f, 0.0f,
-                                      0.0f, 1.0f, 0.0f, 0.0f,
-                                      0.0f, 0.0f, 1.0f, 0.0f,
-                                      0.0f, 0.0f, 0.0f, 1.0f);

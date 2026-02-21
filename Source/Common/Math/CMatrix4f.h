@@ -67,9 +67,18 @@ public:
     [[nodiscard]] CMatrix4f operator*(const CTransform4f& rkMtx) const;
     [[nodiscard]] CMatrix4f operator*(const CMatrix4f& rkMtx) const;
 
-    // Constants
-    static const CMatrix4f skZero;
-    static const CMatrix4f skIdentity;
+    // Constant helpers
+    [[nodiscard]] static constexpr CMatrix4f Zero()
+    {
+        return {};
+    }
+    [[nodiscard]] static constexpr CMatrix4f Identity()
+    {
+        return {1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f};
+    }
 };
 
 #endif // AXIO_CMATRIX4_H
