@@ -30,7 +30,7 @@ CQuaternion CQuaternion::Inverse() const
         return CQuaternion(W * InvNorm, -X * InvNorm, -Y * InvNorm, -Z * InvNorm);
     }
 
-    return CQuaternion::skZero;
+    return CQuaternion::Zero();
 }
 
 CQuaternion CQuaternion::Lerp(const CQuaternion& rkRight, float t) const
@@ -222,6 +222,3 @@ CQuaternion CQuaternion::FromAxes(const CVector3f& rkX, const CVector3f& rkY, co
 
     return CQuaternion::FromRotationMatrix(RotMtx);
 }
-
-constexpr CQuaternion CQuaternion::skIdentity = CQuaternion(1.f, 0.f, 0.f, 0.f);
-constexpr CQuaternion CQuaternion::skZero = CQuaternion(0.f, 0.f, 0.f, 0.f);

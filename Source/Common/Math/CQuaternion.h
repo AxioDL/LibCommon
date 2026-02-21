@@ -45,16 +45,13 @@ public:
     [[nodiscard]] static CQuaternion FromRotationMatrix(const CMatrix4f& rkRotMtx);
     [[nodiscard]] static CQuaternion FromAxes(const CVector3f& rkX, const CVector3f& rkY, const CVector3f& rkZ);
 
-    static constexpr CQuaternion Identity() {
+    [[nodiscard]] static constexpr CQuaternion Identity() {
         return {1.0f, 0.0f, 0.0f, 0.0f};
     }
 
-    static constexpr CQuaternion Zero() {
+    [[nodiscard]] static constexpr CQuaternion Zero() {
         return {0.0f, 0.0f, 0.0f, 0.0f};
     }
-
-    static const CQuaternion skIdentity;
-    static const CQuaternion skZero;
 };
 
 #endif // AXIO_CQUATERNION_H
