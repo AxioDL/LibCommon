@@ -779,7 +779,7 @@ public:
 
     bool operator==(const CharType *pkText) const
     {
-        return CompareCStrings(pkText, CString());
+        return mInternalString == pkText;
     }
 
     bool operator==(const _TString& rkOther) const
@@ -1040,26 +1040,6 @@ public:
         }
 
         return Out;
-    }
-
-    static constexpr bool CompareCStrings(const CharType* pkA, const CharType* pkB)
-    {
-        // Replacement for strcmp so we can compare any CharType
-        while (true)
-        {
-            if (*pkA != *pkB)
-                return false;
-            if (*pkA == 0 || *pkB == 0)
-                return true;
-
-            ++pkA;
-            ++pkB;
-        }
-    }
-
-    static constexpr size_t CStringLength(const CharType* pkStr)
-    {
-        return std::char_traits<CharType>::length(pkStr);
     }
 
     static CharType CharToLower(CharType Chr)
