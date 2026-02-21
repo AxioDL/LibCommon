@@ -739,28 +739,22 @@ public:
         return *this;
     }
 
-    _TString operator/(const CharType* pkOther) const
+    _TString operator/(_TStdStringView other) const
     {
         // Append operator that ensures a slash separates the element being appended
         // Useful for constructing filesystem paths
         _TString Out = *this;
 
         if (Back() != '/' && Back() != '\\')
-        {
             Out.Append('/');
-        }
 
-        return Out.operator+(pkOther);
-    }
-
-    _TString operator/(const _TString& kOther) const
-    {
-        return operator/(kOther.CString());
+        Out.Append(other);
+        return Out;
     }
 
     friend _TString operator/(const CharType* pkLeft, const _TString& rkRight)
     {
-        return  _TString(pkLeft).operator/(rkRight.CString());
+        return  _TString(pkLeft).operator/(rkRight);
     }
 
     friend _TString operator+(CharType Left, const _TString& rkRight)
