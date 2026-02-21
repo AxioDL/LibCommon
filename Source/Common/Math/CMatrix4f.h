@@ -14,8 +14,8 @@ class CMatrix4f
 protected:
     union
     {
-        std::array<std::array<float, 4>, 4> m;
-        std::array<float, 16> _m{};
+        std::array<std::array<float, 4>, 4> m{};
+        std::array<float, 16> _m;
     };
 
 public:

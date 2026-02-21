@@ -12,18 +12,44 @@ class IArchive;
 class IInputStream;
 class IOutputStream;
 
+// Note: The default no-arg constructor initializes to the identity and does not
+//       zero everything out.
 class CTransform4f : public CMatrix4f
 {
 public:
-    CTransform4f();
-    CTransform4f(const CMatrix4f& rkMtx);
-    explicit CTransform4f(IInputStream& rInput);
-    explicit CTransform4f(float Diagonal);
-    CTransform4f(float m00, float m01, float m02, float m03,
-                 float m10, float m11, float m12, float m13,
-                 float m20, float m21, float m22, float m23);
+    // Initializes to identity
+    constexpr CTransform4f() : CTransform4f(1.0f) {}
+
+    constexpr CTransform4f(const CMatrix4f& rkMtx)
+    {
+        for (size_t row = 0; row < 3; row++)
+            m[row] = rkMtx[row];
+
+        SetupRow4();
+    }
+
+    constexpr explicit CTransform4f(float Diagonal)
+    {
+        m[0][0] = Diagonal;
+        m[1][1] = Diagonal;
+        m[2][2] = Diagonal;
+        m[3][3] = 1.f;
+    }
+
+    constexpr CTransform4f(float m00, float m01, float m02, float m03,
+                           float m10, float m11, float m12, float m13,
+                           float m20, float m21, float m22, float m23)
+        : CMatrix4f(m00,  m01,  m02,  m03,
+                    m10,  m11,  m12,  m13,
+                    m20,  m21,  m22,  m23,
+                    0.0f, 0.0f, 0.0f, 1.0f)
+    {
+    }
+
     CTransform4f(const CVector3f& Position, const CQuaternion& Rotation, const CVector3f& Scale);
     CTransform4f(const CVector3f& Position, const CVector3f& Rotation, const CVector3f& Scale);
+
+    explicit CTransform4f(IInputStream& rInput);
 
     void Serialize(IArchive& rOut);
     void Write(IOutputStream& rOut) const;
@@ -55,8 +81,8 @@ public:
     static CTransform4f ScaleMatrix(const CVector3f& Scale);
 
     // Operators
-    std::array<float, 4>& operator[](int64_t index) { return m[index]; }
-    const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
+    constexpr std::array<float, 4>& operator[](int64_t index) { return m[index]; }
+    constexpr const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
     CVector3f operator*(const CVector3f& rkVec) const;
     CVector4f operator*(const CVector4f& rkVec) const;
     CQuaternion operator*(const CQuaternion& rkQuat) const;
@@ -71,7 +97,7 @@ public:
 
     // Protected Utility
 protected:
-    inline void SetupRow4()
+    constexpr void SetupRow4()
     {
         m[3][0] = 0.f;
         m[3][1] = 0.f;
