@@ -54,17 +54,18 @@ public:
     }
 
     // Math
-    CMatrix4f Transpose() const;
-    CMatrix4f Inverse() const;
-    float Determinant() const;
+    [[nodiscard]] CMatrix4f Transpose() const;
+    [[nodiscard]] CMatrix4f Inverse() const;
+    [[nodiscard]] float Determinant() const;
 
     // Operators
-    constexpr std::array<float, 4>& operator[](int64_t index) { return m[index]; }
-    constexpr const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
-    CVector3f operator*(const CVector3f& rkVec) const;
-    CVector4f operator*(const CVector4f& rkVec) const;
-    CMatrix4f operator*(const CTransform4f& rkMtx) const;
-    CMatrix4f operator*(const CMatrix4f& rkMtx) const;
+    [[nodiscard]] constexpr std::array<float, 4>& operator[](int64_t index) { return m[index]; }
+    [[nodiscard]] constexpr const std::array<float, 4>& operator[](int64_t index) const { return m[index]; }
+
+    [[nodiscard]] CVector3f operator*(const CVector3f& rkVec) const;
+    [[nodiscard]] CVector4f operator*(const CVector4f& rkVec) const;
+    [[nodiscard]] CMatrix4f operator*(const CTransform4f& rkMtx) const;
+    [[nodiscard]] CMatrix4f operator*(const CMatrix4f& rkMtx) const;
 
     // Constants
     static const CMatrix4f skZero;
