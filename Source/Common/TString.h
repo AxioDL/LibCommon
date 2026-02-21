@@ -139,16 +139,6 @@ public:
         return (Size() > 0 ? mInternalString.back() : 0);
     }
 
-    const CharType* Begin() const
-    {
-        return mInternalString.data();
-    }
-
-    const CharType* End() const
-    {
-        return mInternalString.data() + mInternalString.size();
-    }
-
     size_t Size() const
     {
         return mInternalString.size();
