@@ -2,7 +2,8 @@
 #define AXIO_ASSERT_H
 
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
+#include <Common/Log.h>
 
 /** Returns the offset of a class member within that class */
 #define MEMBER_OFFSET(TypeName, MemberName) ( (int) (long long) &((TypeName*)0)->MemberName )
@@ -47,15 +48,16 @@
     NLog::Fatal("{}({}): ASSERT FAILED: {}", __FILE_SHORT__, __LINE__, #Expression);
 
 // ENSURE macro always executes, never gets compiled out
-#define ENSURE(Expression) \
-    ASSERT_CHECK_BEGIN(Expression) \
+#define ENSURE(Expression)           \
+    ASSERT_CHECK_BEGIN(Expression)   \
     WRITE_FAILURE_TO_LOG(Expression) \
+    DEBUG_BREAK                      \
     ASSERT_CHECK_END
 
-#if !PUBLIC_RELEASE
-    #define ASSERT(Expression) ENSURE(Expression)
-#else
+#ifdef PUBLIC_RELEASE
     #define ASSERT(Expression) {}
+#else
+    #define ASSERT(Expression) ENSURE(Expression)
 #endif
 
 #endif // AXIO_ASSERT_H
