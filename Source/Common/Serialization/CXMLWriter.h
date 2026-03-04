@@ -16,7 +16,7 @@ class CXMLWriter : public IArchive
 
 public:
     explicit CXMLWriter(const TString& rkFileName, const TString& rkRootName, uint16_t FileVersion = 0, EGame Game = EGame::Invalid)
-        : mOutFilename(rkFileName)
+        : mDoc(true, tinyxml2::PEDANTIC_WHITESPACE), mOutFilename(rkFileName)
     {
         mArchiveFlags = AF_Writer | AF_Text;
         SetVersion(skCurrentArchiveVersion, FileVersion, Game);

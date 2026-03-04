@@ -15,6 +15,7 @@ class CXMLReader : public IArchive
 
 public:
     explicit CXMLReader(const TString& rkFileName)
+        : mDoc(true, tinyxml2::PEDANTIC_WHITESPACE)
     {
         mArchiveFlags = AF_Reader | AF_Text;
 
