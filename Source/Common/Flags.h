@@ -25,39 +25,39 @@ public:
 
     [[nodiscard]] constexpr TFlags operator~() const { return TFlags(UnsignedT(~mValue)); }
 
-#define FLAG_BITWISE_OP_ENUM(op)                           \
-    constexpr TFlags operator op (FlagEnum val) const {    \
-        return TFlags(FlagEnum(mValue op UnsignedT(val))); \
-    }                                                      \
-    constexpr TFlags operator op (TFlags val) const {      \
-        return TFlags(mValue op val.mValue);               \
+#define FLAG_BITWISE_OP_ENUM(op)                             \
+    constexpr TFlags operator op (FlagEnum val) const {      \
+        return TFlags(FlagEnum(mValue op UnsignedT(val)));   \
+    }                                                        \
+    constexpr TFlags operator op (const TFlags& val) const { \
+        return TFlags(mValue op val.mValue);                 \
     }
     FLAG_BITWISE_OP_ENUM(|)
     FLAG_BITWISE_OP_ENUM(&)
     FLAG_BITWISE_OP_ENUM(^)
 #undef FLAG_BITWISE_OP_ENUM
 
-#define FLAG_BITWISE_OP_ASSIGN_ENUM(op)            \
-    constexpr TFlags& operator op (FlagEnum val) { \
-        mValue op UnsignedT(val);                  \
-        return *this;                              \
-    }                                              \
-    constexpr TFlags& operator op (TFlags val) {   \
-        mValue op val.mValue;                      \
-        return *this;                              \
+#define FLAG_BITWISE_OP_ASSIGN_ENUM(op)                 \
+    constexpr TFlags& operator op (FlagEnum val) {      \
+        mValue op UnsignedT(val);                       \
+        return *this;                                   \
+    }                                                   \
+    constexpr TFlags& operator op (const TFlags& val) { \
+        mValue op val.mValue;                           \
+        return *this;                                   \
     }
     FLAG_BITWISE_OP_ASSIGN_ENUM(|=)
     FLAG_BITWISE_OP_ASSIGN_ENUM(&=)
     FLAG_BITWISE_OP_ASSIGN_ENUM(^=)
 #undef FLAG_BITWISE_OP_ASSIGN_ENUM
 
-    [[nodiscard]] constexpr bool HasFlag(FlagEnum Flag) const    { return ((mValue & UnsignedT(Flag)) != 0); }
-    [[nodiscard]] constexpr bool HasAnyFlags(TFlags Flags) const { return ((mValue & Flags.mValue) != 0); }
-    [[nodiscard]] constexpr bool HasAllFlags(TFlags Flags) const { return ((mValue & Flags.mValue) == Flags.mValue); }
-    constexpr void SetFlag(FlagEnum Flag)   { mValue |= UnsignedT(Flag); }
-    constexpr void SetFlag(TFlags Flags)    { mValue |= Flags.mValue; }
-    constexpr void ClearFlag(FlagEnum Flag) { mValue &= ~(UnsignedT(Flag)); }
-    constexpr void ClearFlag(TFlags Flags)  { mValue &= ~Flags.mValue; }
+    [[nodiscard]] constexpr bool HasFlag(FlagEnum Flag) const           { return ((mValue & UnsignedT(Flag)) != 0); }
+    [[nodiscard]] constexpr bool HasAnyFlags(const TFlags& Flags) const { return ((mValue & Flags.mValue) != 0); }
+    [[nodiscard]] constexpr bool HasAllFlags(const TFlags& Flags) const { return ((mValue & Flags.mValue) == Flags.mValue); }
+    constexpr void SetFlag(FlagEnum Flag)         { mValue |= UnsignedT(Flag); }
+    constexpr void SetFlag(const TFlags& Flags)   { mValue |= Flags.mValue; }
+    constexpr void ClearFlag(FlagEnum Flag)       { mValue &= ~(UnsignedT(Flag)); }
+    constexpr void ClearFlag(const TFlags& Flags) { mValue &= ~Flags.mValue; }
 
     constexpr void AssignFlag(FlagEnum Flag, bool Value)
     {
@@ -68,7 +68,7 @@ public:
     }
 
     constexpr void Reset(FlagEnum value) { mValue = UnsignedT(value); }
-    constexpr void Reset(TFlags flags) { mValue = flags.mValue; }
+    constexpr void Reset(const TFlags& flags) { mValue = flags.mValue; }
 
     [[nodiscard]] constexpr UnsignedT Value() const { return mValue; }
     void Serialize(IArchive& rArc) { rArc.SerializePrimitive(mValue, SH_HexDisplay); }
