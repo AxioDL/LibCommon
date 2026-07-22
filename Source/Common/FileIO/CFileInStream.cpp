@@ -34,7 +34,7 @@ void CFileInStream::Open(const TString& rkFile, std::endian FileEndianness)
 #ifdef _WIN32
     _wfopen_s(&mpFStream, ToWChar(rkFile), L"rb");
 #else
-    mpFStream = fopen(*rkFile, "rb");
+    mpFStream = fopen(rkFile.Data(), "rb");
 #endif
     mName = rkFile;
     mDataEndianness = FileEndianness;
