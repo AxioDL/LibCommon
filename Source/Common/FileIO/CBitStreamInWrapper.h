@@ -22,7 +22,7 @@ private:
 public:
     explicit CBitStreamInWrapper(IInputStream *pStream, EChunkSize ChunkSize = k32Bit);
     void SetChunkSize(EChunkSize Size);
-    long ReadBits(uint32_t NumBits, bool ExtendSignBit = true);
+    int ReadBits(uint32_t NumBits, bool ExtendSignBit = true);
     bool ReadBit();
 
 private:

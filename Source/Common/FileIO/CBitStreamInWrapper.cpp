@@ -13,7 +13,7 @@ void CBitStreamInWrapper::SetChunkSize(EChunkSize Size)
     mChunkSize = Size;
 }
 
-long CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true*/)
+int CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true*/)
 {
     uint32_t BitsRemaining = NumBits;
     uint32_t Out = 0;
@@ -31,7 +31,7 @@ long CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true
 
         else
         {
-            long Mask = (1 << BitsRemaining) - 1;
+            const uint32_t Mask = (1U << BitsRemaining) - 1;
             Out |= (mBitPool & Mask) << Shift;
             mBitPool >>= BitsRemaining;
             mBitsRemaining -= BitsRemaining;
@@ -41,11 +41,12 @@ long CBitStreamInWrapper::ReadBits(uint32_t NumBits, bool ExtendSignBit /*= true
 
     if (ExtendSignBit)
     {
-        bool Sign = ((Out >> (NumBits - 1) & 0x1) == 1);
-        if (Sign) Out |= (-1 << NumBits);
+        const bool Sign = ((Out >> (NumBits - 1) & 0x1) == 1);
+        if (Sign)
+            Out |= (UINT32_MAX << NumBits);
     }
 
-    return Out;
+    return static_cast<int>(Out);
 }
 
 bool CBitStreamInWrapper::ReadBit()
