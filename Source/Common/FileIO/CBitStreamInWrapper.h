@@ -15,7 +15,7 @@ public:
 
 private:
     IInputStream *mpSourceStream = nullptr;
-    EChunkSize mChunkSize{};
+    EChunkSize mChunkSize{k32Bit};
     uint32_t mBitPool = 0;
     uint32_t mBitsRemaining = 0;
 
