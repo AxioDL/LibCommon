@@ -1,5 +1,7 @@
 #include "CFileInStream.h"
 
+#include <utility>
+
 CFileInStream::CFileInStream() = default;
 
 CFileInStream::CFileInStream(const TString& rkFile, std::endian FileEndianness)
@@ -11,6 +13,28 @@ CFileInStream::~CFileInStream()
 {
     if (IsValid())
         Close();
+}
+
+CFileInStream::CFileInStream(CFileInStream&& Other) noexcept
+    : mpFStream{std::exchange(Other.mpFStream, nullptr)}
+    , mName{std::exchange(Other.mName, TString())}
+    , mFileSize{std::exchange(Other.mFileSize, 0)}
+{
+    mDataEndianness = Other.mDataEndianness;
+    mDataSource = std::exchange(Other.mDataSource, TString());
+}
+
+CFileInStream& CFileInStream::operator=(CFileInStream&& Other) noexcept
+{
+    if (this == &Other)
+        return *this;
+
+    mpFStream = std::exchange(Other.mpFStream, nullptr);
+    mName = std::exchange(Other.mName, TString());
+    mFileSize = std::exchange(Other.mFileSize, 0);
+    mDataEndianness = Other.mDataEndianness;
+    mDataSource = std::exchange(Other.mDataSource, TString());
+    return *this;
 }
 
 void CFileInStream::Open(const TString& rkFile, std::endian FileEndianness)

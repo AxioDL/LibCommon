@@ -18,6 +18,9 @@ public:
     CFileInStream(const CFileInStream&) = delete;
     CFileInStream& operator=(const CFileInStream&) = delete;
 
+    CFileInStream(CFileInStream&& Other) noexcept;
+    CFileInStream& operator=(CFileInStream&& Other) noexcept;
+
     void Open(const TString& rkFile, std::endian FileEndianness);
     void Close();
 

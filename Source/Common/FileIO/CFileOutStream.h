@@ -18,6 +18,9 @@ public:
     CFileOutStream(const CFileOutStream&) = delete;
     CFileOutStream& operator=(const CFileOutStream&) = delete;
 
+    CFileOutStream(CFileOutStream&& Other) noexcept;
+    CFileOutStream& operator=(CFileOutStream&& Other) noexcept;
+
     void Open(const TString& rkFile, std::endian);
     void Update(const TString& rkFile, std::endian FileEndianness);
     void Close();

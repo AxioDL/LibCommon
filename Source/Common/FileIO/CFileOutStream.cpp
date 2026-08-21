@@ -1,5 +1,7 @@
 #include "CFileOutStream.h"
 
+#include <utility>
+
 CFileOutStream::CFileOutStream() = default;
 
 CFileOutStream::CFileOutStream(const TString& rkFile, std::endian FileEndianness)
@@ -11,6 +13,26 @@ CFileOutStream::~CFileOutStream()
 {
     if (IsValid())
         Close();
+}
+
+CFileOutStream::CFileOutStream(CFileOutStream&& Other) noexcept
+    : mpFStream{std::exchange(Other.mpFStream, nullptr)}
+    , mName{std::exchange(Other.mName, TString())}
+    , mSize{std::exchange(Other.mSize, 0)}
+{
+    mDataEndianness = Other.mDataEndianness;
+}
+
+CFileOutStream& CFileOutStream::operator=(CFileOutStream&& Other) noexcept
+{
+    if (this == &Other)
+        return *this;
+
+    mpFStream = std::exchange(Other.mpFStream, nullptr);
+    mName = std::exchange(Other.mName, TString());
+    mSize = std::exchange(Other.mSize, 0);
+    mDataEndianness = Other.mDataEndianness;
+    return *this;
 }
 
 void CFileOutStream::Open(const TString& rkFile, std::endian FileEndianness)
