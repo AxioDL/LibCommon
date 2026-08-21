@@ -372,7 +372,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
         return Name;
 
     // Remove illegal characters from path
-    for (size_t iChr = 0; iChr < Name.Size(); iChr++)
+    for (size_t iChr = 0; iChr < Name.size(); iChr++)
     {
         char Chr = Name[iChr];
         bool Remove = false;
@@ -381,7 +381,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
             Remove = true;
 
         // Allow colon only as the last character of root
-        bool IsLegalColon = (Chr == ':' && RootDir && iChr == Name.Size() - 1);
+        bool IsLegalColon = (Chr == ':' && RootDir && iChr == Name.size() - 1);
 
         if (!IsLegalColon && !IsValidFileNameCharacter(Chr))
             Remove = true;
@@ -398,7 +398,7 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
     {
         int64_t ChopNum = 0;
 
-        for (auto iChr = (int64_t) Name.Size() - 1; iChr >= 0; iChr--)
+        for (auto iChr = std::ssize(Name) - 1; iChr >= 0; iChr--)
         {
             char Chr = Name[iChr];
 
@@ -414,16 +414,16 @@ TString SanitizeName(TString Name, bool Directory, bool RootDir /*= false*/)
 
     // Remove spaces from beginning of path
     size_t NumLeadingSpaces = 0;
-    while (NumLeadingSpaces < Name.Size() && Name[NumLeadingSpaces] == ' ')
+    while (NumLeadingSpaces < Name.size() && Name[NumLeadingSpaces] == ' ')
         NumLeadingSpaces++;
 
     if (NumLeadingSpaces > 0)
         Name = Name.ChopFront(NumLeadingSpaces);
 
     // Ensure the name is below the character limit
-    if (Name.Size() > MaxFileNameLength())
+    if (Name.size() > MaxFileNameLength())
     {
-        const int64_t ChopNum = Name.Size() - MaxFileNameLength();
+        const int64_t ChopNum = Name.size() - MaxFileNameLength();
         Name = Name.ChopBack(ChopNum);
     }
 
@@ -470,22 +470,22 @@ bool IsValidName(const TString& rkName, bool Directory, bool RootDir /*= false*/
 {
     // Only accounting for Windows limitations right now. However, this function should
     // ideally return the same output on all platforms to ensure projects are cross platform.
-    if (rkName.IsEmpty())
+    if (rkName.empty())
         return false;
 
-    if (rkName.Size() > MaxFileNameLength())
+    if (rkName.size() > MaxFileNameLength())
         return false;
 
     if (Directory && (rkName == "." || rkName == ".."))
         return true;
 
     // Check for banned characters
-    for (size_t iChr = 0; iChr < rkName.Size(); iChr++)
+    for (size_t iChr = 0; iChr < rkName.size(); iChr++)
     {
         char Chr = rkName[iChr];
 
         // Allow colon only as the last character of root
-        bool IsLegalColon = (Chr == ':' && RootDir && iChr == rkName.Size() - 1);
+        bool IsLegalColon = (Chr == ':' && RootDir && iChr == rkName.size() - 1);
 
         if (!IsLegalColon && !IsValidFileNameCharacter(Chr))
             return false;
