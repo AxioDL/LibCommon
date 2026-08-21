@@ -2,11 +2,6 @@
 
 CFileInStream::CFileInStream() = default;
 
-CFileInStream::CFileInStream(const TString& rkFile)
-{
-    Open(rkFile, std::endian::big);
-}
-
 CFileInStream::CFileInStream(const TString& rkFile, std::endian FileEndianness)
 {
     Open(rkFile, FileEndianness);

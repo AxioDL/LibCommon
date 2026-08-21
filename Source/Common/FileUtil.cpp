@@ -568,7 +568,7 @@ TString FindFileExtension(const TString& rkDir, const TString& rkName)
 
 bool LoadFileToString(const TString& rkFilePath, TString& rOut)
 {
-    CFileInStream File(rkFilePath);
+    CFileInStream File(rkFilePath, std::endian::big);
 
     if (File.IsValid())
     {
@@ -582,7 +582,7 @@ bool LoadFileToString(const TString& rkFilePath, TString& rOut)
 
 bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8_t>& Out)
 {
-    CFileInStream File(rkFilePath);
+    CFileInStream File(rkFilePath, std::endian::big);
 
     if (File.IsValid())
     {
@@ -596,7 +596,7 @@ bool LoadFileToBuffer(const TString& rkFilePath, std::vector<uint8_t>& Out)
 
 bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
 {
-    CFileOutStream File(rkFilePath);
+    CFileOutStream File(rkFilePath, std::endian::big);
 
     if (File.IsValid())
     {
@@ -609,7 +609,7 @@ bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
 
 bool SaveBufferToFile(const TString& rkFilePath, const std::vector<uint8_t>& kBuffer)
 {
-    CFileOutStream File(rkFilePath);
+    CFileOutStream File(rkFilePath, std::endian::big);
 
     if (File.IsValid())
     {

@@ -12,7 +12,6 @@ private:
 
 public:
     CFileInStream();
-    explicit CFileInStream(const TString& rkFile);
     explicit CFileInStream(const TString& rkFile, std::endian FileEndianness);
     ~CFileInStream() override;
 

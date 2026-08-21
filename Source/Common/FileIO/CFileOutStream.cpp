@@ -2,11 +2,6 @@
 
 CFileOutStream::CFileOutStream() = default;
 
-CFileOutStream::CFileOutStream(const TString& rkFile)
-{
-    Open(rkFile, std::endian::big);
-}
-
 CFileOutStream::CFileOutStream(const TString& rkFile, std::endian FileEndianness)
 {
     Open(rkFile, FileEndianness);
