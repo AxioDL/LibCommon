@@ -573,7 +573,7 @@ bool LoadFileToString(const TString& rkFilePath, TString& rOut)
     if (File.IsValid())
     {
         rOut = TString(File.Size());
-        File.ReadBytes(&rOut[0], rOut.Size());
+        File.ReadBytes(rOut.data(), rOut.size());
         return true;
     }
 
@@ -600,7 +600,7 @@ bool SaveStringToFile(const TString& rkFilePath, const TString& kString)
 
     if (File.IsValid())
     {
-        File.WriteBytes(&kString[0], kString.Size());
+        File.WriteBytes(kString.data(), kString.size());
         return true;
     }
 
