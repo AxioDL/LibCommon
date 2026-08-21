@@ -36,13 +36,15 @@
 #endif
 
 #define ASSERT_CHECK_BEGIN(Expression) \
-    { \
-        if (!(Expression)) \
+    do                                 \
+    {                                  \
+        if (!(Expression))             \
         {
 
 #define ASSERT_CHECK_END \
-        } \
-    }
+        }                \
+    }                    \
+    while (false)
 
 #define WRITE_FAILURE_TO_LOG(Expression) \
     NLog::Fatal("{}({}): ASSERT FAILED: {}", __FILE_SHORT__, __LINE__, #Expression);
