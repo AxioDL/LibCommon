@@ -12,14 +12,6 @@ CFileOutStream::CFileOutStream(const TString& rkFile, std::endian FileEndianness
     Open(rkFile, FileEndianness);
 }
 
-CFileOutStream::CFileOutStream(const CFileOutStream& rkSrc)
-{
-    Open(rkSrc.mName, rkSrc.mDataEndianness);
-
-    if (rkSrc.IsValid())
-        Seek(rkSrc.Tell(), SEEK_SET);
-}
-
 CFileOutStream::~CFileOutStream()
 {
     if (IsValid())

@@ -14,8 +14,10 @@ public:
     CFileInStream();
     explicit CFileInStream(const TString& rkFile);
     explicit CFileInStream(const TString& rkFile, std::endian FileEndianness);
-    CFileInStream(const CFileInStream& rkSrc);
     ~CFileInStream() override;
+
+    CFileInStream(const CFileInStream&) = delete;
+    CFileInStream& operator=(const CFileInStream&) = delete;
 
     void Open(const TString& rkFile, std::endian FileEndianness);
     void Close();
