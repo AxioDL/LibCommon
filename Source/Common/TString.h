@@ -1024,6 +1024,7 @@ public:
 
     TString() = default;
     TString(const BaseClass& kIn) : BaseClass(kIn) {}
+    TString(BaseClass&& kIn) noexcept : BaseClass{std::move(kIn)} {}
     using BaseClass::BaseClass;
 
     void AppendCodePoint(uint32_t CodePoint);
@@ -1039,6 +1040,7 @@ public:
 
     T16String() = default;
     T16String(const BaseClass& kIn) : BaseClass(kIn) {}
+    T16String(BaseClass&& kIn) noexcept : BaseClass{std::move(kIn)} {}
     using BaseClass::BaseClass;
 
     void AppendCodePoint(uint32_t CodePoint);
@@ -1054,6 +1056,7 @@ public:
 
     T32String() = default;
     T32String(const BaseClass& kIn) : BaseClass(kIn) {}
+    T32String(BaseClass&& kIn) : BaseClass{std::move(kIn)} {}
     using BaseClass::BaseClass;
 
     void AppendCodePoint(uint32_t CodePoint);
