@@ -7,7 +7,9 @@
 #include "TString.h"
 
 #include <compare>
+#include <cstddef>
 #include <cstdint>
+#include <functional>
 
 // Note: All FourCC constants should be wrapped in this macro
 #define FOURCC(Value) Value
@@ -118,6 +120,15 @@ public:
     }
 
     [[nodiscard]] constexpr auto operator<=>(const CFourCC&) const noexcept = default;
+};
+
+template <>
+struct std::hash<CFourCC>
+{
+    size_t operator()(const CFourCC& fcc) const noexcept
+    {
+        return std::hash<uint32_t>{}(fcc.ToU32());
+    }
 };
 
 #endif // AXIO_CFOURCC_H
