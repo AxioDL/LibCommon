@@ -925,23 +925,30 @@ public:
         return rStream;
     }
 
-    auto begin() { return mInternalString.begin(); }
-    auto begin() const { return mInternalString.begin(); }
+    [[nodiscard]]       CharType* data()       noexcept { return mInternalString.data(); }
+    [[nodiscard]] const CharType* data() const noexcept { return mInternalString.data(); }
 
-    auto end() { return mInternalString.end(); }
-    auto end() const { return mInternalString.end(); }
+    [[nodiscard]] bool empty() const noexcept { return mInternalString.empty(); }
 
-    auto rbegin() { return mInternalString.rbegin(); }
-    auto rbegin() const { return mInternalString.rbegin(); }
+    [[nodiscard]] size_t size() const noexcept { return mInternalString.size(); }
 
-    auto rend() { return mInternalString.rend(); }
-    auto rend() const { return mInternalString.rend(); }
+    [[nodiscard]] auto begin()       noexcept { return mInternalString.begin(); }
+    [[nodiscard]] auto begin() const noexcept { return mInternalString.begin(); }
 
-    auto cbegin() const { return mInternalString.cbegin(); }
-    auto cend() const { return mInternalString.cend(); }
+    [[nodiscard]] auto end()       noexcept { return mInternalString.end(); }
+    [[nodiscard]] auto end() const noexcept { return mInternalString.end(); }
 
-    auto crbegin() const { return mInternalString.crbegin(); }
-    auto crend() const { return mInternalString.crend(); }
+    [[nodiscard]] auto rbegin()       noexcept { return mInternalString.rbegin(); }
+    [[nodiscard]] auto rbegin() const noexcept { return mInternalString.rbegin(); }
+
+    [[nodiscard]] auto rend()       noexcept { return mInternalString.rend(); }
+    [[nodiscard]] auto rend() const noexcept { return mInternalString.rend(); }
+
+    [[nodiscard]] auto cbegin() const noexcept { return mInternalString.cbegin(); }
+    [[nodiscard]] auto cend()   const noexcept { return mInternalString.cend(); }
+
+    [[nodiscard]] auto crbegin() const noexcept { return mInternalString.crbegin(); }
+    [[nodiscard]] auto crend()   const noexcept { return mInternalString.crend(); }
 
     // Static
     static _TString FromFloat(float Value, int MinDecimals = 1, bool Scientific = false)
