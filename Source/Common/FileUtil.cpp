@@ -180,9 +180,7 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
         return false;
 
     // Sanity check - don't delete root
-    bool Root = IsRoot(rkDirPath);
-
-    if (Root)
+    if (IsRoot(rkDirPath))
     {
         ASSERT(false);
         NLog::Fatal("Attempted to delete root directory!");
@@ -202,12 +200,11 @@ bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
 bool ClearDirectory(const TString& rkDirPath)
 {
     // This is an extremely destructive function, be careful using it!
-    if (!IsDirectory(rkDirPath)) return false;
+    if (!IsDirectory(rkDirPath))
+        return false;
 
     // Sanity check - don't clear root
-    bool Root = IsRoot(rkDirPath);
-
-    if (Root)
+    if (IsRoot(rkDirPath))
     {
         ASSERT(false);
         NLog::Fatal("Attempted to clear root directory!");
