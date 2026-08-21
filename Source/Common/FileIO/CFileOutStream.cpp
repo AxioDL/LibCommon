@@ -43,7 +43,7 @@ void CFileOutStream::Open(const TString& rkFile, std::endian FileEndianness)
 #ifdef _WIN32
     _wfopen_s(&mpFStream, ToWChar(rkFile), L"wb");
 #else
-    mpFStream = fopen(rkFile.Data(), "wb");
+    mpFStream = fopen(rkFile.data(), "wb");
 #endif
     mName = rkFile;
     mDataEndianness = FileEndianness;
@@ -58,7 +58,7 @@ void CFileOutStream::Update(const TString& rkFile, std::endian FileEndianness)
 #ifdef _WIN32
     _wfopen_s(&mpFStream, ToWChar(rkFile), L"rb+");
 #else
-    mpFStream = fopen(rkFile.Data(), "rb+");
+    mpFStream = fopen(rkFile.data(), "rb+");
 #endif
     mName = rkFile;
     mDataEndianness = FileEndianness;

@@ -88,38 +88,37 @@ void IOutputStream::WriteFourCC(const CFourCC& fcc)
 void IOutputStream::WriteString(const TString& rkVal, int Count, bool Terminate)
 {
     if (Count < 0)
-        Count = rkVal.Size();
+        Count = rkVal.size();
 
-    WriteBytes(rkVal.Data(), Count);
+    WriteBytes(rkVal.data(), Count);
 
-    if (Terminate && (rkVal.IsEmpty() || rkVal[Count - 1] != 0))
+    if (Terminate && (rkVal.empty() || rkVal[Count - 1] != 0))
         WriteS8(0);
 }
 
 void IOutputStream::WriteSizedString(const TString& rkVal)
 {
-    WriteU32(rkVal.Size());
-    WriteBytes(rkVal.Data(), rkVal.Size());
+    WriteU32(rkVal.size());
+    WriteBytes(rkVal.data(), rkVal.size());
 }
 
 void IOutputStream::Write16String(const T16String& rkVal, int Count, bool Terminate)
 {
     if (Count < 0)
-        Count = rkVal.Size();
+        Count = rkVal.size();
 
     for (int ChrIdx = 0; ChrIdx < Count; ChrIdx++)
         WriteS16(rkVal[ChrIdx]);
 
-    if (Terminate && (rkVal.IsEmpty() || rkVal[Count - 1] != 0))
+    if (Terminate && (rkVal.empty() || rkVal[Count - 1] != 0))
         WriteS16(0);
 }
 
 void IOutputStream::WriteSized16String(const T16String& rkVal)
 {
-    WriteU32(rkVal.Size());
-
-    for (size_t ChrIdx = 0; ChrIdx < rkVal.Size(); ChrIdx++)
-        WriteS16(rkVal[ChrIdx]);
+    WriteU32(rkVal.size());
+    for (const auto Chr : rkVal)
+        WriteS16(Chr);
 }
 
 bool IOutputStream::GoTo(uint32_t Address)

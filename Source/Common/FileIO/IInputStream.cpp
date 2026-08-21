@@ -123,7 +123,7 @@ TString IInputStream::ReadString()
 TString IInputStream::ReadString(size_t Count)
 {
     TString Str(Count, 0);
-    ReadBytes(Str.Data(), Count);
+    ReadBytes(Str.data(), Count);
     return Str;
 }
 

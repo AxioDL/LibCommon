@@ -125,18 +125,18 @@ public:
 
     CharType At(size_t Pos) const
     {
-        assert(Size() > Pos);
+        assert(size() > Pos);
         return mInternalString.at(Pos);
     }
 
     CharType Front() const
     {
-        return (Size() > 0 ? mInternalString.front() : 0);
+        return (empty() ? CharType{} : mInternalString.front());
     }
 
     CharType Back() const
     {
-        return (Size() > 0 ? mInternalString.back() : 0);
+        return (empty() ? CharType{} : mInternalString.back());
     }
 
     size_t Size() const
@@ -146,7 +146,7 @@ public:
 
     size_t Length() const
     {
-        return Size();
+        return size();
     }
 
     int64_t IndexOf(CharType Character, size_t Offset = 0) const
@@ -192,20 +192,20 @@ public:
 
     void Insert(size_t Pos, CharType Chr)
     {
-        assert(Size() >= Pos);
+        assert(size() >= Pos);
         mInternalString.insert(Pos, 1, Chr);
     }
 
     void Insert(size_t Pos, _TStdStringView str)
     {
-        assert(Size() >= Pos);
+        assert(size() >= Pos);
         mInternalString.insert(Pos, str);
     }
 
     void Remove(size_t Pos, size_t Len)
     {
 #ifdef _DEBUG
-        assert(Size() > Pos);
+        assert(size() > Pos);
 #endif
         mInternalString.erase(Pos, Len);
     }
@@ -265,7 +265,7 @@ public:
     _TString ToUpper() const
     {
         // todo: doesn't handle accented characters
-        _TString Out(Size());
+        _TString Out(size());
         std::transform(begin(), end(), Out.begin(), &CharToUpper);
         return Out;
     }
@@ -273,7 +273,7 @@ public:
     _TString ToLower() const
     {
         // todo: doesn't handle accented characters
-        _TString Out(Size());
+        _TString Out(size());
         std::transform(begin(), end(), Out.begin(), &CharToLower);
         return Out;
     }
@@ -283,7 +283,7 @@ public:
         size_t Start = _TStdString::npos;
         size_t End = _TStdString::npos;
 
-        for (size_t iChar = 0; iChar < Size(); iChar++)
+        for (size_t iChar = 0; iChar < size(); iChar++)
         {
             if (!IsWhitespace(mInternalString[iChar]))
             {
@@ -296,7 +296,7 @@ public:
         if (Start == _TStdString::npos)
             return _TString();
 
-        for (int64_t iChar = Size() - 1; iChar >= 0; iChar--)
+        for (auto iChar = int64_t(size()) - 1; iChar >= 0; --iChar)
         {
             if (!IsWhitespace(mInternalString[iChar]))
             {
@@ -315,18 +315,18 @@ public:
 
     _TString ChopFront(size_t Amount) const
     {
-        if (Size() <= Amount)
+        if (size() <= Amount)
             return _TString();
 
-        return SubString(Amount, Size() - Amount);
+        return SubString(Amount, size() - Amount);
     }
 
     _TString ChopBack(size_t Amount) const
     {
-        if (Size() <= Amount)
+        if (size() <= Amount)
             return _TString();
 
-        return SubString(0, Size() - Amount);
+        return SubString(0, size() - Amount);
     }
 
     int32_t ToInt32(int Base = 10) const
@@ -435,7 +435,7 @@ public:
 
     bool StartsWith(CharType Chr, bool CaseSensitive = true) const
     {
-        if (IsEmpty())
+        if (empty())
             return false;
 
         return CaseSensitive ? Front() == Chr : CharToUpper(Front()) == CharToUpper(Chr);
@@ -443,7 +443,7 @@ public:
 
     bool StartsWith(_TStdStringView rkStr, bool CaseSensitive = true) const
     {
-        if (Size() < rkStr.size())
+        if (size() < rkStr.size())
             return false;
 
         if (CaseSensitive)
@@ -455,7 +455,7 @@ public:
 
     bool EndsWith(CharType Chr, bool CaseSensitive = true) const
     {
-        if (IsEmpty())
+        if (empty())
             return false;
 
         return CaseSensitive ? Back() == Chr : CharToUpper(Back()) == CharToUpper(Chr);
@@ -463,13 +463,13 @@ public:
 
     bool EndsWith(_TStdStringView rkStr, bool CaseSensitive = true) const
     {
-        if (Size() < rkStr.size())
+        if (size() < rkStr.size())
             return false;
 
         if (CaseSensitive)
             return mInternalString.ends_with(rkStr);
 
-        const auto start = Size() - rkStr.size();
+        const auto start = size() - rkStr.size();
         const auto tmp = _TStdStringView(mInternalString.begin() + start, mInternalString.end());
         return CaseInsensitiveCompare(tmp, rkStr);
     }
@@ -541,12 +541,12 @@ public:
     // Hashing
     uint32_t Hash32() const
     {
-        return CCRC32::StaticHashData(Data(), Size() * sizeof(CharType));
+        return CCRC32::StaticHashData(data(), size() * sizeof(CharType));
     }
 
     uint64_t Hash64() const
     {
-        return CFNV1A::StaticHashData64(Data(), Size() * sizeof(CharType));
+        return CFNV1A::StaticHashData64(data(), size() * sizeof(CharType));
     }
 
     // Get Filename Components
@@ -562,7 +562,7 @@ public:
 
         if (WithExtension)
         {
-            return SubString(EndPath, Size() - EndPath);
+            return SubString(EndPath, size() - EndPath);
         }
         else
         {
@@ -574,7 +574,7 @@ public:
     _TString GetFileExtension() const
     {
         size_t EndName = mInternalString.find_last_of(CHAR_LITERAL('.'));
-        return EndName == _TStdString::npos ? _TString() : SubString(EndName + 1, Size() - EndName);
+        return EndName == _TStdString::npos ? _TString() : SubString(EndName + 1, size() - EndName);
     }
 
     _TString GetFilePathWithoutExtension() const
@@ -715,7 +715,7 @@ public:
 
     bool operator==(CharType Other) const
     {
-        return Size() == 1 && At(0) == Other;
+        return size() == 1 && At(0) == Other;
     }
 
     bool operator==(const CharType *pkText) const
@@ -961,11 +961,11 @@ public:
 
         if (DecIdx == -1 && MinDecimals > 0)
         {
-            DecIdx = Out.Size();
+            DecIdx = Out.size();
             Out.Append(CHAR_LITERAL('.'));
         }
 
-        int64_t NumZeroes = (DecIdx == -1 ? 0 : Out.Size() - (DecIdx + 1));
+        int64_t NumZeroes = (DecIdx == -1 ? 0 : Out.size() - (DecIdx + 1));
 
         // Add extra zeroes to meet the minimum decimal count
         if (NumZeroes < MinDecimals)

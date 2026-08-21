@@ -148,13 +148,13 @@ public:
 
     void SerializeBulkData(void* pData, uint32_t Size, uint32_t Flags) override
     {
-        char* pCharData = (char*) pData;
-        TString StringData = ReadParam();
-        ASSERT(StringData.Size() == Size*2);
+        auto* pCharData = static_cast<char*>(pData);
+        const TString StringData = ReadParam();
+        ASSERT(StringData.size() == Size*2);
 
-        for (uint32_t ByteIdx = 0; ByteIdx < Size; ByteIdx++)
+        for (size_t ByteIdx = 0; ByteIdx < Size; ByteIdx++)
         {
-            *pCharData = (char) StringData.SubString(ByteIdx*2, 2).ToInt32(16);
+            *pCharData = static_cast<char>(StringData.SubString(ByteIdx * 2, 2).ToInt32(16));
             pCharData++;
         }
     }
