@@ -170,7 +170,7 @@ bool DeleteFile(const TString& rkFilePath)
     if (!IsFile(rkFilePath))
         return false;
 
-    return remove(ToPath(rkFilePath)) == 1;
+    return remove(ToPath(rkFilePath));
 }
 
 bool DeleteDirectory(const TString& rkDirPath, bool FailIfNotEmpty)
